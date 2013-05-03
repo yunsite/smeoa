@@ -1,0 +1,93 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	function edit() {
+		window.location = "{:U('edit?id='.$vo['id'])}";
+	}
+</script>
+<input type="hidden" id="ajax" name="ajax" value="1">
+<div class="contact">
+	<div class="row-fluid title">
+		<span><nobr>查看联系人 : {$vo.name}</nobr></span>
+	</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a onclick="go_return_url();" class="btn">返回</a>
+		</div>
+		<div class="right">
+			<a onclick="edit();"  class="btn">修改</a>
+		</div>
+	</div>
+	<form method='post' id="form_data" class="row-fluid">
+		<input type="hidden" name="opmode" value="add">
+		<input type="hidden" name="ajax" id="ajax" value="1">
+		<div class="row-fluid form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="name">姓名：</label>
+					<div class="controls">{$vo.name}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="company">公司：</label>
+					<div class="controls">
+						{$vo.company}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="dept">部门：</label>
+					<div class="controls">
+						{$vo.dept}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="position">职位：</label>
+					<div class="controls">
+						{$vo.position}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="office_tel">办公电话：</label>
+					<div class="controls">
+						{$vo.office_tel}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="mobile_tel">手机：</label>
+					<div class="controls">
+						{$vo.mobile_tel}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="email">邮件：</label>
+					<div class="controls">
+						{$vo.email}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="im">即时聊天：</label>
+					<div class="controls">
+						{$vo.im}</div>
+			</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="website">网址：</label>
+					<div class="controls">
+						{$vo.website}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="address">地址：</label>
+					<div class="controls">
+						{$vo.address}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="remark">其他：</label>
+					<div class="controls">
+						<textarea  name="remark" rows="5" class="span12 readonly" >{$vo.remark}</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

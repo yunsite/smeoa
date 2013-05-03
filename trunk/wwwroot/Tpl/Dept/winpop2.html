@@ -1,0 +1,40 @@
+<layout name='Layout/layout_popup' />
+<div class="popup">
+	<div class="row-fluid title">
+		<span>选择部门</span>
+	</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a  onclick="save();" class="btn">确定</a>
+		</div>
+		<div class="right">
+			<a  onclick="myclose();" class="btn">关闭</a>
+		</div>
+	</div>
+	<div class="popup_tree_menu">
+		<ul class="tree_menu">{$menu}</ul>
+	</div>
+</div>
+<input type="hidden" name="val" id="val">
+<input type="hidden" name="name" id="name">
+<script type="text/javascript">
+	function save(){
+		if ($("#name").val().length > 0) {
+			$("#dept_name", parent.document).val($("#name").val());
+			$("#dept_id", parent.document).val($("#val").val());
+		} else {
+			alert("请选择部门");
+		}
+		myclose();
+	}
+
+
+	$(document).ready(function() {
+		$(".popup_tree_menu a").click(function(){
+			$("#val").val($(this).attr("node"));
+			$("#name").val($(this).children("span").text());
+			$(".popup_tree_menu .tree_menu  a.active").removeClass("active");
+			$(this).addClass("active");
+		})
+	}); 
+</script>

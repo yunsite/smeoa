@@ -1,0 +1,276 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.js"></script>
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.setting.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/swfupload/handlers.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/swfupload/setting.js"></script>
+<script type="text/javascript">
+	function add() {
+		window.open("{:U('add?tid='.$vo['id'])}", "_self");
+	}
+
+	function reply() {
+		editor.sync();
+		if (check_form("form_data")) {			
+			sendForm("form_data", "{:U('post/save')}","__SELF__");
+		}
+	}
+
+	function del() {
+		if(confirm('确定要删除吗?')){
+			sendAjax("{:U('del')}", 'id=' + $("#id").val(), function(data) {
+				if (data.status) {
+					alert(data.info);
+				}
+			});
+		}
+	}
+
+	function del_post(id) {
+		sendAjax("{:U('Post/del')}", 'id=' + id, function(data) {
+			if (data.status) {
+				alert(data.info);
+			}
+		});
+	}
+
+	function edit() {
+		window.open(fix_url("{:U('edit')}?id=" + $("#id").val()), "_self");
+	}
+
+	function edit_post(id) {
+		window.open(fix_url("{:U('post/edit')}?id=" + id), "_self");
+	}
+
+
+	$(document).ready(function() {
+		$("div.face").mouseover(function() {
+			$(this).parent().parent().find("div.read_info").show();
+		})
+
+		$("div.read_info").mouseout(function() {
+			$(this).hide();
+		})
+
+		$('.post img').each(function() {
+			var maxWidth = $("div.operate").width() - 170;
+			// 图片最大宽度
+			var maxHeight = 1020;
+			// 图片最大高度
+			var ratio = 0;
+			// 缩放比例
+			var width = $(this).width();
+			// 图片实际宽度
+			var height = $(this).height();
+			// 图片实际高度
+
+			// 检查图片是否超宽
+			if (width > maxWidth) {
+				ratio = maxWidth / width;
+				// 计算缩放比例
+				$(this).css("width", maxWidth);
+				// 设定实际显示宽度
+				height = height * ratio;
+				// 计算等比例缩放后的高度
+				$(this).css("height", height);
+				// 设定等比例缩放后的高度
+			}
+
+			// 检查图片是否超高
+			if (height > maxHeight) {
+				ratio = maxHeight / height;
+				// 计算缩放比例
+				$(this).css("height", maxHeight);
+				// 设定实际显示高度
+				width = width * ratio;
+				// 计算等比例缩放后的高度
+				$(this).css("width", width * ratio);
+				// 设定等比例缩放后的高度
+			}
+		});
+		editor_init();
+		uploader_init();
+	}); 
+</script>
+<div class="forum">
+	<input type="hidden" name="id" id="id" value="{$vo.id}">
+	<div class="row-fluid title">
+		<span>{$vo.title}</span>
+	</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a onclick="go_return_url();" class="btn">返回</a>
+			<if condition="$auth['admin']">
+				<a onclick="del();"  class="btn">删除</a>
+			</if>
+		</div>
+		<div class="right">
+			<if condition="$auth['write']">
+				<a onclick="add();" class="btn">发帖</a>
+			</if>
+		</div>
+	</div>
+	<table class="table table-bordered">
+		<tr>
+			<td style="width:145px">
+				<div class="left">{$vo.user_name}</div>
+			</td>
+			<td style="width:100%">
+				<div  class="left">
+					发表于 {$vo.create_time|toDate='Y年m月d日 H:i'}
+					<if condition="($auth['write']) and ($vo.user_id eq $user_id)">
+						<a href="" onclick="edit();return false;" class="btn">编辑</a>
+					</if>
+				</div>
+				<div class="right">
+					<a href="#reply" class="btn">回复</a>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:145px;text-align:center;padding:0;margin:0;">
+				<div class="read_info">
+					<div class="wrap">
+						<div class="face left">
+							<img src="/Data/files/{$vo.user.pic}" width="120" height="160" border="0" ></div>
+						<table>
+							<tr>
+								<td  style="width:90px;">姓名</td>
+								<td style="width:150px;">{$vo.user_name}</td>
+							</tr>
+							<tr>
+								<td>部门</td>
+								<td>{$vo.user.dept_name}</td>
+							</tr>
+							<tr>
+								<td>职位/职级</td>
+								<td>{$vo.user.position_name}/{$vo.user.rank_name}</td>
+							</tr>
+							<tr>
+								<td>邮件地址</td>
+								<td>{$vo.user.email}</td>
+							</tr>
+							<tr>
+								<td>办公电话/手机</td>
+								<td>{$vo.user.tel_office}/{$vo.user.tel_mobile}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="face">
+					<img src="__APP__/Data/files/{$vo.user.pic}" width="120" height="160" border="0" ></div>
+			</td>
+			<td style="width:100%;vertical-align:top;">
+				<div class="post">{$vo.content}</div>
+				<gt name="vo.add_file|strlen" value="2">
+					<div class="add_file">附件：{$vo.add_file|showFile}</div>
+				</gt>
+			</td>
+		</tr>
+		<foreach name="list" item="vo">
+			<tr>
+				<td style="width:145px">
+					<div class="left">{$vo.user_name}</div>
+				</td>
+				<td style="width:100%">
+					<div  class="left">
+						发表于 {$vo.create_time|toDate='Y年m月d日 H:i'}
+						<if condition="($auth['write']) and ($vo.user_id eq $user_id)">
+							<a onclick="edit_post({$vo.id});return false;" class="btn">编辑</a>
+						</if>
+						<if condition="($auth['write']) and ($vo.user_id eq $user_id)">
+							<a onclick="del_post({$vo.id});return false;" class="btn">删除</a>
+						</if>
+					</div>
+					<div class="right">
+						<a href="#reply" class="btn">回复</a>
+					</div>
+				</td>
+			</tr>
+			<td style="width:145px;text-align:center;vertical-align:top;padding:0;margin:0;">
+				<div class="read_info">
+					<div class="wrap">
+						<div class="face left">
+							<img src="/Data/files/{$vo.user.pic}" width="120" height="160" border="0" ></div>
+						<table class="table table-bordered">
+							<tr>
+								<td style="width:90px;">姓名</td>
+								<td style="width:150px;">{$vo.user.emp_name}</td>
+							</tr>
+							<tr>
+								<td >部门</td>
+								<td>{$vo.user.dept_name}</td>
+							</tr>
+							<tr>
+								<td>职位/职级</td>
+								<td>{$vo.user.position_name}/{$vo.user.rank_name}</td>
+							</tr>
+							<tr>
+								<td>邮件地址</td>
+								<td>{$vo.user.email}</td>
+							</tr>
+							<tr>
+								<td>办公电话/手机</td>
+								<td>{$vo.user.tel_office}/{$vo.user.tel_mobile}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="face">
+					<img src="/Data/files/{$vo.user.pic}" width="120" height="160" border="0" ></div>
+			</td>
+			<td style="width:100%;vertical-align:top;">
+				<div class="post">{$vo.content}</div>
+				<gt name="vo.add_file|strlen" value="2">
+					<div class="add_file">附件：{$vo.add_file|showFile}</div>
+				</gt>
+			</td>
+		</tr>
+	</foreach>
+</table>
+<div class="page">{$page}</div>
+<if condition="$auth['write']">
+	<div class="row-fluid title">
+		<span>回复</span>
+	</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a onclick="go_return_url();" class="btn">返回</a>
+		</div>
+		<div class="right">
+			<a onclick="reply();"  class="btn">回复</a>
+		</div>
+	</div>
+	<form method="post" action="" id="form_data" name="form_data">
+		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="tid" name="tid" value="{$tid}">
+		<input type="hidden" id="add_file" name="add_file" value="">
+		<input type="hidden" id="opmode" name="opmode" value="add">
+		<table class="table table-bordered">
+			<tr>
+				<td>附件：</td>
+				<td>
+					<div class="hidden-phone">
+						<span id="spanButtonPlaceHolder"></span>
+						</div>
+					<div id="fsUploadProgress"></div>
+				</td>
+			</tr>
+			<td style="width:145px;text-align:center;vertical-align:top;">
+				<div class="face">
+					<img src="/Data/files/{$user.user.pic}" width="120" height="160" border="0" ></div>
+			</td>
+			<td style="width:100%;vertical-align:top;">
+				<div >
+					<textarea name="content" id="content" style="width:100%;height:220px;"></textarea>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<td colspan="2"></form>
+</if>
+</div>
+</body>
+</html>

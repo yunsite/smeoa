@@ -1,0 +1,203 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.js"></script>
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.setting.js"></script>
+<script type="text/javascript">
+
+	function approve() {
+		sendForm("form_confirm", "{:U('approve')}","{:U('read?id='.$vo['id'])}");
+	}
+
+	function reject() {
+		sendForm("form_confirm", "{:U('reject')}","{:U('read?id='.$vo['id'])}");
+	}
+
+	function save(step) {
+		$("#confirm").val("");
+		$("#confirm_wrap  span").each(function() {
+			$("#confirm").val($("#confirm").val() + $(this).attr("emp_no") + '|');
+		})
+
+		$("#consult").val("");
+		$("#consult_wrap  span").each(function() {
+			$("#consult").val($("#consult").val() + $(this).attr("emp_no") + '|');
+		})
+
+		$("#refer").val("");
+		$("#refer_wrap  span").each(function() {
+			$("#refer").val($("#refer").val() + $(this).attr("emp_no") + '|');
+		})
+		if ($("#confirm").val().length < 2) {
+			alert('请选择审批流程');
+			return
+		}
+		$("#step").val(step);
+		editor.sync();
+		sendForm("form_data", "{:U('save')}");
+	}
+
+	function select_confirm() {
+		winopen("{:U('contact/popup_confirm')}", 900, 750);
+	};
+
+	$(document).ready(function() {
+		$("#confirm span").live("dblclick", function() {
+			$("#confirm span").last().find("b").remove();
+		});
+		$("#consult span").live("dblclick", function() {
+			$("#consult span").last().find("b").remove();
+		});
+	}); 
+</script>
+<div class="flow">
+    <div class="row-fluid title">
+        <span>{$flow_type.name}:{$vo.title}</span>
+    </div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a onclick="go_return_url();" class="btn">返回</a>
+			<a href="#flow_status"  class="btn">裁决情况</a>
+			<notempty name="confirm">
+				<a href="#confirm"  class="btn">办理意见</a>
+			</notempty>
+		</div>
+		<div class="right"></div>
+	</div>
+	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data">
+		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="type" name="type" value="{$flow_type.id}">
+		<input type="hidden" id="opmode" name="opmode" value="add">
+		<input type="hidden" id="confirm" name="confirm" value="">
+		<input type="hidden" id="consult" name="consult" value="">
+		<input type="hidden" id="refer" name="refer" value="">
+		<input type="hidden" id="step" name="step" value="">
+		<div class="row-fluid form_box">
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">文件编号：</label>
+								<div class="controls">
+										{$vo.doc_no}
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">日期：</label>
+								<div class="controls">
+										{$vo.create_time|toDate='Y-m-d'}
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">编写人：</label>
+								<div class="controls">
+										{$vo.user_name}
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">部门：</label>
+								<div class="controls">
+										{$vo.dept_name}
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">裁决：</label>
+								<div class="controls">
+										{$vo.confirm_name}
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">协商：</label>
+								<div class="controls">
+										{$vo.consult_name}
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">抄送：</label>
+								<div class="controls">
+										{$vo.refer|show_confirm}
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<textarea id="content" name="content" style="width:100%;height:300px;">{$vo.content}
+									</textarea>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group">
+								<label class="control-label" for="title">附件：</label>
+								<div class="controls">
+									<include file="Layout:file_list" />
+								</div>
+						</div>
+				</div>
+		</div>
+	</form>
+</div>
+<div class="row-fluid title">
+	<span><a name="flow_status"></a>裁决情况</span>
+</div>
+<div class="row-fluid table form_box">
+	<ul>
+		<li class="thead">
+			<span style="width:90px;">类型</span>
+			<span style="width:90px;">裁决人</span>
+			<span style="width:90px;">日期</span>
+			<span style="width:90px;">结果</span>
+			<span class="auto">意见</span>
+		</li>
+		<volist name="flow_log" id="item">
+			<li class="tbody">
+				<span style="width:90px;" class="text-center">{$item.step|step_type}</span>
+				<span style="width:90px;" class="text-center">{$item.user_name}</span>
+				<span style="width:90px;" class="text-center">{$item.create_time|toDate='Y-m-d'}</span>
+				<span style="width:90px;" class="text-center">{$item.result}</span>
+				<span class="auto">
+					<div style="overflow:hidden">
+						{$item.comment}
+					</div></span>
+			</li>
+		</volist>
+	</ul>
+</div>
+<notempty name="confirm">
+<div class="row-fluid title">
+	<span><a name="confirm"></a>办理意见</span>
+</div>
+	<form method="post" action="" name="form_confirm" id="form_confirm">
+		<input type="hidden" name="id" value="{$confirm.id}">
+		<input type="hidden" name="flow_id" value="{$vo.id}">
+		<input type="hidden" name="step" value="{$confirm.step}">
+		<div class="operate row-fluid">
+			<div class="left">
+				<a onclick="go_return_url();" class="btn">返回</a>
+			</div>
+			<div class="right">
+				<a onclick="approve();" class="btn">同意</a>
+				<a onclick="reject();" class="btn">驳回</a>
+			</div>
+		</div>
+		<div class="row-fluid form_box"> 
+			<div class="row-fluid form-horizontal">
+					<div class="control-group">
+							<label class="control-label" for="title">办理意见：</label>
+							<div class="controls">
+									<textarea name="comment" ></textarea>
+									</gt>
+							</div>
+					</div>
+			</div>
+		</div>
+</notempty>
+</form>
+

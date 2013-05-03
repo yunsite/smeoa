@@ -1,0 +1,135 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	function save() {
+		if (check_form("form_data")) {
+			sendForm("form_data", "{:U('save')}", "__URL__");
+		}
+	}
+
+	function showdata(result){
+		$(".user_list li.tbody").remove();		
+		for (var s in result.data){
+			$("#sample .name").text(result.data[s].name);
+			$("#sample .position").text(result.data[s].position_name);
+			$("#sample .rank").text(result.data[s].rank_name);
+			$("#sample .email").text(result.data[s].email);
+			
+			$("#sample li").attr("email",result.data[s].email);		
+			$("#sample li").attr("duty",result.data[s].duty);		
+			$("#sample li").attr("name",result.data[s].name);			
+			$("#sample li").attr("office_tel",result.data[s].office_tel);
+			$("#sample li").attr("mobile_tel",result.data[s].mobile_tel);
+			$("#sample li").attr("pic",result.data[s].pic);									
+			html=$("#sample").html();			
+			$(".user_list ul").append(html);
+			$("#sample li span").text("");
+		}
+		if($(".user_list li.tbody").length>0){
+			$(".user_list li.tbody").get(0).click();
+		}else{
+			$(".user_info .info").text("");
+			$("#emp_pic").attr('src',"");
+		}		
+	}
+
+
+	$(document).ready(function() {
+		$(".sub_left_menu .tree_menu  a").click(function() {
+			$(".sub_left_menu .tree_menu  a").each(function() {
+				$(this).attr("class", "");
+			});
+			$(this).attr("class", "active");
+			sendAjax("{:U('ajaxRead')}", "id=" + $(this).attr("node"), function(data) {
+				showdata(data);
+			});
+			return false;
+		})
+		$(".user_list li").live("click",function(){
+			$(".user_info .name").text($(this).attr("name"));
+			$(".user_info .office_tel").text($(this).attr("office_tel"));
+			$(".user_info .mobile_tel").text($(this).attr("mobile_tel"));
+			$(".user_info .duty").text($(this).attr("duty"));			
+			$("#emp_pic").attr("src","{:C('SAVE_PATH')}"+$(this).attr("pic"));			
+		})
+	});
+
+</script>
+<div class="admin" >
+	<div class="row-fluid title">
+		<span>职员查询</span>
+	</div>
+	<div>
+		&nbsp;
+	</div>
+	<!-- 功能操作区域结束 -->
+	<!-- 列表显示区域  -->
+	<div class="row-fluid">
+		<div class="span4 sub_left_menu">
+			<div class="wrap">
+				<?php echo $menu ?>
+			</div>
+		</div>
+		<div class="span8">
+			<div class="table user_list">
+				<ul>
+					<li class="thead row-fluid">
+						<div class="span7">
+							<span style="width:25%;">姓名</span>
+							<span style="width: 35%">职责</span>
+							<span style="width: 35%">职责</span>
+						</div>
+						<div class="span5">
+							<span style="width:100%;">邮件</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<br>
+			<div class="row-fluid">
+				<div class="span4 text-center">
+					<img id="emp_pic" class="img-polaroid"/>
+				</div>
+				<div class="span8">
+					<div class="table user_info">
+						<ul>
+							<li class="tbody row-fluid">
+								<span class="th" style="width:30%;">姓名</span>
+								<span style="width: 70%" class="text-center name info"></span>
+							</li>
+							<li class="tbody row-fluid">
+								<span class="th" style="width:30%;">办公电话</span>
+								<span style="width: 70%" class="text-center office_tel info"></span>
+							</li>
+							<li class="tbody row-fluid">
+								<span class="th" style="width:30%;">手机</span>
+								<span style="width: 70%" class="text-center mobile_tel info"></span>
+							</li>
+							<li class="tbody row-fluid">
+								<span class="th" style="width:30%;">邮箱</span>
+								<span style="width: 70%" class="text-center email info">姓名姓名</span>
+							</li>
+							<li class="tbody row-fluid">
+								<span class="th" style="width:30%;">业务</span>
+								<span style="width: 70%" class="text-center duty info"></span>
+							</li>
+							<ul>
+					</div>
+				</div>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="sample">
+	<li class="tbody row-fluid">
+		<div class="span7">
+			<span style="width:25%;" class="text-center name"></span>
+			<span style="width: 35%" class="text-center position"></span>
+			<span style="width: 35%" class="text-center rank"></span>
+		</div>
+		<div class="span5">
+			<span style="width:100%;" class="email"></span>
+		</div>
+	</li>
+</div>

@@ -1,0 +1,166 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	function del() {
+		if(confirm('确定要删除吗?')){
+			sendAjax("{:U('mark?action=del')}", 'mail_id=' + $("#id").val(), function(data) {
+				if (data.status) {
+					alert(data.info);
+					window.open($("#next_link").attr("href"), '_self');
+				}
+			});
+		}
+	}
+
+	function mark_spam() {
+		sendAjax("{:U('mark?action=spam')}", 'mail_id=' + $("#id").val(), function(data) {
+			if (data.status) {
+				alert(data.info);
+			}
+		});
+	}
+
+	function del_forever() {
+		sendAjax("{:U('mark?action=del_forever')}", 'mail_id=' + $("#id").val(), function(data) {
+			if (data.status) {
+				alert(data.info);
+			}
+		});
+	}
+
+	function forword(){
+		if ($("input[name='mail_id']:checkbox:checked").length == 1) {
+			window.open(fix_url("{:U('reply')}?id=" + $("input[name='mail_id']:checkbox:checked:first").val()) + "&type=forward", "_self");
+		} else {
+			alert("请选择一封要转发的邮件");
+		};
+	}
+
+	function mark(val){
+		if (val == "readed"){
+			sendAjax("{:U('mark?action=readed')}", 'main_id=' + $("#id").val());
+		} else {
+			sendAjax("{:U('mark?action=unread')}", 'main_id=' + $("#id").val());
+		}
+	}
+
+	function move_to(val){
+		sendAjax("{:U('mark?action=move_folder')}", 'val=' + val + '&mail_id='+$("#id").val(),function(data){
+			alert(data.info);
+		})
+	}
+
+	function reply(type) {
+		if (type == "reply") {
+			setTimeout(function() {
+				window.location.href = fix_url("{:U('reply?id='.$vo['id'])}?type=" + type);
+			}, 300);
+		} else {
+			window.location.href = fix_url("{:U('reply?id='.$vo['id'])}?type=" + type);
+		}
+	}
+
+	function myprint() {
+		window.print();
+	}
+
+	$(document).ready(function() {
+		$("#move_to li").click(function() {
+			move_to($(this).attr("id"));
+		})
+		show_content();
+	})
+</script>
+<div class="mail">
+	<div class="row-fluid title">
+		<span>{$vo.title}</span>
+	</div>
+	<form method='post' id="form_content" name="form_content" enctype="multipart/form-data">
+		<input type="hidden" id="id" name="id" value="{$vo.id}">
+		<div class="row-fluid operate">
+			<div class="left">
+				<a onclick="go_return_url()" class="btn">返回</a>
+				<div class="btn-group">
+					<a class="btn" onclick="reply('reply');">回复</a>
+					<button class="btn dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<a onclick="reply('reply');">回复</a>
+						</li>
+						<li>
+							<a onclick="reply('all');">全部回复</a>
+						</li>
+						<li>
+							<a onclick="reply('forward');" >转发</a>
+						</li>
+					</ul>
+				</div>
+				<a onclick="del()" class="btn">删除</a>
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						标记为
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a onclick="mark('readed');">已读</a>
+						</li>
+						<li>
+							<a onclick="mark('unread');">未读</a>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-group" id="move_to">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						转移到
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">{$folder_list}</ul>
+				</div>
+				<a  onclick="myprint()" class="btn hidden-phone">打印</a>
+			</div>
+			<div class="right">{$next_link}</div>
+		</div>
+		<div class="form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="name">发件人：</label>
+					<div class="controls">{$vo.from|show_contact}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="name">时间：</label>
+					<div class="controls">{$vo.create_time|toDate='Y年m月d日 H:i'}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="name">收件人：</label>
+					<div class="controls">{$vo.to|show_contact}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="name">抄送：</label>
+					<div class="controls">{$vo.cc|show_contact}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<div id="content_wrap" >
+						<iframe id="content_iframe"></iframe>
+					</div>
+					<textarea id="content_1" name="content" style="width:100%;display:none;">{$vo.content}</textarea>
+				</div>
+			</div>
+			<gt name="vo.add_file|strlen" value="2">
+				<div class="row-fluid form-horizontal">
+					<div class="control-group span12">
+						<label class="control-label" for="name">附件：</label>
+						<div class="controls">
+							<include file="Layout:file_list" />
+						</div>
+					</div>
+				</div>
+			</gt>
+		</div>
+	</form>
+</div>

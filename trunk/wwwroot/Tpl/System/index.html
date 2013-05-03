@@ -1,0 +1,157 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	$(document).ready(function() {
+
+	});
+
+	function add() {
+		$("#form_data :input :not(:button)").each(function() {
+			$(this).val("");
+		});
+		$("#form_data :text").each(function() {
+			$(this).val("");
+		});
+		$("#form_data select").each(function() {
+			$(this).find('option:first').attr('selected', 'selected');
+		})
+		$(".sub_left_menu tr.active").removeClass("active");
+		$("#opmode").val("add");
+	}
+
+	function reset_pwd() {
+		if ($("#id").val().length < 1) {
+			alert("请选择用户");
+			return false;
+		}
+		winopen(fix_url("{:U('password')}?id=" + $("#id").val()), 400, 300);
+	}
+
+	function select_dept() {
+		winopen("{:U('dept/winpop2')}", 600, 400);
+	}
+
+	function btn_search() {
+		sendForm("form_search", "__SELF__");
+		$("#form_search").submit();
+	}
+
+	function key_search() {
+		if (event.keyCode == 13) {
+			sendForm("form_search", "__SELF__");
+			return false;
+		}
+	}
+
+	function save() {
+		$("#pic").val($("#save_name").val().split(";")[0]);
+		sendForm("form_data", "/User/save");
+	}
+
+	function showdata(result) {
+		for (var s in result.data) {
+			//alert(s+"|"+$("#"+s).attr("type"))
+			if (($("#" + s).attr("type")) === "select-one") {
+				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
+				//alert(s+"|"+$("#"+s).attr("type")+result.data[s] )
+			} else {
+				$("#" + s).val(result.data[s]);
+			}
+		}
+		$("#dept_name").val($("#dept_list option[value='" + $("#dept_id").val() + "']").text());
+		img_url = "\\data\\files\\" + $("#pic").val();
+		$("#emp_pic").attr("src", img_url.split(";")[0]);
+		$("#save_name").val("");
+		$("#opmode").val("edit");
+	}
+
+
+	$(document).ready(function() {
+		editor_init();
+		uploader_init();
+
+		$(".sub_left_menu  tr").click(function() {
+			$(".sub_left_menu  tr.active").removeClass("active");
+			$(this).attr("class","active");
+			sendAjax("{:U('ajaxRead')}", "id=" + $(this).attr("id"), function(data) {
+				showdata(data);
+			});
+			return false;
+		})
+	});
+</script>
+<div class="admin" >
+	<form method="post" action="" id="form_search" name="form_search">
+		<div class="row-fluid title">
+			<span>系统信息</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+			</div>
+		</div>
+	</form>
+	<div class="operate" >
+		<div class="right">
+			<a onclick="save()">保存</a>
+		</div>
+	</div>
+	<div>
+		<form id="form_data" name="form_data"method="post" action="">
+			<table >
+				<tr>
+					<th>
+					<nobr>
+						系统版本
+					</nobr></th>
+					<td>
+					<input type="text" id="emp_no" name="emp_no">
+					</td>
+					<th>
+					<nobr>
+						查看最新版本
+					</nobr></th>
+					<td>
+					<input type="text" id="emp_name" name="emp_name">
+					</td>
+				<tr>
+					<th>
+					<nobr>
+						授权信息
+					</nobr></th>
+					<td><a href="">购买授权</a></td>
+					<th>序列号</th>
+					<td>
+					<input type="text" id="emp_name" name="emp_name">
+					</td>
+				</tr>
+				<tr>
+					<th>
+					<nobr>
+						开始时间
+					</nobr></th>
+					<td>
+					<input type="text" id="emp_no" name="emp_no">
+					</td>
+					<th>结束日期</th>
+					<td>
+					<input type="text" id="emp_name" name="emp_name">
+					</td>
+				</tr>
+				<tr>
+					<th>
+					<nobr>
+						官方网站
+					</nobr></th>
+					<td>
+					<input type="text" id="emp_no" name="emp_no">
+					</td>
+					<th>官方QQ群</th>
+					<td>
+					<input type="text" id="emp_name" name="emp_name">
+					</td>
+				</tr>
+			</table>
+	</div>
+	</form>
+</div>

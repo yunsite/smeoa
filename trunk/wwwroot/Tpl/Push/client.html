@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="keywords" />
+	<meta name="description" content="description" />
+
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+	<script type="text/javascript">
+			var flag = true;
+			var runing=false;
+			push_start();
+			function sendPush(url,vars,callback){
+				return $.ajax({
+					type : "POST",
+					url : url,
+					data : vars + "&ajax=1",
+					dataType : "json",
+					success : callback
+				});
+			}
+			function hide_msg($obj){
+				runing=true;
+				setTimeout(function(){
+					$($obj).find("h4:first").remove();
+					if($($obj).find("h4:first").length){
+						hide_msg($obj);
+					}else{
+						runing=false;
+					}
+				},3000)
+			}
+			function show_msg(info){
+				if(info!="no-data"){
+					html="<h4><button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button><span>"+info+"</span></h4>"
+					$obj=$(".msg",parent.document);
+					$obj.prepend(html);
+					if (runing==false){
+						hide_msg($obj);	
+					}					
+				}	
+			}
+			function push_start(){								
+				sendPush("/Push/server","id=1", function(data){
+					show_msg(data.info);
+					if (flag){
+						push_start();
+					}
+				});
+			}
+
+			function push_stop() {
+				flag = false;
+			}
+
+		</script>
+</head>
+<body>
+	<div class="cot" >
+		<div class="row-fluid title">
+			<span>PUSH测试</span>
+		</div>
+		<form name="form_search" id="form_search" method="post" >
+			<div class="operate" >
+				<div class="right">
+					<input type="button" value="开始" onclick="push_start();" class="btn">
+					<input type="button" value="停止" onclick="push_stop()" class="btn"></div>
+			</div>
+		</form>
+		<!-- 功能操作区域结束 -->
+		<!-- 列表显示区域  -->
+		<div class="area box">
+			<div id="panel"></div>
+		</div>
+	</div>
+
+</body>
+</html>

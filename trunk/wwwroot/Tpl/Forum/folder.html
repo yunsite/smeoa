@@ -1,0 +1,191 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	function add() {
+		window.open("{:U('add?fid='.$folder_id)}", "_self");
+	}
+
+	function key_search() {
+		if (event.keyCode == 13) {
+			sendForm("form_search", "{:U('folder')}");
+			return false;
+		}
+	}
+
+	function btn_search() {
+		sendForm("form_search", "{:U('folder')}");
+		return false;
+	}
+
+	function adv_search() {
+		sendForm("form_search", "{:U('folder')}");
+		return false;
+	}
+
+	function open_search() {
+		$("div.adv_search").show();
+		return false;
+	}
+
+	function close_search() {
+		$("div.adv_search").hide();
+		return false;
+	}
+
+	function move_to(val) {
+		sendAjax("{:U('move_folder')}", 'folder=' + val + '&id=' + $("#forum_id").val());
+		$("input[name='forum_id']:checkbox:checked").each(function() {
+			$(this).parent().parent().parent().hide(500);
+		});
+		close_move_to();
+	}
+
+	function close_move_to() {
+		$("div.move_to").slideUp(100);
+	}
+
+	function open_move_to() {
+		$("div.move_to").show();
+	}
+
+	function del() {
+		if(confirm('确定要删除吗?')){
+			sendAjax("{:U('del')}", 'id=' + $("#forum_id").val(), function(data) {
+				if (data.status) {
+					alert(data.info);
+					$("input[name='forum_id']:checkbox:checked").each(function() {
+						$(this).parent().parent().hide();
+					})
+				}
+			});
+		}
+	}
+
+
+	$(document).ready(function() {
+		set_return_url();
+		$("#move_to").mouseleave(close_move_to);
+
+		$("input[name='forum_id']").click(function() {
+			$("#forum_id").val("");
+			$("input[name='forum_id']:checkbox:checked").each(function() {
+				$("#forum_id").val($("#forum_id").val() + $(this).val() + ",");
+			})
+		})
+	}); 
+</script>
+<div class="forum">
+	<form id="form_search" method='post' >
+		<input type="hidden" id="forum_id">
+		<input type="hidden" name="fid" id="fid" value={$folder_id}>
+		<div class="row-fluid title">
+			<span>{$folder_name}</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword" id="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+				<a class="btn" onclick="open_search();"> <i class="icon-angle-down"></i>
+				</a>
+			</div>
+		</div>
+		<div class="row-fluid adv_search">
+			<div class="row-fluid adv_search_head">
+				<h4 class="left">高级搜索</h4>
+				<div class="right text-right">
+					<a  class="btn" onclick="adv_search();">搜索</a>
+					<a  class="btn" onclick="close_search();">关闭</a>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="title">标题 ：</label>
+					<div class="controls">
+						<input type="text" id="title" name="title"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="content">内容：</label>
+					<div class="controls">
+						<input type="text" id="content" name="content" ></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="user_name">登录人：</label>
+					<div class="controls">
+						<input type="text" id="user_name" name="user_name"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="start_date">登录时间：</label>
+					<div class="controls">
+						<input  type="text" name="start_date" id="start_date" class="input-date" value="{$search['start_date']}"  readonly="readonly">
+						&nbsp;~&nbsp;
+						<input type="text" name="end_date" id="end_date" value="{$search['end_date']}" readonly="readonly" class="input-date" ></div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="row-fluid operate">
+		<div class="right">
+			<if condition="$auth['write']">
+				<a  onclick="add();" class="btn">发帖</a>
+			</if>
+		</div>
+		<div class="left">
+			<if condition="$auth['admin']">
+				<a onclick="mark('del');" class="btn">删除</a>
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						转移到
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						{$folder_list}
+					</ul>
+				</div>
+			</if>
+		</div>
+	</div>
+</form>
+		<div class="table">
+			<ul>
+				<li class="thead" style="padding-left:30px;">
+					<span class="checkbox">
+						<input  type="checkbox" id="chk_select_all" value="all" onclick="select_all('notice_id[]')"/>
+					</span>
+					<span class="col2 right"> 回复/查看</span>
+					<span class="col5 right"> 登录时间 </span>
+					<span class="col4 right"> 登录人 </span>
+					<div class="auto">
+						主题
+					</div>
+				</li>
+				<if condition="count($list) eq 0 ">
+					<li class="tbody text-center">
+						<h3>没找到相应的数据</h3>
+					</li>
+			</ul>
+		</div>
+		<else/>
+		<foreach name="list" item="vo">
+			<li class="tbody" style="padding-left:30px;">
+				<span class="checkbox">
+					<input name="notice_id[]" type="checkbox" value="{$vo.id}"/>
+				</span>
+				<span class="col2 right text-center">  {$vo.reply}/{$vo.views} </span>
+				<span class="col5 right text-center"> {$vo.create_time|toDate='Y-m-d'} </span>
+				<span class="col4 right text-center"> {$vo.user_name} </span>
+				<div class="auto">
+					<a href="{:U('read?id='.$vo['id'])}" >{$vo.title}
+					<eq name="vo.title|strlen" value="0">
+						无标题
+					</eq></a>
+				</div>
+			</li>
+		</foreach>
+		</ul>
+		</if>
+</div>
+<div class="page">
+	{$page}
+</div>
+</if>
+</div>

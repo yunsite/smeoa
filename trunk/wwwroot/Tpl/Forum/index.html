@@ -1,0 +1,66 @@
+<layout name='Layout/layout_main' />
+<div class="notice">
+	<div class="row-fluid title"><span>最新帖子</span></div>
+	<form id="form_search" method='post'>
+		<div class="operate">
+			<div class="span-2 right last">
+				<a onclick="btn_search()">搜索</a>
+			</div>
+			<div class="span-10 left">
+				<div class="combo">
+					<label for="name">标题</label>
+					<input type="text" name="title" id="title">
+				</div>
+				<div class="combo">
+					<label for="content">内容</label>
+					<input type="text" name="content" id="content">
+				</div>
+				<div class="combo">
+					<label for="user_name">登录人</label>
+					<input type="text" name="user_name" id="user_name">
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="table">
+		<ul>
+			<li class="thead">
+				<span class="col3">板块</span>
+				<span class="col5 right">登录时间</span>
+				<span class="col4 right">登录人</span>
+				<div class="auto autocut">
+					标题
+				</div>
+			</li>
+			<if condition="count($list) eq 0 ">
+				<li class="tbody text-center">
+					<h3>没找到相应的数据</h3>
+				</li>
+		</ul>
+	</div>
+	<else/>
+	<foreach name="list" item="vo">
+		<li class="tbody">
+			<span class="col3 text-center">&nbsp;{$vo.folder_name}&nbsp;</span>
+			<span class="col5 right text-center">&nbsp;{$vo.create_time|toDate='Y-m-d'}&nbsp;</span>
+			<span class="col4 right text-center">{$vo.user_name}</span>
+			<div class="auto autocut">
+				<a href="{:U('read?id='.$vo[id])}">{$vo.title}
+				<eq name="vo.title|strlen" value="0">
+					无标题
+				</eq></a>
+			</div>
+		</li>
+	</foreach>
+	</ul>
+</div>
+</if>
+<div class="page">
+	{$page}
+</div>
+</div></div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		set_return_url();
+	}); 
+</script>

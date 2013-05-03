@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='utf-8' />
+	<title>smeoa</title>
+	<meta content='' name='description' />
+	<meta content='' name='author' />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+	<style type="text/css">
+	html,body{
+		width:100%;
+		height: 100%;
+		margin:0;
+		padding:0;
+		border: 0px;
+	}
+	iframe.main{
+		margin:0;
+		padding:0;
+		border: 0px;
+		width: 100%;
+		height: 100%;
+	}
+	.action{
+		display: none;
+		margin:0;
+		padding:0;
+		border: 0px;		
+		height: 0%;
+		width: 100%;
+	}
+	iframe.action{
+		display: none;
+	}
+	body{
+		overflow: auto;
+	}
+	</style>
+<body>
+	<iframe src="/home/index" class="main" id="main" onload="Javascript:SetWinHeight(this)" frameborder="0" scrolling="no"></iframe>
+	<iframe src="/push/client" class="action" id="action"></iframe>
+	<script src="__PUBLIC__/js/jquery.js"></script>	
+	<script type="text/javascript">
+	function SetWinHeight(obj)
+	{
+	var ifmWin=$(obj).get(0).contentWindow;
+	height=$(ifmWin.document.body).height();
+	$(obj).height(height+30);		
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	function save() {
+		if(check_form("form_data")){
+			sendForm("form_data", "{:U('save')}");
+		}
+	}
+</script>
+<div class="admin">
+<div class="row-fluid title">
+    <span>新增基础数据</span>
+</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a onclick="go_return_url();" class="btn">返回</a>
+		</div>
+		<div class="right">
+			<a onclick="save();" class="btn">保存</a>
+		</div>
+	</div>
+	<form method='post' id="form_data" action="" name="form_data">
+		<table class="table">
+			<input type="hidden" name="opmode" id="opmode" value="add">
+			<tr>
+				<th><nobr>分类代码</nobr></th>
+				<td >
+				<input type="text" id="type" name="type" value="" check="require" msg="请输入分类代码">
+				</td>
+			</tr>
+			<tr>
+				<th><nobr>代码</nobr></th>
+				<td >
+				<input type="text" name="code" value="" check="require" msg="请输入代码">
+				</td>
+			</tr>
+			<tr>
+				<th><nobr>名称</nobr></th>
+				<td >
+				<input type="text" name="name" value=""  check="require" msg="请输入名称">
+				</td>
+			</tr>
+			<tr>
+				<th><nobr>排序</nobr></th>
+				<td >
+				<input type="text" name="sort" value="">
+				</td>
+			</tr>
+			<tr>
+				<th><nobr>状态</nobr></th>
+				<td >
+				<select  name="status">
+					<option value="1">启用</option>
+					<option value="0">禁用</option>
+				</select></td>
+			</tr>
+		</table>
+	</form>
+</div>

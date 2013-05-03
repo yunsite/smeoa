@@ -1,0 +1,401 @@
+<layout name='Layout/layout_popup' />
+<script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+        function save(){
+            $("#confirm_wrap",parent.document).hide();
+            $("#consult_wrap",parent.document).hide();
+
+            $("#confirm_wrap",parent.document).html("");
+            $("#consult_wrap",parent.document).html("");
+            
+            $("#rc select option").each(function(i){
+                    //email=($(this).html().split(";")[1].split("&")[0]);
+                    $("#confirm_wrap",parent.document).append('<span  emp_no="'+$(this).val()+'">'+jQuery.trim($(this).text())+' </span>');
+            });
+            $("#cc select option").each(function(i){
+                    //email=($(this).html().split(";")[1].split("&")[0]);
+                    $("#consult_wrap",parent.document).append('<span  emp_no="'+$(this).val()+'">'+jQuery.trim($(this).text())+' </span>');
+            });
+
+
+            $("#confirm_wrap span b",parent.document).each(function(){
+                $(this).remove();
+            })
+            
+            $("#confirm_wrap span",parent.document).each(function(){
+                $(this).append("<b>&rarr;</b>   ");
+            })
+            $("#confirm_wrap span",parent.document).last().find("b").remove();
+
+
+            $("#consult_wrap span b",parent.document).each(function(){
+                $(this).remove();
+            })
+            
+            $("#consult_wrap span",parent.document).each(function(){
+                $(this).append("<b>&rarr;</b>   ");
+            })
+            $("#consult_wrap span",parent.document).last().find("b").remove();
+
+            $("#confirm_wrap",parent.document).show();
+            $("#consult_wrap",parent.document).show();
+
+            myclose();
+        }
+        // 显示AJAX 读取的数据
+        function showdata(result){
+            
+            $("#addr_list").html("");
+            //alert(result.info);
+            for(s in result.data){
+                var id=result.data[s].id;
+                var position_name=result.data[s].position_name;
+                var emp_no=result.data[s].emp_no;
+                var emp_name=result.data[s].emp_name;
+                var email=result.data[s].email;
+                if (position_name==undefined)
+                {
+                    var html_string="<label><input type=\"checkbox\" name=\"addr_id\" value=\""+emp_no +"\"><a  title="+email+" onmousedown=\"return false\" href=\"javascript:void(0);\">"+emp_name+" &lt;"+email+"&gt; </a></label>";         
+                }else{
+
+                    var html_string="<label><input type=\"checkbox\" name=\"addr_id\" value=\""+emp_no +"\"><a  title="+email+" onmousedown=\"return false\" href=\"javascript:void(0);\">"+emp_name+" / "+ position_name+"</a></label>"; 
+                }
+                $("#addr_list").html($("#addr_list").html()+html_string);
+            }
+        }
+          $(document).ready(function(){
+
+                $("#rb_{$type}").attr("checked",true);   // 选择用户默认选择的类型
+                            
+                $(".{$type}").removeClass("dis");
+
+                $("div.combo input").focus(function(){
+                    $(this).parent().find("label").hide();
+                })
+                $("div.combo input").blur(function(){
+                    if($(this).val().length==0){
+                        $(this).parent().find("label").show();
+                    }
+                })
+
+                $("input[name='type']").change(function(){
+                    $("input[name='type']").each(function(){
+                        $("."+$(this).val()).addClass("dis");
+                    });
+                    $("."+$(this).val()).removeClass("dis")
+                })
+
+                $("#emp .tree_menu  a").click(function(){                    //点击节点时读取相应的数据
+                    $(".emp .tree_menu a").each(function(){
+                        $(this).attr("class","");
+                    });
+                var type=$("input[name='type']:checked").val();  
+                    $(this).attr("class","active");             
+                    sendAjax("{:U('ajaxRead')}","type="+type+"&id="+$(this).attr("node"),function(data){
+                        showdata(data);})
+                    return false; //禁止连接生效
+                });
+
+                $("#dept .tree_menu  a").click(function(){                    //点击节点时读取相应的数据
+                    $("#dept .tree_menu a").each(function(){
+                        $(this).attr("class","");
+                    });
+                    $(this).attr("class","active");  
+                    
+                    var type=$("input[name='type']:checked").val();  
+                               
+                    return false; //禁止连接生效
+                });
+
+                $("#dept_grade .tree_menu a").click(function(){                    //点击节点时读取相应的数据
+                    $("#dept_grade .tree_menu a").each(function(){
+                        $(this).attr("class","");
+                    });
+                    $(this).attr("class","active");  
+                    
+                    var type=$("input[name='type']:checked").val();  
+                               
+                    return false; //禁止连接生效
+                });    
+
+                $("#position .tree_menu a").click(function(){                    //点击节点时读取相应的数据
+                    $("#position .tree_menu a").each(function(){
+                        $(this).attr("class","");
+                    });
+                    $(this).attr("class","active");  
+                    
+                    var type=$("input[name='type']:checked").val();  
+                               
+                    return false; //禁止连接生效
+                }); 
+
+                $("#addr_list a").live("dblclick",function(){   // 双击添加到收件人 因后添加的数据 所以需要用live函数                     
+                    $text=$(this).text();
+                    $val=$(this).parent().find("input").val();
+                    if($("#rc select option[value='"+$val+"']").val()==undefined){
+                        $option=$("<option></option>");                                             
+                        $option.val($val);
+                        $option.text($text).appendTo("#rc select");
+                        $("#rc_count").text("("+$("#rc select option").length+")");                         
+                    };
+                });
+
+                $("#rc  select").live("dblclick",function(){   // 双击添加到收件人 因后添加的数据 所以需要用live函数
+                    $(this).find("option:selected").remove();
+                    $("#rc_count").text("("+$("#rc select option").length+")");
+                });
+
+                $("#cc  select").live("dblclick",function(){   // 双击添加到收件人 因后添加的数据 所以需要用live函数
+                    $(this).find("option:selected").remove();
+                    $("#cc_count").text("("+$("#cc select option").length+")");
+                });         
+                $("#addr_list").live("mouseover",function(){     //通过jquery_ui 添加 拖动功能
+                    $( "#addr_list label" ).draggable({
+                        appendTo: "body",
+                        helper: "clone"
+                    });
+                });
+                $("#rc select").droppable({
+                    activeClass: "ui-state-default",
+                    hoverClass: "ui-state-hover",
+                    accept: ":not(.ui-sortable-helper)",
+                    drop: function( event, ui ) {
+                        $text=ui.draggable.text();
+                        $val=ui.draggable.find("input").val();
+                        if($("#rc select option[value='"+$val+"']").val()==undefined){
+                            $option=$("<option></option>");                                             
+                            $option.val($val);
+                            $option.text($text).appendTo(this);
+                            $("#rc_count").text("("+$("#rc select option").length+")");                         
+                        };
+                    },
+                }).sortable({
+                    items: "option:not(.placeholder)",
+                    sort: function() {
+                        // gets added unintentionally by droppable interacting with sortable
+                        // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+                        $( this ).removeClass( "ui-state-default" );
+                    }
+                }); 
+                $("#cc select").droppable({
+                    activeClass: "ui-state-default",
+                    hoverClass: "ui-state-hover",
+                    accept: ":not(.ui-sortable-helper)",
+                    drop: function( event, ui ) {                       
+                        $text=ui.draggable.text();
+                        $val=ui.draggable.find("input").val();
+                        if($("#cc select option[value='"+$val+"']").val()==undefined){
+                            $option=$("<option></option>");                                             
+                            $option.val($val);
+                            $option.text($text).appendTo(this);
+                            $("#cc_count").text("("+$("#cc select option").length+")");                         
+                        };
+                    },
+                }).sortable({
+                    items: "li:not(.placeholder)",
+                    sort: function() {
+                        // gets added unintentionally by droppable interacting with sortable
+                        // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+                        $( this ).removeClass( "ui-state-default" );
+                    }
+                });     
+
+              })
+        //最终确认
+
+        function add_address(name){
+             var type=$("input[name='type']:checked").val();
+             switch(type)
+             {
+                case "dgp":
+                    $dept_grade_id=$("#dept_grade a.active").attr("node");
+                    $dept_grade_name=$("#dept_grade a.active span").text();
+
+                    if($dept_grade_id==undefined){
+                        alert("请选择部门级别");
+                        return false;
+                    }
+                    $position_id=$("#position a.active").attr("node");
+                    $position_name=$("#position a.active span").text();
+ 
+                    if($position_id==undefined){
+                        alert("请选择职位");
+                        return false;
+                    }
+                    $text=$dept_grade_name+"-"+$position_name;
+                    $val="dgp_"+$dept_grade_id+"_"+$position_id;
+                    $option=$("<option></option>");                                             
+                    $option.val($val);
+                    $option.text($text).appendTo("#"+name+" select");
+                    $("#"+name+"_count").text("("+$("#"+name+" select option").length+")");                    
+                break
+                case "dp":
+                    $dept_id=$("#dept a.active").attr("node");
+                    $dept_name=$("#dept a.active span").text();
+
+                    if($dept_id==undefined){
+                        alert("请选择部门");
+                        return false;
+                    }
+                    $position_id=$("#position a.active").attr("node");
+                    $position_name=$("#position a.active span").text();
+ 
+                    if($position_id==undefined){
+                        alert("请选择职位");
+                        return false;
+                    }
+                    $text=$dept_name+"-"+$position_name;
+                    $val="dp_"+$dept_id+"_"+$position_id;
+                    $option=$("<option></option>");                                             
+                    $option.val($val);
+                    $option.text($text).appendTo("#"+name+" select");
+                    $("#"+name+"_count").text("("+$("#"+name+" select option").length+")");                    
+                break
+                case "dept":
+                    $dept_id=$("#dept a.active").attr("node");
+                    $dept_name=$("#dept a.active span").text();
+
+                    if($dept_id==undefined){
+                        alert("请选择部门");
+                        return false;
+                    }
+                    $text=$dept_name;
+                    $val="dept_"+$dept_id;
+                    $option=$("<option></option>");                                             
+                    $option.val($val);
+                    $option.text($text).appendTo("#"+name+" select");
+                    $("#"+name+"_count").text("("+$("#"+name+" select option").length+")");                    
+                break
+
+                case "emp":
+                    $("input:checked[name='addr_id']").each(function(){
+                        $text=$(this).parent().find("a").text();
+                        $val="emp_"+$(this).val();
+                        if($("#"+name+" select option[value='"+$val+"']").val()==undefined){
+                                $option=$("<option></option>");                                             
+                                $option.val($val);
+                                $option.text($text).appendTo("#"+name+" select");
+                                $("#"+name+"_count").text("("+$("#"+name+" select option").length+")");            
+                        };     
+                    })                
+                break
+             }
+
+        }
+    //-->
+    </script>
+<div class="popup">
+    <div class="row-fluid title">
+        <span>选择裁决流程</span>
+    </div>
+    <div class="row-fluid operate" >
+        <div class="left">
+            <label class="checkbox inline">
+                <input class="left" type="radio" id="rb_dgp" name="type" value="dgp" >部门级别-职位</label>
+            <label class="checkbox inline">
+                <input class="left" type="radio" id="rb_dp" name="type" value="dp">部门-职位</label>
+            <label class="checkbox inline">
+                <input class="left" type="radio" id="rb_dept" name="type" value="dept">部门</label>
+            <label class="checkbox inline">
+                <input class="left" type="radio" id="rb_emp" name="type" value="emp">人员</label>
+        </div>
+        <div class="right">
+            <a  onclick="save();" class="btn">确定</a>
+            <a  onclick="myclose();" class="btn">关闭</a>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span5">
+            <div class="row-fluid form-horizontal">
+                <div class="control-group"> <b class="dis dgp">部门级别</b> <b class="dis dp dept emp">部门</b>
+                </div>
+            </div>
+            <div class="row-fluid popup_tree_menu">
+                <div id="dept_grade" style="width:100%;height:190px;" class="dgp dis">{$list_dept_grade}</div>
+                <div id="dept" style="width:100%;height:190px;" class="dp dept dis">{$list_dept}</div>
+                <div id="emp" style="width:100%;height:190px;" class="emp dis">{$list_dept}</div>
+            </div>
+            <div class="row-fluid form-horizontal">
+                <div class="control-group">
+                    <b class="dis dgp dp ">职位</b>
+                    <b class="dis emp">人员</b>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div id="position" style="width:100%;height:190px;" class="dis dgp dp popup_tree_menu">{$list_position}</div>
+                <div class="popup_tree_menu emp dis">
+                    <div id="addr_list" style="height:190px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="span7">
+            <div class="row-fluid form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" ></label>
+                    <div class="controls">
+                        <b>裁决</b>
+                        <span id="rc_count"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" >
+                        <a onclick="add_address('rc');" class="btn"> <i class="icon-double-angle-right"></i>
+                        </a>
+                    </label>
+                    <div class="controls">
+                        <div id="rc" style="width:100%;height:100px;overflow:hidden">
+                            <select size="6" style="height:100%;width:100%;"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" ></label>
+                    <div class="controls">
+                        <b>协商</b>
+                        <span id="cc_count"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" >
+                        <a onclick="add_address('cc');" class="btn"> <i class="icon-double-angle-right"></i>
+                        </a>
+                    </label>
+                    <div class="controls">
+                        <div id="cc" style="width:100%;height:100px;overflow:hidden">
+                            <select size="6" style="height:100%;width:100%;"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" ></label>
+                    <div class="controls">
+                        <b>抄送</b>
+                        <span id="bcc_count"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" >
+                        <a onclick="add_address('bcc');" class="btn">
+                            <i class="icon-double-angle-right"></i>
+                        </a>
+                    </label>
+                    <div class="controls">
+                        <div id="bcc" style="width:100%;height:100px;overflow:hidden">
+                            <select size="6" style="height:100%;width:100%;"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

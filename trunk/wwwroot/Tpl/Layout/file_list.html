@@ -1,0 +1,19 @@
+<div id="uploader" style="position:relative;">
+	<div class="table">
+		<ul id="file_list">
+			<notempty name="file_list">
+				<volist name="file_list" id="file">
+					<li class="tbody" id="{$file.id|f_encode}" add_file="{$file.id|f_encode}" size="{$file.size}" filename="{$file.name}">
+						<div class="loading"></div>
+						<div class="data">
+							<span class="del text-center">
+								<a class="link down" target="_blank" href="{:U('down?attach_id='.f_encode($file['id']))}">下载</a></span>
+							<span class="size text-right" >{$file.size|reunit}</span>
+							<span class="auto autocut" title="{$file.name}">{$file.name}</span>
+						</div>
+					</li>
+				</volist>
+			</notempty>
+		</ul>
+	</div>
+</div>

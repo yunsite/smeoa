@@ -1,0 +1,93 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	function add() {
+		window.open("{:U('add')}", "_self");
+	}
+
+	function btn_search() {
+		$("#form_search").submit();
+	}
+
+	function move_to(val) {
+		var vars = $("#form_data").serialize();
+		sendAjax("{:U('mark')}", 'val=' + val + '&' + vars);
+		$("input[name='flow_type_id[]']:checkbox:checked").each(function() {
+			$(this).parent().next().find("nobr").text(val);
+			$(this).attr("checked", false);
+		})
+	}
+
+	$(document).ready(function() {
+		set_return_url();
+	}); 
+</script>
+<div class="flowtype">
+	<form id="form_search" name="form_search" method='post'>
+		<div class="row-fluid title">
+			<span>流程管理</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+			</div>
+		</div>
+		<!--  功能操作区域  -->
+		<div class="row-fluid operate">
+			<div class="left" >
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						移动到
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+							<foreach name="group_list" item="vo">
+								<li onclick="move_to('{$key}');">
+									<a>{$vo}</a>
+								</li>
+							</foreach>
+					</ul>
+				</div>
+			</div >
+			<div class="right">
+				<a  onclick="add();" class="btn">新建</a>
+			</div>
+		</div>
+	</form>
+	<!-- 功能操作区域结束 -->
+	<form id="form_data" name="form_data" method='post'>
+		<div class="row-fluid table">
+			<ul>
+				<li class="thead"  style="padding-left:30px">
+					<span class="checkbox" >
+						<input type="checkbox" name="chk_select_all" id="chk_select_all" onclick="select_all('flow_type_id[]')">
+					</span>
+					<span style="width:140px" >			
+						<div class="wrap">分组</div>						
+					</span>
+					<span style="width:100px;float:right;text-center:center;"  >状态</span>
+					<span style="width:300px;float:right;text-center:center;"  >文档编码格式</span>
+					<span class="autocut auto">名称</span>
+				</li>
+				<if condition="count($list) eq 0 ">
+					<li class="tbody text-center">
+						<h3>没找到相应的数据</h3>
+					</li>
+				</ul>
+			</div>
+			<else/>
+			<foreach name="list" item="vo">
+				<li class="tbody" style="padding-left:30px">
+				<span  class="checkbox">
+					<input type="checkbox" name="flow_type_id[]" value="{$vo.id}">
+				</span>
+					<span style="width:140px" >{$vo.group}&nbsp;</span>
+					<span style="width:100px;float:right;text-align:center;"  >{$vo.status|status}&nbsp;</span>
+					<span style="width:300px;float:right;"  >{$vo.doc_no_format }&nbsp;</span>
+					<span class="autocut auto"><a href="{:U('edit?id='.$vo['id'])}">{$vo.name}&nbsp;</a></span>	
+				</li>
+	</foreach>
+	</ul>
+	</if>
+</div>
+	</form>
+</div>

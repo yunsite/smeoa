@@ -1,0 +1,126 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<link type="text/css" href="__PUBLIC__/css/jquery-ui.css" rel="stylesheet"/>
+<script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		set_return_url();
+		$(function(){
+			$("#start_date").datepicker({
+			});
+			$("#end_date").datepicker({
+			});
+			$("#slider-range-important").slider({
+				range : "min",
+				min : 1,
+				max : 5,
+				value : 3,
+				slide : function(event, ui) {
+					$("#important").val(ui.value);
+					$("div.slider_box div.ui-widget-header").css("background-color", schedule_bg(ui.value, $("#urgency").val()));
+				}
+			});
+
+			$("#important").val($("#slider-range-important").slider("value"));
+			$("#slider-range-urgency").slider({
+				range : "min",
+				min : 1,
+				max : 5,
+				value : 3,
+				slide : function(event, ui) {
+					$("#urgency").val(ui.value);
+					$("div.slider_box div.ui-widget-header").css("background-color", schedule_bg($("#important").val(), ui.value));
+				}
+			});
+			$("#urgency").val($("#slider-range-urgency").slider("value"));
+			$("div.slider_box div.ui-widget-header").css("background-color", schedule_bg(3, 3));
+		})
+	});
+	function month_view() {
+		window.open("__URL__", "_self");
+	}
+</script>
+<div class="schedule">
+	<form id="form_search" method='post' >
+		<div class="row-fluid title">
+			<span>日程搜索</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword" id="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+				<a class="btn" onclick="open_search();"> <i class="icon-angle-down"></i>
+				</a>
+			</div>
+		</div>
+		<div class="row-fluid adv_search">
+			<div class="row-fluid adv_search_head">
+				<h4 class="left">高级搜索</h4>
+				<div class="right text-right">
+					<a  class="btn" onclick="adv_search();">搜索</a>
+					<a  class="btn" onclick="close_search();">关闭</a>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="name">主题 ：</label>
+					<div class="controls">
+						<input type="text" id="name" name="name"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="location">地点：</label>
+					<div class="controls">
+						<input type="text" id="location" name="location" ></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="content">内容：</label>
+					<div class="controls">
+						<input type="text" id="content" name="content"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="start_date">时间：</label>
+					<div class="controls">
+						<input  type="text" name="start_date" id="start_date" class="input-date" value="{$start_date}"  readonly="readonly">
+						&nbsp;~&nbsp;
+						<input type="text" name="end_date" id="end_date" value="{$end_date}" readonly="readonly" class="input-date" ></div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<form method="post" action="" id="form_data">
+		<div class="table">
+			<ul>
+				<li class="thead">
+					<span class="col4 right">结束时间</span>
+					<span class="col3 right">开始时间</span>
+					<span class="col2 right">地点</span>
+					<div class="auto autocut">标题</div>
+				</li>
+			<if condition="count($list) eq 0 ">
+				<li class="tbody text-center">
+					<h3>没找到相应的数据</h3>
+				</li>
+			</ul>
+		</div>
+	</form>	
+			<else/>
+				<foreach name="list" item="vo">
+					<li class="tbody">
+						<span class="col4 right">{$vo.end_date}</span>
+						<span class="col3 right">{$vo.start_date}</span>
+						<span class="col2 right">{$vo.location}&nbsp;</span>
+						<div class="auto autocut">
+							<a href="{:U('read2?id='.$vo['id'])}">
+								{$vo.name}
+								<eq name="vo.name|strlen" value="0">无标题</eq>
+							</a>
+						</div>
+					</li>
+				</foreach>
+			</ul>
+		</div>
+	</form>
+		<div class="page">{$page}</div>
+	</if>
+</div>

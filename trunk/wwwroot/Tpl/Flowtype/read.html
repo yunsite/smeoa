@@ -1,0 +1,56 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	function edit() {
+		window.location = "{:U('edit?id='.$vo['id'])}";
+	}
+</script>
+<input type="hidden" id="ajax" name="ajax" value="1">
+<div class="contact">
+	<div class="row-fluid title"><span>详细信息 : {$vo.name}</span></div>
+	<div class="operate">
+		<div class="left">
+			<a onclick="go_return_url();">返回</a>
+		</div>
+		<div class="right">
+			<a onclick="edit();">修改</a>
+		</div>
+	</div>
+	<table style="width:100%;">
+		<tr>
+			<th style="width:17%" > 姓名： </th>
+			<td style="width:33%"> {$vo.name} </td>
+			<th style="width:17%" > 公司： </th>
+			<td  style="width:33%"> {$vo.company} </td>
+		</tr>
+		<tr>
+			<th > 部门： </th>
+			<td > {$vo.dept} </td>
+			<th> 职位： </th>
+			<td > {$vo.position} </td>
+		</tr>
+		<tr>
+			<th > 办公电话： </th>
+			<td > {$vo.office_tel} </td>
+			<th > 手机： </th>
+			<td > {$vo.mobile_tel} </td>
+		</tr>
+		<tr>
+			<th > 邮件： </th>
+			<td > {$vo.email} </td>
+			<th> MSN/QQ： </th>
+			<td > {$vo.im} </td>
+		</tr>
+		<tr>
+			<th> 网址： </th>
+			<td> {$vo.website} </td>
+			<th> 分组 </th>
+			<td> {$vo.group} </td>
+		</tr>
+		<tr>
+			<th > 备  注： </th>
+			<td  colspan="3">			<textarea name="remark" rows="5" style="width:100%" readonly> {$vo.remark}
+							</textarea></td>
+		</tr>
+	</table>
+</div>
+</div>

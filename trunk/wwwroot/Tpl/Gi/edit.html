@@ -1,0 +1,171 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.js"></script>
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.setting.js"></script>
+<script type="text/javascript">
+	function popup_contact(){
+		winopen("{:U("contact/popup_contact")}",800,574);
+	}
+	function send(flag) {
+		$("#to").val("");
+		$("#recever .address_list span").each(function() {
+			$("#to").val($("#to").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";")
+		})
+		$("#cc").val("");
+		$("#carbon_copy .address_list span").each(function() {
+			$("#cc").val($("#cc").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";")
+		})
+
+		$("#bcc").val("");
+		$("#blind_carbon_copy .address_list span").each(function() {
+			$("#cc").val($("#cc").val() + $(this).find("b").text() + '|' + $(this).attr("email") + ";")
+		})
+		if ($("#to").val().indexOf("@") < 1) {
+			alert("请选择收件人");
+			$("#recever letter").focus();
+			return
+		}
+		if ($("#mail_title").val().length < 2) {
+			alert('请输入标题');
+			return
+		}
+		editor.sync();
+		if(check_form("form_send")){
+			if (flag) {
+				sendForm("form_send", "{:U('send')}");
+			} else {
+				sendForm("form_send", "{:U('set_darft')}");
+			}
+		}
+	}
+
+	$(document).ready(function() {
+		editor_init();
+		uploader_init();
+
+		$("td.recent li").click(function() {
+			var html = '<span title="' + $(this).children("span").attr("title") + '"  onmousedown="return false">' + $(this).text() + ';</span>';
+			$("#recever div.address_list").append(html);
+		})
+	})
+	function switch_bcc() {
+		if ($("#bcc").attr("class") == "") {
+			$("#bcc").attr("class", "dis");
+			$("#switch_bcc").text("\u25BC");
+		} else {
+			$("#bcc").attr("class", "");
+			$("#switch_bcc").text("\u25B2");
+		}
+	}
+
+	function switch_recent(obj) {
+		if ($(obj).children("input").attr("class") == "nextfd") {
+			$("td.recent").show();
+			$("th.recent").show();
+			$(obj).children("input").attr("class", "prefd");
+		} else {
+			$("td.recent").hide();
+			$("th.recent").hide();
+			$(obj).children("input").attr("class", "nextfd");
+		}
+	}
+</script>
+<div class="mail">
+	<div class="row-fluid title">
+		<span>写邮件</span>
+	</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a class="btn" onclick="send(true);">发送</a>
+			<a class="btn" onclick="send(false);" >临时保管</a>
+		</div>
+	</div>	
+	<form method='post' id="form_send" name="form_send" enctype="multipart/form-data">
+		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="opmode" name="opmode" value="edit">
+		<input type="hidden" id="id" name="id" value="{$vo.id}">
+		<input type="hidden" id="add_file" name="add_file">
+		<input type="hidden" id="to" name="to"/>
+		<input type="hidden" id="cc" name="cc"/>
+		<div class="form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<a class="control-label" onclick="popup_contact()">收件人*：</a>
+					<div class="controls">
+						<div id="recever" class="inputbox">
+							<div class="wrap" >
+								<span class="address_list">
+									{$vo.to|show_contact="edit"}
+								</span>
+								<span class="text" >
+									<input class="letter" type="text"  ></span>
+							</div>
+							<div class="search dropdown ">
+								<ul class="dropdown-menu"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="name">
+						抄送：
+						<a onclick="switch_bcc();" id="switch_bcc" >&#9660;</a>
+					</label>
+					<div class="controls">
+						<div id="carbon_copy" class="inputbox">
+							<div class="wrap" >
+								<span class="address_list">
+									{$vo.cc|show_contact}
+								</span>
+								<span class="text" >
+									<input class="letter" type="text"  ></span>
+							</div>
+							<div class="search dropdown ">
+								<ul class="dropdown-menu"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="name">密送：</label>
+					<div class="controls">
+						<div id="carbon_copy" class="inputbox">
+							<div class="wrap" >
+								<span class="address_list">
+									{$vo.bcc|show_contact}
+								</span>
+								<span class="text" >
+									<input class="letter" type="text"></span>
+							</div>
+							<div class="search dropdown ">
+								<ul class="dropdown-menu"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="name">主题：</label>
+					<div class="controls">
+						<input type="text" name="title" id="mail_title" class="span12" check="require" msg="请输入主题"></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal hidden-phone">
+				<div class="control-group span12">
+					<label class="control-label" for="name">附件：</label>
+					<div class="controls">
+						<include file="Layout:uploader" />
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<textarea id="content" name="content" class="span12">{$vo.content}</textarea>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

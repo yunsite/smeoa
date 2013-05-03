@@ -1,0 +1,33 @@
+<script type="text/javascript" src="__PUBLIC__/js/plupload/plupload.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/plupload/plupload.flash.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/plupload/plupload.html5.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/plupload/plupload.setting.js"></script>
+<div id="uploader">
+	<a id="pickfiles" href="javascript:;" class="btn">选择文件</a>
+	<a id="uploadfiles" href="javascript:;"  class="btn">开始上传</a>
+	<div class="table">
+		<ul id="file_list">
+			<li class="thead">
+				<span class="del">删除</span>
+				<span class="size">大小</span>
+				<span class="auto autocut">文件名</span>
+			</li>
+			<notempty name="file_list">
+				<volist name="file_list" id="file">
+					<li class="tbody" id="{$file.id}" add_file="{$file.id}" size="{$file.size}" filename="{$file.name}">
+						<div class="loading"></div>
+						<div class="data">
+							<span class="del text-center">
+								<a class="link del">删除</a>
+							</span>
+							<span class="size" >{$file.size|reunit}</span>
+							<span class="auto autocut" title="{$file.name}">
+								<a target="_blank" href="{:U('down?attach_id='.f_encode($file['id']))}">{$file.name}</a>
+							</span>
+						</div>
+					</li>
+				</volist>
+			</notempty>
+		</ul>
+	</div>
+</div>

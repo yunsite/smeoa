@@ -1,0 +1,169 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	function save() {
+		if ($(":checkbox:checked").length == 0) {
+			alert("请至少选择一项");
+			$("#sender_check").focus();
+			return;
+		}
+
+		if (($("#sender_check").attr("checked") == "checked") && ($("#sender_key").val() == "")) {
+			alert("内容不能为空");
+			$("#sender_key").focus();
+			return;
+		}
+
+		if (($("#domain_check").attr("checked") == "checked") && ($("#domain_key").val() == "")) {
+			alert("内容不能为空");
+			$("#domain_key").focus();
+			return;
+		}
+
+		if (($("#recever_check").attr("checked") == "checked") && ($("#recever_key").val() == "")) {
+			alert("内容不能为空");
+			$("#recever_key").focus();
+			return;
+		}
+
+		if (($("#title_check").attr("checked") == "checked") && ($("#title_key").val() == "")) {
+			alert("内容不能为空");
+			$("#title_key").focus();
+			return;
+		}
+		if ($("#to").val() == "") {
+			alert("请选择文件夹");
+			$("#to").focus();
+			return;
+		}
+		sendForm("form_data", "{:U('save')}");
+	}
+
+
+	$(document).ready(function() {
+
+		$("div.combo input").focus(function() {
+			$(this).parent().find("label").hide();
+		})
+		$("div.combo input").blur(function() {
+			if ($(this).val().length == 0) {
+				$(this).parent().find("label").show();
+			}
+		})
+		set_val("sender_check", "{$vo.sender_check}");
+		set_val("sender_option", "{$vo.sender_option}");
+		set_val("sender_key", "{$vo.sender_key}");
+
+		set_val("recever_check", "{$vo.recever_check}");
+		set_val("recever_option", "{$vo.recever_option}");
+		set_val("recever_key", "{$vo.recever_key}");
+
+		set_val("domain_check", "{$vo.domain_check}");
+		set_val("domain_option", "{$vo.domain_option}");
+		set_val("domain_key", "{$vo.domain_key}");
+
+		set_val("title_check", "{$vo.title_check}");
+		set_val("title_option", "{$vo.title_option}");
+		set_val("title_key", "{$vo.title_key}");
+
+		set_val("to", "{$vo.to}");
+		$("div.combo input").each(function() {
+			if ($(this).val().length > 1) {
+				$(this).parent().find("label").hide();
+			}
+		})
+	}); 
+</script>
+<div class="mail_org">
+	<div class="row-fluid title">
+		<span>修改邮件分类</span>
+	</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a class="btn" onclick="go_return_url();">返回</a>
+		</div>
+		<div class="right">
+			<a class="btn" onclick="save();">保存</a>
+		</div>
+	</div>
+	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data">
+		<input type="hidden" name="opmode" id="opmode" value="edit">
+		<input type="hidden" name="id" id="id" value="{$vo.id}">
+		<div class="form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="status">状态：</label>
+					<div class="controls">
+						<select class="span2"   name="status" id="status">
+							<option value="1">启用</option>
+							<option value="0">禁用</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="name">邮件到达时：</label>
+					<div class="controls">
+						<label class="checkbox">
+							<input type="checkbox" name="sender_check" id="sender_check" value="1">如果发件人
+						</label>
+						<select class="input-small" type="select-one" id="sender_option" name="sender_option"  >
+							<option selected="selected" value="1">包含</option>
+							<option value="0">不包含</option>
+						</select>
+						<input type="text"  name="sender_key"  id="sender_key"><span class="help-inline">例如：abc@abc.com</span>		
+					</div>
+					<div class="controls">
+						<label class="checkbox">
+							<input type="checkbox" name="domain_check" id="domain_check" value="1">如果发件域
+						</label>
+						<select class="input-small" type="select-one" id="domain_option" name="domain_option"  >
+							<option selected="selected" value="1">包含</option>
+							<option value="0">不包含</option>
+						</select>
+						<input type="text"  name="domain_key"  id="domain_key"><span class="help-inline">例如：@abc.com</span>		
+					</div>
+					<div class="controls">
+						<label class="checkbox">
+							<input type="checkbox" name="recever_check" id="recever_check" value="1">如果收件人
+						</label>
+						<select class="input-small" type="select-one" id="recever_option" name="recever_option"  >
+							<option selected="selected" value="1">包含</option>
+							<option value="0">不包含</option>
+						</select>
+						<input type="text"  name="recever_key"  id="recever_key"><span class="help-inline">例如：abc@abc.com</span>		
+					</div>
+					<div class="controls">
+						<label class="checkbox">
+							<input type="checkbox" name="title_check" id="title_check" value="1">如果标题中
+						</label>
+						<select class="input-small" type="select-one" id="title_option" name="title_option"  >
+							<option selected="selected" value="1">包含</option>
+							<option value="0">不包含</option>
+						</select>
+						<input type="text"  name="title_key"  id="title_key"><span class="help-inline">例如：标题</span>		
+					</div>		
+				</div>																
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="status">满足以上条件时</label>
+					<div class="controls">
+						<select style="width:130px;" type="select-one"  id="to" name="to" >
+							<option>移动到...</option>
+							<volist name="mail_folder" id="vo" >
+								<option value="{$vo.id}">
+									<php>echo str_repeat("&nbsp;",$vo['level'])</php>
+									&#62;{$vo.name}
+								</option>
+							</volist>
+						</select>
+					</div>
+				</div>
+			</div>
+<div class="action">
+<input class="btn default" type="button" value="保存" onclick="save();">
+<input  class="btn" type="button" value="取消" onclick="go_return_url();"></div>
+</form>
+</div>
