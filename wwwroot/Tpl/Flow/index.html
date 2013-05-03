@@ -1,0 +1,46 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".title .dropdown-menu li").click(function(){
+			$(".list span").hide();
+			gid = $(this).attr("gid");
+			$(".title nobr").html($(this).text());
+			count=0;
+			$(".list span div.group").each(function(){
+				if ($(this).text().indexOf(gid) >= 0) {
+					count++;
+					$(this).parents("span").show();					
+				};
+			})
+		})
+	})
+</script>
+<div class="flow">
+	<div class="row-fluid title">
+		<div class="btn-group">
+			<span class="btn dropdown-toggle no-border" data-toggle="dropdown" href="#">
+				<nobr>全部</nobr> <i class="icon-caret-down"></i>
+			</span>
+			<ul class="dropdown-menu title">
+				<li gid="">
+					<a>全部</a>
+				</li>
+				<foreach name="group_list" item="vo">
+					<li gid="{$key}">
+						<a>{$vo}</a>
+					</li>
+				</foreach>
+			</ul>
+		</div>
+	</div>
+	<div class="list">
+		<div class="row-fluid">
+			<foreach name="list" item="vo">
+				<span class="span3">
+					<div class="group" style="display:none">{$vo.group}</div>
+					<a class="box" href="{:U('add?type='.$vo['id'])}">{$vo.name}</a>
+				</span>
+			</foreach>
+		</div>
+	</div>
+</div>

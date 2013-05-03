@@ -1,0 +1,121 @@
+<tagLib name="html" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+		<title>{$title}</title>
+		<link type="text/css" href="__PUBLIC__/css/global.css" rel="stylesheet"/>
+		<link type="text/css" href="__PUBLIC__/css/main.css" rel="stylesheet"/>
+		<link type="text/css" href="__PUBLIC__/css/mail.css" rel="stylesheet"/>
+	</head>
+	<style type="text/css">
+		#mail_operater {
+			width: 100%;
+			height: 32px;
+			background: #82c5fb;
+			line-height: 32px;
+		}
+	</style>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js" ></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("input[name='mail_id']").bind('propertychange', function() {
+				$("#id").val("");
+				$("input[name='mail_id']:checkbox:checked").each(function() {
+					$("#id").val($("#id").val() + $(this).val() + ",");
+				})
+			})
+			$("#mark").change(function() {
+				var val = ($(this).val());
+				if (val == "readed") {
+					sendAjax("{:U('mark')}", 'field=read&val=1&id=' + $("#id").val());
+					$("input[name='mail_id']:checked").each(function() {
+						$(this).parent().parent().find("div.unread").attr("class", "readed");
+						$(this).parent().parent().attr("class", "normal");
+					})
+				} else {
+					sendAjax("{:U('mark')}", 'ajax=1&field=read&val=0&url=__URL__&id=' + $("#id").val());
+					//alert($("input[name='mail_id']:checked").length)
+					$("input[name='mail_id']:checked").each(function() {
+						$(this).parent().parent().find("div.readed").attr("class", "unread");
+						$(this).parent().parent().attr("class", "bold");
+					})
+				}
+				$('#mark').find('option:first').attr('selected', 'selected').parent('select');
+			})
+			$("#mail_folder").change(function() {
+				var val = ($(this).val());
+				sendAjax("{:U('mark')}", 'ajax=1&field=folder&val=' + val + '&url=__URL__&id=' + $("#id").val());
+				$('#mark').find('option:first').attr('selected', 'selected').parent('select');
+			})
+		});
+	</script>
+	<body>
+		<input type="hidden" name="id" id="id">
+		<div class="cot">
+			<div class="row-fluid title"><span>邮件首页</span></div>
+			<div id="mail_operater">
+				<div class="right">
+					<span style="line-height: 23px;"class="fright ">{$page}</span>
+				</div>
+				<div class="left">
+					<input type="button" class="wd2 btn" value="删除" onclick="del(1)">
+					<input type="button" class="wd4 btn" value="彻底删除" onclick="del(2)">
+					<input type="button" class="wd2 btn" value="转发" onclick="del(1)">
+					<input type="button" class="wd2 btn" value="举报" onclick="">
+					<input type="button" class="wd4 btn" value="全部标为已读" onclick="">
+					<select id="mark" name="mark" class="fleft">
+						<option >标记为...</option>
+						<option value="readed" >已读</option>
+						<option value="unread">未读</option>
+					</select>
+					<html:select id="mail_folder" name="mail_folder" style="fleft" options="{mail_folder}" value="1" selected="" first="移动到..."/>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<table style="width:100%" class="list" >
+				<tr>
+					<th style="width:50px">
+					<input type="checkbox" id="checkedAll" value="all"/>
+					</th>
+					<th style="width:50px"><div class="ico_mailtitle"></div></th>
+					<th style="width:105px"> 发件人 </th>
+					<th> 主 题 </th>
+					<th  style="width:84px"> 时间 </th>
+				</tr>
+				<if condition="count($list) eq 0 ">
+					<tr>
+						<td colspan="10" style="text-align:center" ><h3>没找到相应的数据</h3></td>
+					</tr>
+			</table>
+			<else/>
+			<foreach name="list" item="vo">
+				<tr class="<eq name="vo.read" value="1">normal</eq><eq name="vo.read" value="0">bold</eq>">
+					<td style="text-align: center">
+					<input name="mail_id" type="checkbox" value="{$vo.id}"/>
+					</td>
+					<td><div class="<eq name="vo.read" value="1">readed</eq>
+					<eq name="vo.read" value="0">unread</eq>"></div><div class="<gt name="vo.add_file|strlen" value="3">attach</gt>"></div></td>
+					<td >
+					<nobr>
+						{$vo.from|show_contact}
+					</nobr></td>
+					<td><a href="{:U('read?id='.$vo['id'])}">{$vo.title}<span class="sort_content">
+						<eq name="vo.title|strlen" value="0">
+							无标题
+						</eq></span></a></td>
+					<td > {$vo.create_time|toDate='Y-m-d'} </td>
+				</tr>
+			</foreach>
+			</table>
+			<div class="page">
+				{$page}
+			</div>
+			</if>
+		</div>
+		<div id="ajax_ui"></div>
+	</body>
+</html>

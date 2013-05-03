@@ -1,0 +1,167 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<link type="text/css" href="__PUBLIC__/css/jquery-ui.css" rel="stylesheet"/>
+<script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+	function add() {
+		window.open("{:U('add?type=common&id='.$folder_id)}", "_self");
+	}
+
+	function move_to(val) {
+		sendAjax("{:U('move_folder')}", 'folder=' + val + '&id=' + $("#flow_id[]").val());
+		$("input[name='flow_id[]']:checkbox:checked").each(function() {
+			$(this).parent().parent().parent().hide();
+		})
+		close_move_to();
+	}
+
+	function close_move_to() {
+		$("div.move_to").slideUp(100);
+	}
+
+	function open_move_to() {
+		$("div.move_to").show();
+	}
+
+	function del() {
+		if(confirm('确定要删除吗?')){
+			sendAjax("{:U('del')}", 'id=' + $("#flow_id[]").val(), function(data) {
+				if (data.status) {
+					alert(data.info);
+					$("input[name='flow_id[]']:checkbox:checked").each(function() {
+						$(this).parent().parent().hide();
+					})
+				}
+			});
+		}
+	}
+
+
+	$(document).ready(function() {
+		set_return_url();
+		$("#start_date").datepicker();
+		$("#end_date").datepicker();
+
+		$("div.combo input").focus(function() {
+			$(this).parent().find("label").hide();
+		})
+		$("div.combo input").blur(function() {
+			if ($(this).val().length == 0) {
+				$(this).parent().find("label").show();
+			}
+		})
+		$("input[name='flow_id[]']").click(function() {
+			$("#flow_id[]").val("");
+			$("input[name='flow_id[]']:checkbox:checked").each(function() {
+				$("#flow_id[]").val($("#flow_id[]").val() + $(this).val() + ",");
+			})
+		})
+		$("#doc_folder").change(function() {
+			var val = ($(this).val());
+			sendAjax("{:U('move_folder')}", 'folder=' + val + '&id=' + $("#flow_id[]").val());
+			$("input[name='flow_id[]']:checkbox:checked").each(function() {
+				$(this).parent().parent().hide();
+			})
+			$('#doc_folder').find('option:first').attr('selected', 'selected').parent('select');
+		})
+	}); 
+</script>
+<div class="flow">
+	<form id="form_search" method='post' >
+		<input type="hidden" name="fid" id="fid" value="{$folder_id}">
+		<div class="row-fluid title">
+			<span>{$folder_name}</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+				<a class="btn" onclick="open_search();"> <i class="icon-angle-down"></i>
+				</a>
+			</div>
+		</div>
+		<div class="row-fluid adv_search">
+			<div class="row-fluid adv_search_head">
+				<h4 class="left">高级搜索</h4>
+				<div class="right text-right">
+					<a  class="btn" onclick="adv_search();">搜索</a>
+					<a  class="btn" onclick="close_search();">关闭</a>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="title">标题：</label>
+					<div class="controls">
+						<input type="text" id="title" name="title"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="content">内容：</label>
+					<div class="controls">
+						<input type="text" id="content" name="content" ></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="user_name">登录人：</label>
+					<div class="controls">
+						<input type="text" id="user_name" name="user_name"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="start_date">登录时间：</label>
+					<div class="controls">
+						<input  type="text" name="start_date" id="start_date" class="input-date" value="{$search['start_date']}"  readonly="readonly">
+						&nbsp;~&nbsp;
+						<input type="text" name="end_date" id="end_date" value="{$search['end_date']}" readonly="readonly" class="input-date" ></div>
+				</div>
+			</div>
+			</div>
+	</form>
+	<div class="table">
+		<ul>
+			<li class="thead" style="padding-left:30px">
+				<span class="checkbox">
+					<input  type="checkbox" id="chk_select_all" onclick="select_all('flow_id[]')"/>
+				</span>
+				<span class="col_2 ">编号</span>
+				<span class="col_3">类型</span>
+				<span class="col_5 right">状态</span>
+				<span  class="col_6 right"> 登录人</span>
+				<span  class="col_7 right">登录时间</span>
+				<div class="autocut auto">
+					标题
+				</div>
+			</li>
+			<if condition="count($list) eq 0 ">
+				<li class="tbody  text-center">
+					<h3>没找到相应的数据</h3>
+				</li>
+		</ul>
+	</div>
+	<else/>
+	<foreach name="list" item="vo">
+		<li class="tbody" style="padding-left:30px;">
+			<span class="checkbox">
+				<input name="flow_id[]" type="checkbox" value="{$vo.id}"/>
+			</span>
+			<span class="col_2 text-center">{$vo.doc_no}</span>
+			<span class="col_3  text-center"> {$vo.type_name} </span>
+			<span class="col_5 right  text-center">{$vo.step|step}</span>
+			<span class="col_6 right  text-center">{$vo.user_name}</span>
+			<span class="col_7 right  text-center"> {$vo.create_time|toDate='Y-m-d'} </span>
+			<span class="autocut auto">
+				<in name="folder" value="darft">
+					<a href="{:U('edit?id='.$vo['id'])}">{$vo.title}
+					<else/>
+					<a href="{:U('read?id='.$vo['id'])}">{$vo.title}
+				</in>
+				<eq name="vo.title|strlen" value="0">
+					无标题
+				</eq></a> </span>
+		</li>
+	</foreach>
+	</ul>
+</div>
+<div class="page">
+	{$page}
+</div>
+</if>
+</div>

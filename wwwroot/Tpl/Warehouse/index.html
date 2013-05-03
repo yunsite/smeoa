@@ -1,0 +1,128 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	function add() {
+		$("#form_data input").each(function() {
+			$(this).val("");
+		});
+		$("#form_data :text").each(function() {
+			$(this).val("");
+		});
+		$("#opmode").val("add");
+	}
+
+	function btn_search() {
+		sendForm("form_search", "__SELF__");
+		$("#form_search").submit();
+	}
+
+	function key_search() {
+		if (event.keyCode == 13) {
+			sendForm("form_search", "__SELF__");
+			return false;
+		}
+	}
+
+	function save() {
+		if(check_form("form_data")){
+			sendForm("form_data", "{:U('save')}","__URL__");
+		}
+	}
+
+	function showdata(result) {
+		for (var s in result.data) {
+			if (($("#" + s).attr("type")) === "select-one") {
+				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
+			} else {
+				$("#" + s).val(result.data[s]);
+			}
+		}
+		$("#opmode").val("edit");
+	}
+
+
+	$(document).ready(function() {
+		$(".sub_left_menu  tr").click(function() {
+			$(".sub_left_menu  tr.active").removeClass("active");
+			$(this).attr("class","active");
+			sendAjax("{:U('ajaxRead')}", "id=" + $(this).attr("id"), function(data) {
+				showdata(data);
+			});
+			return false;
+		})
+	}); 
+</script>
+<div class="admin" >
+	<form method="post" action="" id="form_search" name="form_search">
+		<div class="row-fluid title">
+			<span>仓库</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+			</div>
+		</div>
+	</form>
+	<div class="row-fluid operate" >
+		<div class="right">
+			<a onclick="add()" class="btn">新增</a>
+			<a onclick="save()"  class="btn">保存</a>
+		</div>
+	</div>
+</form>
+<!-- 功能操作区域结束 -->
+<!-- 列表显示区域  -->
+<div class="row-fluid">
+	<div class="span4 sub_left_menu ">
+		<table class="table table-bordered">
+			<tr>
+				<th>编号</th>
+				<th>名称</th>
+				<th>状态</th>
+			</tr>
+			<volist name="list" id="data">
+				<tr id="{$data.id}">
+					<td>{$data.code}</td>
+					<td>{$data.name}</td>
+					<td>{$data.status|status}</td>
+				</tr>
+			</volist>
+		</table>
+	</div>
+	<div class="span8 last sub_content">
+		<form id="form_data" name="form_data"method="post" action="">
+			<input type="hidden" name="id" id="id">
+			<input type="hidden" name="ajax" id="ajax" value="0">
+			<input type="hidden" name="opmode" id="opmode" value="">
+			<div id="edit" class="" >
+				<table  class="table table-bordered">
+					<tr>
+						<th>
+							<nobr>编号</nobr>
+						</th>
+						<td>
+							<input type="text" id="code" name="code" check="require" msg="请输入编号"></td>
+					</tr>
+					<tr>
+						<th>名称</th>
+						<td>
+							<input type="text" id="name" name="name"  check="require" msg="请输入名称"></td>
+					</tr>
+					<tr>
+						<th>排序</th>
+						<td>
+							<input type="text" id="sort" name="sort"></td>
+					</tr>
+					<th>状态</th>
+					<td>
+						<select class=""  name="status" id="status">
+							<option  value="1">启用</option>
+							<option value="0">禁用</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+</div>

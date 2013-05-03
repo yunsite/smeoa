@@ -1,0 +1,245 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<link type="text/css" href="__PUBLIC__/css/jquery-ui.css" rel="stylesheet"/>
+<script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+	function mark(action) {
+		var vars = $("#form_data").serialize();
+		switch (action) {
+			case "readed":
+				sendAjax("{:U('mark?action=readed')}", vars, function(data) {
+					if (data.status) {
+						$("input[name='mail_id[]']:checked").each(function() {
+							$(this).parents("li").removeClass("bold");
+							$(this).parents("li").addClass("normal");
+							$(this).attr("checked", false);
+						})
+					}
+				});
+
+				break;
+			case "unread":
+				sendAjax("{:U('mark?action=unread')}", vars, function(data) {
+					if (data.status) {
+						$("input[name='mail_id[]']:checked").each(function() {
+							$(this).parents("li").removeClass("normal");
+							$(this).parents("li").addClass("bold");
+							$(this).attr("checked", false);
+						})						
+					}
+				});
+
+				break;
+			case "del":
+				sendAjax("{:U('mark?action-del')}", vars, function(data) {
+					if (data.status) {
+						alert(data.info);
+						$("input[name='mail_id[]']:checkbox:checked").each(function() {
+							$(this).parents("li").remove();
+						})
+					}
+				});
+				break;
+			case "del_forever":
+				if (confirm('确定要删除吗?')) {
+					sendAjax("{:U('mark?action=del_forever')}", vars, function(data) {
+						if (data.status) {
+							alert(data.info);
+							$("input[name='mail_id[]']:checkbox:checked").each(function() {
+								$(this).parents("li").remove();
+							})
+						}
+					});
+				}
+				break;
+			case "spam":
+				sendAjax("{:U('mark?action=spam')}", vars, function(data) {
+					if (data.status) {
+						alert(data.info);
+						$("input[name='mail_id[]']:checkbox:checked").each(function() {
+							$(this).parents("li").remove();
+						})
+					}
+				});
+				break;
+			default:
+		}
+		$("#select_all").attr("checked", false);
+	}
+
+	function forword() {
+		if ($("input[name='mail_id[]']:checkbox:checked").length == 1) {
+			window.open("http://localhost/mail/reply/id/" + $("input[name='mail_id[]']:checkbox:checked:first").val() + "/type/forward", "main");
+		} else {
+			alert("请选择一封要转发的邮件");
+		};
+	}
+
+	function move_to(val) {
+		var vars = $("#form_data").serialize();
+		sendAjax("{:U('mark?action=move_folder')}", 'val=' + val + '&' + vars);
+		$("input[name='mail_id[]']:checkbox:checked").each(function() {
+			$(this).parents("li").hide();
+		})
+	}
+
+	$(document).ready(function() {
+		$("#move_to li").click(function() {
+			move_to($(this).attr("id"));
+		})
+		set_return_url();
+		$("#start_date").datepicker();
+		$("#end_date").datepicker(); 
+	<notempty name = "receve" > sendAjax("{:U('receve')}"); </notempty>
+	});
+</script>
+<div class="mail">
+	<form id="form_search" method='post' >
+		<div class="row-fluid title">
+			<span>{$folder_name}</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword" id="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+				<a class="btn" onclick="open_search();"> <i class="icon-angle-down"></i>
+				</a>
+			</div>
+		</div>
+		<div class="row-fluid adv_search">
+			<div class="row-fluid adv_search_head">
+				<h4 class="left">高级搜索</h4>
+				<div class="right text-right">
+					<a  class="btn" onclick="adv_search();">搜索</a>
+					<a  class="btn" onclick="close_search();">关闭</a>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="title">标题：</label>
+					<div class="controls">
+						<input type="text" id="title" name="title"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="content">内容：</label>
+					<div class="controls">
+						<input type="text" id="content" name="content" ></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="from">发件人：</label>
+					<div class="controls">
+						<input type="text" id="from" name="from"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="start_date">登录时间：</label>
+					<div class="controls">
+						<input  type="text" name="start_date" id="start_date" class="input-date" readonly="readonly">
+						&nbsp;~&nbsp;
+						<input type="text" name="end_date" id="end_date" readonly="readonly" class="input-date" ></div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a onclick="mark('del');" class="btn">删除</a>
+			<a onclick="mark('del_forever');" class="btn">彻底删除</a>
+			<a onclick="forword();" class="btn">转发</a>
+			<a onclick="mark('spam');" class="btn">举报</a>
+			<div class="btn-group">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					标记为
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li onclick="mark('readed');">
+						<a>已读</a>
+					</li>
+					<li onclick="mark('unread');">
+						<a>未读</a>
+					</li>
+				</ul>
+			</div>
+			<div class="btn-group" id="move_to">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					转移到
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">{$folder_list}</ul>
+			</div>
+		</div>
+	</div>
+	<form method="post" action="" name="form_data" id="form_data">
+		<div class="table">
+			<ul>
+				<li class="thead" style="padding-left:30px">
+					<span style="width:140px" class="checkbox">
+						<input type="checkbox" id="chk_select_all" value="all" onclick="select_all('mail_id[]')"/>
+						<div class="wrap autocut">
+						<in name="folder" value="darftbox,outbox">
+							收件人
+							<else/>
+							发件人
+						</in>
+						</div>
+					</span>
+					<span style="width:100px;float:right;text-center:center;"  >时间</span>
+					<span style="width:20px;float:right;" class="ico_mailtitle"></span>
+					<span class="autocut auto">主题</span>
+				</li>
+				<if condition="count($list) eq 0 ">
+					<li class="tbody text-center">
+						<h3>没找到相应的数据</h3>
+					</li>
+				</ul>
+			</div>
+			<else/>
+			<foreach name="list" item="vo">
+				<li class="tbody <eq name='vo.read' value='1'>normal</eq><eq name='vo.read' value='0'>bold</eq>" style="padding-left:30px">
+				<span  style="width:140px;" class="autocut checkbox" >
+					<input name="mail_id[]" type="checkbox" value="{$vo.id}"/>
+					<div class="wrap">
+						<in name="folder" value="darftbox,outbox">
+							{$vo.to|show_contact}
+							<else/>
+							{$vo.from|show_contact}
+						</in>
+					</div>
+				</span>
+				<span  style="width:100px;float:right;text-align:center;">{$vo.create_time|toDate='Y-m-d'}</span>
+				<span style="width:20px;float:right;">
+					<div   class="<eq name="vo.read" value="1">readed</eq>
+					<eq name="vo.read" value="0">unread</eq>
+					">
+				</div>
+				<div class="<gt name="vo.add_file|strlen" value="3">attach</gt>
+				">
+			</div>
+		</span>
+		<span class="autocut auto">
+			<notempty name = "vo['add_file']" >
+				<i class="icon-paper-clip"></i>
+				<else/>
+				<i class="icon-paper-clip" style="text-indent:-9999px;"></i>
+			</notempty>
+			<in name="folder" value="darftbox">
+				<a class="" title="{$vo.title|htmlspecialchars}" href="{:U('edit?id='.$vo['id'])}">
+					{$vo.title}&nbsp;&nbsp;&nbsp;
+					<eq name="vo.title|strlen" value="0">无标题</eq>
+				</a>
+				<else/>
+				<a title="{$vo.title|htmlspecialchars}" href="{:U('read?id='.$vo['id'])}">
+					{$vo.title}&nbsp;&nbsp;&nbsp;
+					<eq name="vo.title|strlen" value="0">无标题</eq>
+				</a>
+			</in>
+		</span>
+	</li>
+</foreach>
+</ul>
+</div>
+</form>
+<div class="page">{$page}</div>
+</if>
+</div>

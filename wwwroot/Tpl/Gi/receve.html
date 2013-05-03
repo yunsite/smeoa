@@ -1,0 +1,264 @@
+<layout name='Layout/layout_main' />
+<link type="text/css" href="__PUBLIC__/css/jquery-ui.css" rel="stylesheet"/>
+<script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+	function save() {
+		if(check_form("form_data")){
+			sendForm("form_data", "{:U('save')}","__URL__");
+		}
+	}
+
+	function total_init(){
+		$("li.tbody").each(function(){
+			order_qty=0;
+			$(this).find(".data_item .order_qty").each(function(){
+				order_qty=dec_add(order_qty,$(this).text());
+			})			
+			$(".data_total .order_qty").text(order_qty);	
+
+			in_qty=0;
+			$(this).find(".data_item .in_qty").each(function(){
+				in_qty=dec_add(in_qty,$(this).text());
+			})
+			$(".data_total .in_qty").text(in_qty);	
+
+			diff=0;
+			$(this).find(".data_item .diff").each(function(){
+				diff=dec_add(diff,$(this).text());
+			})
+			$(".data_total .diff").text(diff);										
+		})
+	}
+
+	$(document).ready(function() {
+		uploader_init();
+		total_init();
+		$("#po_date").datepicker();
+		$(".qty input,.price input").live("blur",function(){
+			qty=$(this).parents("div.span6").find(".qty input").val();
+			price=$(this).parents("div.span6").find(".price input").val();
+			$(this).parents("div.span6").find(".sum input").val(dec_mul(price,qty));
+		});
+		$(".sum input").live("blur", function() {
+			qty = $(this).parents("div.span6").find(".qty input").val();
+			sum = $(this).parents("div.span6").find(".sum input").val();
+			$(this).parents("div.span6").find(".price input").val(Math.round(dec_div(sum, qty) * 100) / 100);
+		})
+		$(".qty input,.price input").live("keyup",function(){
+			switch(event.keyCode)
+			{
+				case 13:
+					qty=$(this).parents("div.span6").find(".qty input").val();
+					price=$(this).parents("div.span6").find(".price input").val();
+					$(this).parents("div.span6").find(".sum input").val(dec_mul(price,qty));
+				 break	
+			}
+		})			
+		$(".sum input").live("keyup",function(){
+			switch(event.keyCode)
+			{
+				case 13:
+					qty=$(this).parents("div.span6").find(".qty input").val();
+					sum=$(this).parents("div.span6").find(".sum input").val();
+					$(this).parents("div.span6").find(".price input").val(Math.round(dec_div(sum,qty)*100)/100);
+				 break	
+			}
+		})
+			
+	})
+
+	function select_supplier() {
+		winopen("{:U('supplier/winpop')}", 600, 400);
+	}
+
+	function process(obj,data){		
+		li=obj.parents("li.tbody");
+		li.find(".name").text(data.name);
+		li.find(".spec").text(data.spec);
+		li.find(".unit").text(data.unit);
+		li.find("input[name='mat_no[]']").val(data.mat_no);		
+		li.find("input[name='price[]']").val(data.buy_price);		
+	}
+
+	function new_line(){
+		new2=$("#sample").html();
+		$(".table ul.po_item").append(new2);
+	}
+
+	function del_line(){
+		$("input[name='po_item_id[]']:checked").parents("li").remove();	
+		$("form #chk_select_all").attr("checked",false);
+	}
+</script>
+<div class="po">
+	<div class="row-fluid title">
+		<span>新建：入库单</span>
+	</div>
+	<div class="row-fluid operate">
+		<div class="left">
+			<a class="btn" onclick="new_line();" >新行</a>
+			<a class="btn" onclick="del_line();" >删行</a>
+			<a class="btn" onclick="send(true);">打印</a>
+			<a class="btn" onclick="send(true);">取消</a>
+		</div>
+		<div class="right">
+			<a class="btn" onclick="save();" >保存</a>
+			<a class="btn" onclick="edit();">修改</a>
+		</div>
+	</div>
+	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data">
+		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="add_file" name="add_file">
+		<input type="hidden" id="opmode" name="opmode" value="add">
+		<div class="form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="supplier_name">供应商：</label>
+					<div class="controls">
+						<input  type="text" id="supplier_name" name="supplier_name" class="val" readonly="readonly" value="{$list[0].supplier_name}">
+						<input  type="hidden" id="supplier" name="supplier" value="{$list[0].supplier}">
+					</div>					
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="">日期：</label>
+					<div class="controls">
+						<input type="text" name="gi_date" id="gi_date" value="{:toDate(time(),'Y-m-d')}"></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="type">采购订单：</label>
+					<div class="controls">
+							<input  type="hidden" id="po_no" name="po_no" value="{$list[0].po_no}">		
+							<input  type="text" id="po_no_name" name="po_no_name" class="val"  source="{:U('po/json')}" readonly="readonly" value="{$list[0].po_no}">
+					</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="warehouse">收货仓库：</label>
+					<div class="controls">
+						<select name="warehouse">
+							<option value="1">一号仓库</option>
+							<option value="2">二号仓库</option>
+							<option value="3">三号仓库</option>
+						</select>
+					</div>
+				</div>				
+			</div>
+			<div class="table">
+				<ul class="po_item">
+					<li class="thead row-fluid">
+						<div class="span6" style="padding-left:30px;">
+							<span  class="checkbox" >
+								<input type="checkbox" id="chk_select_all" value="all" onclick="select_all('po_item_id[]')"/>
+							</span>
+							<span style="width:25%;">编号</span>
+							<span style="width:40%;">名称+属性</span>
+							<span style="width:20%;">规格</span>
+							<span style="width:15%;">单位</span>
+						</div>
+						<div class="span6">
+							<span style="width:20%;" >订单量</span>
+							<span style="width:20%;" >已入库</span>
+							<span style="width:20%;" >差异</span>
+							<span style="width:20%;" >本次入库</span>
+							<span style="width:20%;" >备注</span>
+						</div>
+					</li>
+					<volist name="list" id="vo">
+						<li class="tbody row-fluid">
+							<div class="span6" style="padding-left:30px;">
+								<span class="checkbox">
+									<input type="checkbox" name="po_item_id[]" >
+								</span>
+								<span style="width:25%;" >
+									<span class="controls wrap">
+										<input type="text" name="mat_no[]" source="{:U('material/json')}" process="process" class="val" check="require" msg="请输入采购订单号" value="{$vo.mat_no}" readonly="readonly">
+										<div class="search dropdown">
+											<ul class="dropdown-menu"></ul>
+										</div>
+									</span>
+								</span>
+								<span style="width:40%;" class="name autocut">{$vo.material_name}</span>
+								<span style="width:20%;" class="spec text-center">{$vo.spec}</span>
+								<span style="width:15%;" class="unit text-center">{$vo.unit}</span>
+							</div>
+							<div class="span6">
+								<span style="width:20%;"  class="order_qty controls">
+									<input type="text" name="order_qty[]" class="text-right" value="{$vo.order_qty}" readonly="readonly"></span>
+								<span style="width:20%;"  class="in_qty controls">
+									<input type="text" name="in_qty[]" class="text-right"  value="{$vo.in_qty|default=0}" readonly="readonly"></span>
+								<span style="width:20%;"  class="diff controls">
+									<input type="text" name="diff[]" class="text-right" value="{$vo.diff}"></span>
+								<span style="width:20%;"  class="diff controls" readonly="readonly">
+								<input type="text" name="qty[]" class="text-right" check="number" msg="必须是数字" value="{$vo.diff}"></span>									
+								<span style="width:20%;" class="remark controls" >
+									<input type="text" name="remark[]" class="text-right"></span>
+							</div>
+						</li>
+					</volist>
+					<li>
+							<div class="row-fluid data_total" >
+								<div class="span6" style="padding-left:10px">
+									<b>合计</b>
+								</div>
+								<div class="span6">
+									<span style="width:20%;" class="text-right order_qty"></span>
+									<span style="width:20%;" class="text-right in_qty">&nbsp;</span>
+									<span style="width:20%;" class="text-right diff"></span>
+									<span style="width:20%;" class="text-right qty"></span>
+									<span style="width:20%;" class="text-right"><span>
+								</div>
+							</div>																				
+					</li>
+				</ul>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="name">附件：</label>
+					<div class="controls">
+						<div>
+							<include file="Layout:uploader" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="remark">备注：</label>
+					<div class="controls">
+						<input type="text" name="remark" id="remark" class="span12"></div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div id="sample">
+		<li class="tbody row-fluid">
+			<div class="span6" style="padding-left:30px;">
+				<span class="checkbox">
+					<input type="checkbox" name="po_item_id[]" >
+				</span>
+				<span style="width:25%;" >
+					<span class="controls wrap">
+						<input type="text" name="mat_no[]" source="{:U('material/json')}" process="process" class="val" check="require" msg="请输入资材编号">
+						<div class="search dropdown">
+							<ul class="dropdown-menu"></ul>
+						</div>
+					</span>
+				</span>
+				<span style="width:40%;" class="name autocut">&nbsp;</span>
+				<span style="width:20%;" class="spec text-center">&nbsp;</span>
+				<span style="width:15%;" class="unit text-center">&nbsp;</span>
+			</div>
+			<div class="span6">
+				<span style="width:20%;"  class="qty controls">
+					<input type="text" name="qty[]" class="text-right" check="number" msg="必须是数字"></span>
+				<span style="width:20%;"  class="price controls">
+					<input type="text" name="price[]" class="text-right" check="number" msg="必须是数字"></span>
+				<span style="width:20%;"  class="sum controls">
+					<input type="text" name="sum[]" class="text-right" check="number" msg="必须是数字"></span>
+				<span style="width:40%;" class="remark controls" >
+					<input type="text" name="remark[]" class="text-right"></span>
+			</div>
+		</li>
+	</div>
+</div>

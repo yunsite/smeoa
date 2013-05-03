@@ -1,0 +1,208 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	$(document).ready(function() {
+
+	});
+	function add() {
+		$("#form_data :input :not(:button)").each(function() {
+			$(this).val("");
+		});
+		$("#form_data :text").each(function() {
+			$(this).val("");
+		});
+		$("#form_data select").each(function() {
+			$(this).find('option:first').attr('selected', 'selected');
+		});
+		$(".sub_left_menu tr.active").removeClass("active");
+		$("#opmode").val("add");
+	}
+
+	function reset_pwd() {
+		if ($("#id").val().length < 1) {
+			alert("请选择用户");
+			return false;
+		}
+		winopen("{:U('password')}?id="+ $("#id").val(), 400, 300);
+	}
+
+	function select_dept() {
+		winopen("{:U('dept/winpop2')}", 600, 400);
+	}
+
+	function btn_search() {
+		sendForm("form_search", "__SELF__");
+		$("#form_search").submit();
+	}
+
+	function key_search() {
+		if (event.keyCode == 13) {
+			sendForm("form_search", "__SELF__");
+			return false;
+		}
+	}
+
+	function save() {
+		$("#pic").val($("#save_name").val().split(";")[0]);
+		if(check_form("form_data")){
+			sendForm("form_data", "{:U('save')}","__URL__");
+		}		
+	}
+
+	function showdata(result) {
+		for (var s in result.data) {
+			//alert(s+"|"+$("#"+s).attr("type"))
+			if (($("#" + s).attr("type")) === "select-one") {
+				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
+				//alert(s+"|"+$("#"+s).attr("type")+result.data[s] )
+			} else {
+				$("#" + s).val(result.data[s]);
+			}
+		}
+		$("#dept_name").val($("#dept_list option[value='" + $("#dept_id").val() + "']").text());
+		img_url = "{:C('SAVE_PATH')}" + $("#pic").val();
+		$("#emp_pic").attr("src", img_url.split(";")[0]);
+		$("#save_name").val("");
+		$("#opmode").val("edit");
+	}
+
+	$(document).ready(function(){		
+		uploader_init();
+
+		$(".sub_left_menu  tr").click(function() {
+			$(".sub_left_menu  tr.active").removeClass("active");
+			$(this).attr("class","active");
+			sendAjax("{:U('ajaxRead')}", "id=" + $(this).attr("id"), function(data) {
+				showdata(data);
+			});
+			return false;
+		})
+	});
+
+</script>
+<div class="admin" >
+	<form method="post" action="" id="form_search" name="form_search">
+		<div class="row-fluid title">
+			<span>用户管理</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+			</div>
+		</div>
+	</form>
+	<div class="row-fluid operate" >
+		<div class="right">
+			<a onclick="reset_pwd()" class="btn">设置密码</a>
+			<a onclick="add()"  class="btn">新增</a>
+			<a onclick="save()"  class="btn">保存</a>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span4 sub_left_menu ">
+			<table class="table table-bordered">
+				<tr>
+					<th>员工编号</th>
+					<th>姓名</th>
+					<th>状态</th>
+				</tr>
+				<volist name="list" id="data">
+					<tr id="{$data.id}">
+						<td>{$data.emp_no}</td>
+						<td>{$data.emp_name}</td>
+						<td>{$data.status|status}</td>
+					</tr>
+				</volist>
+			</table>
+		</div>
+		<div class="span8">
+			<form id="form_data" name="form_data" method="post" action="">
+				<input type="hidden" id="save_name" name="save_name">
+				<input type="hidden" name="id" id="id">
+				<input type="hidden" name="pid" id="pid" value="">
+				<input type="hidden" name="pic" id="pic" >
+				<input type="hidden" name="ajax" id="ajax" value="1">
+				<input type="hidden" name="opmode" id="opmode" value="">
+				<html:select id="dept_list" name="dept_list"  options="dept_list" style="dis"/>
+				<table class="table table-bordered" >
+					<tr>
+						<th>
+							<nobr>员工编号*</nobr>
+						</th>
+						<td>
+							<input type="text" id="emp_no" name="emp_no" class="input-small"  check="require" msg="请输入员工编号"></td>
+						<th rowspan="4">
+							照片
+							<br>(120*160)</th>
+						<td rowspan="3">
+							<img width=120 height=160 id="emp_pic" ></td>
+					</tr>
+					<tr>
+						<th>姓名*</th>
+						<td>
+							<input type="text" id="emp_name" name="emp_name" class="input-small" check="require" msg="请输入姓名"></td>
+					</tr>
+					<tr>
+						<th>部门*</th>
+						<td>
+							<input type="text" name="dept_name" id="dept_name" readonly="readonly" class="input-small">
+							<input type="hidden" name="dept_id" id="dept_id" check="require" msg="请输入部门">
+							<input type="button" class="btn" name="btn_select_dept" value="选择部门" onclick="select_dept();"></td>
+					</tr>
+					<tr>
+						<th>电子邮箱</th>
+						<td>
+							<input type="text" id="email" name="email" class="input-small"></td>
+						<td>
+								<include file="Layout:uploader" />
+						</td>
+					</tr>
+					<tr>
+						<th>性别</th>
+						<td>
+							<select name="sex" id="sex" class="input-small">
+								<option  value="male">男</option>
+								<option value="female">女</option>
+							</select>
+						</td>
+						<th>生日</th>
+						<td>
+							<input type="text" id="birthday" name="birthday" readonly="readonly" class="input-date"></td>
+					</tr>
+					<tr>
+						<th>职级</th>
+						<td>
+							<html:select id="rank_id" name="rank_id" style="input-small"  first="选择组" options="rank_list" />
+						</td>
+						<th>职位</th>
+						<td>
+							<html:select id="position_id" name="position_id" style="input-small"  first="选择组" options="position_list"  />
+						</td>
+					</tr>
+					<tr>
+						<th>负责业务</th>
+						<td colspan="3">
+							<input type="text" id="duty" name="duty"></td>
+					</tr>
+					<tr>
+						<th>办公室电话</th>
+						<td>
+							<input type="text" id="office_tel" name="office_tel" class="input-date"></td>
+						<th>移动电话</th>
+						<td>
+							<input type="text" id="mobile_tel" name="mobile_tel" class="input-date"></td>
+					</tr>
+					<tr>
+						<th>状态</th>
+						<td colspan="3">
+							<select class="input-date"  name="status" id="status">
+								<option  value="1">启用</option>
+								<option value="0">禁用</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>

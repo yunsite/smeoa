@@ -1,0 +1,86 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	function add() {
+		window.open("{:U('add')}", "_self");
+	}
+	$(document).ready(function() {
+		set_return_url();
+	})
+</script>
+<div class="admin">
+	<form method="post" action="" id="form_search" name="form_search">
+		<div class="row-fluid title">
+			<span>基础数据</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+			</div>
+		</div>
+	</form>
+	<div class="row-fluid operate">
+		<div class="right" >
+			<a onclick="add()" class="btn">新增</a>
+		</div>
+	</div>
+	<table  class="table table-bordered">
+		<tr>
+			<th >
+			<nobr>
+				分类
+			</nobr></th>
+			<th >
+			<nobr>
+				代码
+			</nobr></th>
+			<th >
+			<nobr>
+				名称
+			</nobr></th>
+			<th >
+			<nobr>
+				排序
+			</nobr></th>
+			<th >
+			<nobr>
+				状态
+			</nobr></th>
+			<th>
+			<nobr>
+				操作
+			</nobr></th>
+		</tr>
+		<foreach name="list" item="vo">
+			<tr>
+				<td>
+				<nobr>
+					{$vo.type}
+				</nobr></td>
+				<td>
+				<nobr>
+					{$vo.code}
+				</nobr></td>
+				<td><a href="{:U('edit?id='.$vo['id'])}">
+				<nobr>
+					{$vo.name}
+				</nobr></a></td>
+				<td>
+				<nobr>
+					{$vo.sort}
+				</nobr></td>
+				<td>
+				<nobr>
+					{$vo.status|status}
+				</nobr></td>
+				<td>
+				<nobr>
+					{$vo.status}
+				</nobr></td>
+			</tr>
+		</foreach>
+	</table>
+	<div class="page">
+		{$page}
+	</div>
+</div>
+

@@ -1,0 +1,260 @@
+<layout name='Layout/layout_main' />
+<script type="text/javascript">
+	function add() {
+		window.open("{:U('add')}", "_self");
+	}
+
+	function edit() {
+		id = $("li.tbody.active :checkbox").val();
+		if (id == undefined) {
+			alert("请选择要编辑的联系人");
+			return false;
+		} else {
+			window.open(fix_url("{:U('edit')}?id=" + id), "_self");
+		}
+	}
+
+	function del() {
+		if(confirm('确定要删除吗?')){
+		if ($("#form_data .table input:checked").length == 0) {
+			$("li.tbody.active :checkbox").attr("checked", true);
+		}
+		sendForm("form_data", "{:U('del')}");
+		$("#form_data input:checked").each(function() {
+			$(this).parents("li").remove();
+		})
+		}
+	}
+
+	function apply() {
+		if ($("#form_data .table input:checked").length == 0) {
+			$("li.tbody.active input:checkbox").attr("checked", true);
+		}
+		sendForm("form_data", "{:U('set_group')}","__URL__");
+	}
+
+	function new_group1() {
+		$(".supplier .cmd").hide();
+		$(".supplier .new_group").css("display", "block");
+		$(".supplier .apply").show();
+	}
+
+
+	function key_search_2() {
+		if (event.keyCode == 13){
+			$(".table li").hide();			
+			val = $("#keyword").val().toUpperCase();
+			if (val.length == 0) {
+				$(".title nobr").html("全部");
+			} else {
+				$(".title nobr").html("搜索结果");
+			}
+			$(".table li .data").each(function() {
+				if ($(this).text().indexOf(val) >= 0) {
+					$(this).parents("li").show();
+				};
+			})
+		}
+	}
+
+	function btn_search_2() {		
+		$(".table li").hide();			
+		val = $("#keyword").val().toUpperCase();
+		if (val.length == 0) {
+			$(".title nobr").html("全部");
+		} else {
+			$(".title nobr").html("搜索结果");
+		}
+		$(".table li .data").each(function() {
+			if ($(this).text().indexOf(val) >= 0) {
+				$(this).parents("li").show();
+			};
+		})		
+	}
+	
+	function move_to(val) {
+		if (val != '') {
+			sendAjax("{:U('mark')}", 'val=' + val + '&id=' + $("#supplier_id").val(), function(data) {
+				if (data.status) {
+					$("#form_search").submit();
+				}
+			});
+		} else {
+			$("#form_search").submit();
+		}
+	}
+	
+	function export_supplier(){
+		window.open("{:U('export')}","_blank");
+	}
+
+	function import_supplier(){
+		window.open("{:U('import')}","_self");
+	}
+
+	$(document).ready(function() {
+		set_return_url();
+		$(".drop-down-box.title li").click(function() {
+			$("#keyword").val("");
+			$(".table li").hide();
+			gid = $(this).attr("gid");
+			$(".title nobr").html($(this).text());
+			$(".table li div.group").each(function() {
+				if ($(this).text().indexOf(gid) >= 0) {
+					$(this).parents("li").show();
+				};
+			})
+		})
+		$(".table input:checkbox").click(function(e) {
+			$("li.tbody.active").removeClass("active");
+			$(".group_list input[name='group[]']").attr("checked", false);
+			$("li.tbody input:checked").each(function() {
+				$(this).parents("li.tbody").addClass("active");
+			})
+			e.stopPropagation();
+		})
+		$(".group_list input:checkbox").bind("change propertychange", function() {
+			$(".supplier .cmd").hide();
+			$(".supplier .apply").show();
+		})
+		$(".group_list li,.dropdown-menu .cmd li,.new_group input").click(function(e){
+			e.stopPropagation();
+		})		
+		$("li.tbody").click(function() {
+			$("li.tbody.active").removeClass("active");
+			$(this).addClass("active");
+			$(".table input:checkbox").attr("checked", false);
+			$(".group_list input[name='group[]']").attr("checked", false);
+			str=trim($(this).find(".group").text());
+			strs=str.split(","); 
+			for (i=0;i<strs.length;i++)    
+			 {  
+				 $(".group_list input[name='group[]'][value='"+strs[i]+"']").attr("checked",true);
+			}
+		})	
+	}); 
+</script>
+<div class="supplier">
+	<div class="row-fluid title">
+		<div class="btn-group">
+			<span class="btn dropdown-toggle no-border" data-toggle="dropdown" href="#">
+				<nobr>全部</nobr> <i class="icon-caret-down"></i>
+			</span>
+			<ul class="dropdown-menu title">
+				<li gid="">
+					<a>全部</a>
+				</li>
+				<foreach name="group_list" item="vo">
+					<li gid="{$key}">
+						<a>{$vo}</a>
+					</li>
+				</foreach>
+			</ul>
+		</div>
+		<div class="input-append right">
+			<input type="text"  onkeydown="key_search_2();" name="keyword" id="keyword">
+			<a class="btn" onclick="btn_search_2();"> <i class="icon-search"></i>
+			</a>
+		</div>
+	</div>
+	<form id="form_data" name="form_data" method='post'>
+		<div class="operate row-fluid">
+			<div class="left">
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						管理
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a onclick="manage_group();">管理组</a>
+						</li>
+						<li>
+							<a onclick="import_supplier();">导入</a>
+						</li>
+						<li>
+							<a onclick="export_supplier();">导出</a>
+						</li>
+					</ul>
+				</div>
+				<a class="btn" onclick="edit();">编辑</a>
+				<a class="btn"onclick="del();" >删除</a>
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						组
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu group_list">
+						<li class="disabled">
+							<a>添加到</a>
+						</li>
+						<foreach name="group_list" item="vo">
+							<li>
+								<a>
+									<label class="checkbox">
+										<input type="checkbox" name="group[]" value="{$key}">{$vo}</label>
+								</a>
+							</li>
+						</foreach>
+						<li class="new_group">
+							<input type="text" name="new_group" class="input-medium"></li>
+						<li class="divider"></li>
+						<li class="apply">
+							<input class="btn" type="button" value="应用" onclick="apply();"></li>
+						<li class="cmd">
+							<input class="btn input-mini" type="button" onclick="new_group1();" value="新组"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="right">
+				<a class="btn" onclick="add();">新建</a>
+			</div>
+		</div>
+		<div id="list" name="list" class="table">
+			<ul>
+				<if condition="count($list) eq 0 ">
+					<li class="tbody text-center">
+						<h3>没找到相应的数据</h3>
+					</li>
+				</ul>
+			</div>
+			<else/>
+			<foreach name="list" item="vo">
+				<li  class="tbody">
+					<div class="data" style="display:none">{$vo.letter}</div>
+					<div class="group" style="display:none">
+						<php>echo ($group_data[$vo["id"]])</php>
+					</div>
+						<div class="row-fluid">											
+							<span class="span6" style="padding-left:30px">
+								<span class="checkbox" >
+									<input type="checkbox" name="supplier_id[]" value="{$vo.id}" ></span>
+								<a href="{:U('read?id='.$vo['id'])}" class="data">{$vo.name}</a>
+							</span>
+							<span class="span6" style="padding-left:10px">
+								<nobr>联系人：</nobr>
+								<nobr class="data">{$vo.contact}</nobr>
+							</span>
+						</div>
+						<div class="row-fluid">
+							<span  class="span6" style="padding-left:10px">
+								<nobr>电话：</nobr>
+								<nobr class="data">
+									{$vo.office_tel}
+									<notempty name="vo.mobile_tel">/ {$vo.mobile_tel}</notempty>
+								</nobr>
+							</span>
+							<span  class="span6" style="padding-left:10px">
+								<nobr>邮箱：</nobr>
+								<nobr class="data">
+									{$vo.email}									
+								</nobr>
+							</span>
+						</div>
+				</li>
+			</foreach>
+		</ul>
+	</div>
+</form>
+</if>
+</div>

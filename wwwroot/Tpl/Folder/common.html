@@ -1,0 +1,201 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	function add() {
+		pid = $("#id").val();
+		$("#form_data :input :not(:button)").each(function() {
+			$(this).val("");
+		});
+		$("#form_data :text").each(function() {
+			$(this).val("");
+		});
+		$("#pid").val(pid);
+		$("#id").val("");
+		$("#type").val("{$type}");
+		$("#opmode").val("add");
+	};
+
+	function save(){
+		if ($("#opmode").val() == "") {
+			alert("请选择文件夹或新增");
+		} else {
+			$("#admin").val("");
+			$("#admin_list div.address_list span").each(function() {
+				$("#admin").val($("#admin").val() + $(this).text().replace(';', '') + '|' + $(this).attr("emp_no") + ";")
+			})
+			$("#write").val("");
+			$("#write_list div.address_list span").each(function() {
+				$("#write").val($("#write").val() + $(this).text().replace(';', '') + '|' + $(this).attr("emp_no") + ";")
+			})
+			$("#read").val("");
+			$("#read_list div.address_list span").each(function() {
+				$("#read").val($("#read").val() + $(this).text().replace(';', '') + '|' + $(this).attr("emp_no") + ";")
+			})
+			if(check_form("form_data")){
+				sendForm("form_data", "{:U('save')}","__SELF__");
+			}
+		}
+	};
+
+	function showdata(result) {
+		for (var s in result.data) {
+			if (($("#" + s).attr("type")) === "select-one") {
+				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
+			} else {
+				$("#" + s).val(result.data[s]);
+			}
+		}
+		$("#admin_list div.address_list").html(contact_conv($("#admin").val()));
+		$("#write_list div.address_list").html(contact_conv($("#write").val()));
+		$("#read_list div.address_list").html(contact_conv($("#read").val()));
+		$("#type").val("{$type}");
+		$("#folder_name").val($("#folder_list option[value='" + $("#pid").val() + "']").text());
+		$("#opmode").val("edit");
+	}
+
+	function popup_auth(){
+		winopen("{:U("contact/popup_auth")}",800,574);
+	}
+
+	function select_charge(){
+		if ($("div.sub_left_menu a.active").length > 0) {
+			popup_auth();
+		} else {
+			alert("请选择文件夹");
+		};
+	};
+
+	function select_pid() {
+		if ($("div.sub_left_menu a.active").length > 0) {
+			winopen("{:U('winpop2')}", 600, 400);
+		} else {
+			alert("请选择文件夹");
+		};
+	}
+	$(document).ready(function(){
+		$(".sub_left_menu .tree_menu  a").click(function() {
+			$(".sub_left_menu .tree_menu  a").each(function() {
+				$(this).attr("class", "");
+			});
+			$(this).attr("class","active");
+			sendAjax("{:U('ajaxRead')}", "id=" + $(this).attr("node"), function(data) {
+				showdata(data);
+			});
+			return false;
+		})
+		// 双击添加到收件人 因后添加的数据 所以需要用live函数
+		$(".address_list span").live("dblclick", function(){
+			$(this).remove();
+		});
+	});
+
+
+</script>
+<div class="folder">
+	<div class="row-fluid title">
+		<span>{$folder_name}</span>
+	</div>
+	<div class="row-fluid operate" >
+		<div class="right">
+			<a onclick="add()" class="btn">新增</a>
+			<a onclick="save()" class="btn">保存</a>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span4 sub_left_menu ">
+			<div class="wrap">
+				<?php echo $menu ?></div>
+		</div>
+		<div class="span8 form_box">
+			<form id="form_data" name="form_data" method="post" action="">
+				<input type="hidden" name="id" id="id">
+				<input type="hidden" name="pid" id="pid" value="">
+				<input type="hidden" name="public" id="public" value="1">
+				<input type="hidden" name="folder" id="folder" value="{$type}">
+				<input type="hidden" name="ajax" id="ajax" value="1">
+				<input type="hidden" name="opmode" id="opmode" value="">
+				<input type="hidden" name="admin" id="admin">
+				<input type="hidden" name="write" id="write">
+				<input type="hidden" name="read" id="read">
+				<html:select id="folder_list" name="folder_list"  options="folder_list" style="dis"/>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="name">名称*：</label>
+						<div class="controls">
+							<input type="text" id="name" name="name" check="require" msg="请输入名称"></div>
+					</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="folder_name">父节点：</label>
+						<div class="controls">
+							<div class="input-append">
+								<input  type="text" id="folder_name" name="folder_name" readonly>
+								<button class="btn" type="button"  onclick="select_pid()" >选择</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="name">管理：</label>
+						<div class="controls">
+							<div id="admin_list">
+								<div class="address_list"></div>
+							</div>
+							<button class="btn" type="button"  onclick="select_charge()" >选择</button>
+						</div>
+					</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="name">写入 / 修改：</label>
+						<div class="controls">
+							<div id="write_list">
+								<div class="address_list"></div>
+							</div>
+							<button class="btn" type="button"  onclick="select_charge()" >选择</button>
+						</div>
+					</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="name">读取：</label>
+						<div class="controls">
+							<div id="read_list">
+								<div class="address_list"></div>
+							</div>
+							<button class="btn" type="button"  onclick="select_charge()" >选择</button>
+						</div>
+					</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="sort">排序：</label>
+						<div class="controls">
+							<input type="text" id="sort" name="sort"></div>
+					</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="status">状态：</label>
+						<div class="controls">
+							<select class=""  name="status" id="status">
+								<option  value="1">启用</option>
+								<option value="0">禁用</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="status">备注：</label>
+						<div class="controls">
+							<textarea id="remark" name="remark" class="span12"></textarea>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

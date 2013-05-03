@@ -1,0 +1,84 @@
+<layout name='Layout/layout_main' />
+<input type="hidden" id="id" name="id" value="{$vo.id}">
+<div class="row-fluid title">
+	<span>{$vo.title}</span>
+</div>
+<div class="row-fluid operate">
+	<div class="left">
+		<a onclick="go_return_url();" class="btn">返回</a>
+		<if condition="$auth['admin']">
+			<a onclick="del();" class="btn">删除</a>
+		</if>
+	</div>
+	<div class="right">
+		<a onclick="myprint()" class="btn">打印</a>
+		<if condition="$auth['write']">
+			<a onclick="edit();" class="btn">修改</a>
+		</if>
+	</div>
+</div>
+	<form method='post' id="frm_content" name="frm_content" enctype="multipart/form-data">
+		<input type="hidden" id="id" name="id" value="{$vo.id}">
+		<div class="row-fluid form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="name">编号：</label>
+					<div class="controls">{$vo.notice_no}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="name">登录日期：</label>
+					<div class="controls">{$vo.create_time|toDate='Y年m月d日 H:i'}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="name">登录人：</label>
+					<div class="controls">{$vo.user_name}</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="name">管理者：</label>
+					<div class="controls">{$admin|show_contact}</div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group">
+					<div id="content_wrap" >
+						<iframe id="content_iframe"></iframe>
+					</div>
+					<textarea id="content_1" name="content" style="width:100%;display:none">{$vo.content}</textarea>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="name">附件：</label>
+					<div class="controls">
+						<include file="Layout:file_list" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+<script type="text/javascript">
+	$(function() {
+		show_content();
+	});
+	function del() {
+		sendAjax("{:U('del')}", 'id=' + $("#id").val(), function(data) {
+			if (data.status) {
+				alert(data.info);
+			}
+		});
+	}
+
+	function attach_down(obj) {
+		winopen("{:U('down')}?attach_id=" + $(obj).attr("file_id") + "&id/" + $("#id").val(), 600, 300);
+	}
+
+	function edit() {
+		window.open(fix_url("{:U('edit')}?id=" + $("#id").val()), "_self");
+	}
+
+	function myprint() {
+
+	}
+</script>

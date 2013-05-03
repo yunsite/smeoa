@@ -1,0 +1,153 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	function btn_search() {
+		sendForm("form_search", "__SELF__");
+		$("#form_search").submit();
+	}
+
+	function key_search() {
+		if (event.keyCode == 13) {
+			sendForm("form_search", "__SELF__");
+			return false;
+		}
+	}
+
+	function save() {
+		if ($("input:checked[name='user_list[]']").length < 1) {
+			alert("请选择用户");
+			return false;
+		};
+		if ($("input:checked[name='role_list[]']").length < 1) {
+			alert("请选择权限");
+			return false;
+		};
+		sendForm("form_data", "{:U('set_role')}");
+	}
+
+	function showdata(result) {
+		$("input[name='role_list[]']").each(function() {
+			$(this).attr("checked", false);
+		});
+		for (var s in result.data) {
+			$("#role_" + result.data[s].role_id).attr("checked", "checked");
+		}
+	}
+
+
+	$(document).ready(function() {
+		set_return_url();
+		$("#emp_all").change(function() {
+			//alert($("#emp_all").attr("checked"));
+			if ($("#emp_all").attr("checked") == "checked") {
+				$("input[name='user_list[]']").each(function() {
+					$(this).attr("checked", "checked");
+				});
+			} else {
+				$("input[name='user_list[]']").each(function() {
+					$(this).attr("checked", false);
+				});
+			}
+		})
+		$(".sub_left_menu  tr").click(function() {
+			$(".sub_left_menu  tr").attr("class","");
+			$(this).attr("class","active");
+			sendAjax("{:U('get_role_list')}", "id=" + $(this).attr("id"), function(data) {
+				showdata(data);
+			});
+		})
+	}); 
+</script>
+<div class="admin" >
+	<form method="post" action="" id="form_search" name="form_search">
+		<div class="row-fluid title">
+			<span>用户管理</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+			</div>
+		</div>
+	</form>
+	<div class="row-fluid operate" >
+		<div class="right">
+			<a onclick="save()" class="btn">保存</a>
+		</div>
+	</div>
+</form>
+<!-- 列表显示区域  -->
+<form id="form_data" name="form_data"method="post" action="">
+	<div class="row-fluid">
+		<div class="span8 sub_left_menu">
+			<table class="table table-bordered">
+				<tr>
+					<th style="width:3%;vertical-align: -3px;">
+							<input  type="checkbox" id="select_all" value="all" onclick="select_all('emp_id')"/>
+					</th>
+					<th>
+						<nobr>员工编号</nobr>
+					</th>
+					<th>
+						<nobr>姓名</nobr>
+					</th>
+					<th>
+						<nobr>部门</nobr>
+					</th>
+					<th>
+						<nobr>职级</nobr>
+					</th>
+					<th>
+						<nobr>职责</nobr>
+					</th>
+					<th>
+						<nobr>状态</nobr>
+					</th>
+				</tr>
+				<volist name="user_list" id="data">
+					<tr id="{$data.id}">
+						<td style="text-align: center">
+							<div class="chk_wrap">
+								<input type="checkbox" name="user_list[]" value="{$data.id}"></div>
+						</td>
+						<td>
+							<nobr>{$data.emp_no}</nobr>
+						</td>
+						<td>
+							<nobr>{$data.emp_name}</nobr>
+						</td>
+						<td>
+							<nobr>{$data.dept_name}</nobr>
+						</td>
+						<td>
+							<nobr>{$data.rank_name}</nobr>
+						</td>
+						<td>
+							<nobr>{$data.position_name}</nobr>
+						</td>
+						<td>
+							<nobr>{$data.status|status}</nobr>
+						</td>
+					</tr>
+				</volist>
+			</table>
+		</div>
+		<div class="span4 last sub_content">
+			<input type="hidden" name="id" id="id">
+			<input type="hidden" name="pid" id="pid" value="">
+			<input type="hidden" name="ajax" id="ajax" value="1">
+			<input type="hidden" name="opmode" id="opmode" value="">
+			<table class="table table-bordered">
+				<tr>
+					<th>&nbsp;</th>
+					<th>名称</th>
+				</tr>
+				<volist name="role_list" id="data">
+					<tr id="{$data.id}">
+						<td>
+							<input type="checkbox" id="role_{$data.id}" name="role_list[]" value="{$data.id}"></td>
+						<td>{$data.name}</td>
+					</tr>
+				</volist>
+			</table>
+		</div>
+	</div>

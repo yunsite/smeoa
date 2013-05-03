@@ -1,0 +1,105 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	function save() {
+		if(check_form("form_data")){
+			sendForm("form_data", "{:U('save')}","__URL__");
+		}
+	}
+	function select_class() {
+		winopen("{:U('winpop')}", 600, 400);
+	}
+	$(document).ready(function(){
+		$("#class_name").val($("#class_list option[value='" + $("#class").val() + "']").text());
+	});
+</script>
+<div class="contact">
+	<div class="row-fluid title">
+		<span><nobr>添加新资材</nobr></span>
+	</div>
+	<form method='post' id="form_data" class="row-fluid">
+        <input type="hidden" id="opmode" name="opmode" value="edit">
+        <input type="hidden" id="ajax" name="ajax" value="1">
+        <input type="hidden" id="id" name="id" value="{$vo.id}">
+		<input type="hidden" name="class" id="class" value="{$vo.class}">
+		<html:select id="class_list" name="class_list"  options="class_list" style="dis"/>
+		<div class="row-fluid form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="mat_no">编码*：</label>
+					<div class="controls">
+						<input type="text" id="mat_no" name="mat_no" check="require" msg="请输入编码" value="{$vo.mat_no}"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="name">名称+属性：</label>
+					<div class="controls">
+						<input type="text" id="name" name="name" value="{$vo.name}"></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="spec">规格：</label>
+					<div class="controls">
+						<input type="text" id="spec" name="spec" value="{$vo.spec}"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="unit">单位：</label>
+					<div class="controls">
+						<input type="text" id="unit" name="unit"  value="{$vo.unit}"></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="buy_price">参考进价*：</label>
+					<div class="controls">
+						<input type="text" id="buy_price" name="buy_price" check="require" msg="请输入参考进价"  value="{$vo.buy_price}"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="sell_price">参考售价*：</label>
+					<div class="controls">
+						<input type="text" id="sell_price" name="sell_price" value="{$vo.sell_price}"></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="class">类别*：</label>
+					<div class="controls">
+							<div class="input-append">
+								<input  type="text" id="class_name" name="class_name" check="require" msg="请输入类别" readonly>
+								<button class="btn" type="button"  onclick="select_class()" >选择</button>
+							</div>
+						</div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="init_qty">初始库存：</label>
+					<div class="controls">
+						<input type="text" id="init_qty" name="init_qty" value="{$vo.init_qty}"></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span6">
+					<label class="control-label" for="min_qty">缺货下线</label>
+					<div class="controls">
+						<input type="text" id="min_qty" name="min_qty" value="{$vo.min_qty}"></div>
+				</div>
+				<div class="control-group span6">
+					<label class="control-label" for="max_qty">积压上线：</label>
+					<div class="controls">
+						<input type="text" id="max_qty" name="max_qty" value="{$vo.max_qty}" ></div>
+				</div>
+			</div>
+			<div class="row-fluid form-horizontal">
+				<div class="control-group span12">
+					<label class="control-label" for="remark">其他：</label>
+					<div class="controls">
+						<textarea  name="remark" rows="5" class="span12" > {$vo.remark}</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="action">
+			<input class="btn default" type="button" value="保存" onclick="save();">
+			<input  class="btn" type="button" value="取消" onclick="go_return_url();">
+		</div>
+	</form>
+</div>

@@ -1,0 +1,254 @@
+<layout name='Layout/layout_home' />
+<div class="home">
+	<div class="row-fluid">
+		<!-- 邮件开始 -->
+		<div class="tabbable span6 tab_box" sort="1">
+			<div class="tab_head">
+				<span>邮件</span>
+				<ul class="nav nav-tabs right" >
+					<li class="active" >
+						<a href="#tab1" data-toggle="tab" >最新</a>
+					</li>
+					<li>
+						<a href="#tab2" data-toggle="tab">未读</a>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane active table" id="tab1">
+					<ul>
+						<volist name="new_mail_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d h:m'}</span>
+								<span  class="auto autocut">
+									<a href="{:U('mail/read?id='.$vo['id'])}" node="85" return_url="{:U('mail/mail_list?folder=inbox')}">{$vo.title}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+				<div class="tab-pane table" id="tab2">
+					<ul>
+						<volist name="unread_mail_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d h:m'}</span>
+								<span  class="auto autocut">
+									<a href="{:U('flow/read?id='.$vo['id'])}" node="87" return_url="{:U('flow/flow_list?folder=submit')}">{$vo.title}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 邮件结束 -->
+
+		<!-- 审批开始 -->
+		<div class="tabbable span6 tab_box" sort="2">
+			<div class="tab_head">
+				<span>审批</span>
+				<ul class="nav nav-tabs right" >
+					<li class="active" >
+						<a href="#tab3" data-toggle="tab" >待办</a>
+					</li>
+					<li >
+						<a href="#tab4" data-toggle="tab">已提交</a>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane active table" id="tab3">
+					<ul>
+						<volist name="todo_flow_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d h:m'}</span>
+								<span  class="auto autocut">
+									<a href="{:U('flow/read?id='.$vo['id'])}" node="87" return_url="{:U('flow/flow_list?folder=confirm')}">{$vo.title}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+				<div class="tab-pane table" id="tab4">
+					<ul>
+						<volist name="submit_flow_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d h:m'}</span>
+								<span  class="auto autocut">
+									<a href="{:U('flow/read?id='.$vo['id'])}" node="87" return_url="{:U('flow/flow_list?folder=submit')}">{$vo.title}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 审批结束 -->
+
+		<!-- 文档开始 -->
+		<div class="tabbable span6 tab_box" sort="3">
+			<div class="tab_head">
+				<span>文档</span>
+				<ul class="nav nav-tabs right" >
+					<li class="active" >
+						<a href="#tab5" data-toggle="tab" >公用</a>
+					</li>
+					<li >
+						<a href="#tab6" data-toggle="tab">个人</a>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane active table" id="tab5">
+					<ul>
+						<volist name="common_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d h:m'}</span>
+								<span  class="auto autocut">
+									<a href="{:U('doc/read?id='.$vo['id'])}" node="88" return_url="{:U('doc/index')}">{$vo.name}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+				<div class="tab-pane table" id="tab6">
+					<ul>
+						<volist name="personal_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d h:m'}</span>
+								<span  class="auto autocut">
+									<a href="{:U('doc/read?id='.$vo['id'])}" node="88" return_url="{:U('doc/index')}">{$vo.name}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 文档结束 -->
+
+		<!-- 日程开始 -->
+		<div class="tabbable span6 tab_box" sort="4">
+			<div class="tab_head">
+				<span>日程</span>
+				<ul class="nav nav-tabs right" >
+					<li class="active" >
+						<a href="#tab7" data-toggle="tab" >日历</a>
+					</li>
+					<li >
+						<a href="#tab8" data-toggle="tab">待办</a>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane active table" id="tab7">
+					<ul>
+						<volist name="schedule_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.start_date}</span>
+								<span  class="auto autocut">
+									<a href="{:U('schedule/read2?id='.$vo['id'])}" node="91" return_url="{:U('schedule/index')}">{$vo.name}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+				<div class="tab-pane table" id="tab8">
+					<ul>
+						<volist name="todo_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.start_date}</span>
+								<span  class="auto autocut">
+									<a href="{:U('todo/edit?id='.$vo['id'])}" node="91" return_url="{:U('todo/index')}">{$vo.name}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 日程结束 -->
+
+		<!-- 公告开始 -->
+		<div class="tabbable span6 tab_box" sort="5">
+			<div class="tab_head">
+				<span>公告</span>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane active table" id="tab9">
+					<ul>
+						<volist name="new_notice_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d'}</span>
+								<span  class="auto autocut">
+									<a href="{:U('notice/read?id='.$vo['id'])}" node="83" return_url="{:U('notice/index')}">{$vo.title}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 公告结束 -->
+
+		<!-- 论坛开始 -->
+		<div class="tabbable span6 tab_box"  sort="6">
+			<div class="tab_head">
+				<span>论坛</span>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane active table" id="tab10">
+					<ul>
+						<volist name="new_forum_list" id="vo">
+							<li>
+								<span class="right hidden-phone">{$vo.create_time|toDate='m-d'}</span>
+								<span  class="auto autocut">
+									<a href="/{:U('forum/read?id='.$vo['id'])}"  node="83" return_url="{:U('forum/index')}">{$vo.title}</a>
+								</span>
+							</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 论坛结束 -->
+	</div>
+</div>	
+	<link type="text/css" href="__PUBLIC__/css/jquery-ui.css" rel="stylesheet"/>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
+	<script>
+	$(function(){
+			$(".home .row-fluid").sortable({
+			cancel:".tab-content,.tab_head span,.tab_head ul.nav",
+			 stop: function(event,ui){
+				set_sort()
+			 }
+		});
+			$( ".home .row-fluid").disableSelection();
+			$( ".tab_head").disableSelection();
+		init_sort("{$home_sort}");
+		$(".home li a").click(function(){
+			click_home_list($(this));
+		})
+	});	
+
+	function init_sort(sort_string){
+		array_sort=sort_string.split(",");
+		for (x in array_sort)
+		{
+			index=array_sort[x];
+			last=$(".tab_box:last");
+			current=$(".tab_box[sort='"+index+"']");			
+			if(index!==last.attr("sort")){
+				current.insertAfter(last);
+			}
+		}
+	};
+	function set_sort(){
+		var sort_string="";
+		$(".tab_box").each(function(){
+			sort_string=sort_string+$(this).attr("sort")+",";
+		})
+		sendAjax("{:U('set_sort')}","val="+sort_string);	
+	}
+	</script>

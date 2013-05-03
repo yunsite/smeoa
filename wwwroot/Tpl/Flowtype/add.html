@@ -1,0 +1,146 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.js"></script>
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.setting.js"></script>
+<script type="text/javascript">
+	function save() {
+		$("#confirm").val("");
+		$("#confirm_wrap  span").each(function() {
+			$("#confirm").val($("#confirm").val() + $(this).attr("emp_no") + '|');
+		})
+
+		$("#confirm_name").val("");
+		$("#confirm_name").val($("#confirm_wrap").html());
+
+		$("#consult").val("");
+		$("#consult_wrap  span").each(function() {
+			$("#consult").val($("#consult").val() + $(this).attr("emp_no") + '|');
+		})
+
+		$("#consult_name").val("");
+		$("#consult_name").val($("#consult_wrap").html());
+
+		$("#refer").val("");
+		$("#refer_wrap  span").each(function() {
+			$("#refer").val($("#refer").val() + $(this).attr("emp_no") + '|');
+		})
+
+		$("#refer_name").val("");
+		$("#refer_name").val($("#refer_wrap").html());
+
+		editor.sync();
+		if(check_form("form_data")){
+			sendForm("form_data", "{:U('save')}","{:U('edit?id='.$vo['id'])}");
+		}
+	}
+	function popup_flow(){
+		winopen("{:U('contact/popup_flow')}",800,574);
+	}
+	$(document).ready(function() {
+		editor_init();
+	}); 	
+</script>
+<div class="contact">
+	<div class="row-fluid title"><span>新建流程类型</span></div>
+	<form method='post' id="form_data">
+		<input type="hidden" id="opmode" name="opmode" value="add">
+		<input type="hidden" id="ajax" name="ajax" value="1">
+		<input type="hidden" id="confirm" name="confirm" >
+		<input type="hidden" id="confirm_name" name="confirm_name" >
+		<input type="hidden" id="consult" name="consult" >
+		<input type="hidden" id="consult_name" name="consult_name">
+		<input type="hidden" id="refer" name="refer">
+		<input type="hidden" id="refer_name" name="refer_name" >
+		<div class="row-fluid form_box">
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span6">
+								<label class="control-label" for="name">名称*：</label>
+								<div class="controls">
+										<input type="text" id="name" name="name"  check="require" msg="请输入名称"></div>
+						</div>
+						<div class="control-group span6">
+								<label class="control-label" for="short">简称*：</label>
+								<div class="controls">
+										<input type="text" id="short" name="short"  check="require" msg="请输入简称"></div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span6">
+								<label class="control-label" for="doc_no_format">编码格式*：</label>
+								<div class="controls">
+										<input type="text" id="doc_no_format" name="doc_no_format"  check="require" msg="请输入文档编码格式"></div>
+						</div>
+						<div class="control-group span6">
+								<label class="control-label" for="group">分组：</label>
+								<div class="controls">
+										<html:select id="group" name="group"  options="group_list" first="选择或录入" style="writeable" />
+							<script type="text/javascript">
+								<!--$("#group option[value='{$vo.group}'").attr("selected", "selected");
+								//-->
+							</script>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span6">
+								<label class="control-label" for="sort">排序：</label>
+								<div class="controls">
+										<input type="text" id="sort" name="sort"></div>
+						</div>
+						<div class="control-group span6">
+								<label class="control-label" for="status">状态：</label>
+								<div class="controls">
+									<select name="status" id="status">
+										<option value="1" >启用</option>
+										<option value="0">禁用</option>
+									</select>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span12">
+							<textarea id="content" name="content" style="width:100%;height:300px;">{$vo.content}</textarea>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span6">
+								<label class="control-label" for="type">流程类型：</label>
+								<div class="controls">
+										<select name="type" id="type" type="select-one">
+											<option value="0" >自由</option>
+											<option value="1">固定</option>
+										</select>
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span6">
+								<label class="control-label">裁决步骤：</label>
+								<div class="controls">
+									<div class="address_list" id="confirm_wrap" style="display: block;"></div>
+									<a onclick="popup_flow();" class="btn">选择裁决条件</a>
+								</div>
+						</div>
+				</div>
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span6">
+								<label class="control-label">协商步骤：</label>
+								<div class="controls">
+									<div class="address_list" id="confirm_wrap" style="display: block;"></div>
+									<a onclick="popup_flow();" class="btn">选择协商步骤</a>
+								</div>
+						</div>
+				</div>						
+				<div class="row-fluid form-horizontal">
+						<div class="control-group span6">
+								<label class="control-label">抄送：</label>
+								<div class="controls">
+									<div class="address_list" id="confirm_wrap" style="display: block;"></div>
+									<a  onclick="popup_flow();" class="btn">选择抄送人员</a>
+								</div>
+						</div>
+				</div>			
+			<div class="action">
+					<input class="btn default" type="button" value="保存" onclick="save();">
+					<input  class="btn" type="button" value="取消" onclick="go_return_url();">
+			</div>
+	</form>
+</div>

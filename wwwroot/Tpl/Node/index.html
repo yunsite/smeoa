@@ -1,0 +1,152 @@
+<layout name='Layout/layout_main' />
+<tagLib name="html" />
+<script type="text/javascript">
+	var manager = null;
+	function add() {
+		pid = $("#id").val();
+		$("#form_data :text").each(function() {
+			$(this).val("");
+		});
+		$("#form_data :text").each(function() {
+			$(this).val("");
+		});
+		$("#pid").val(pid);
+		$("#id").val('');
+		$("#opmode").val("add");
+	};
+
+	function save() {
+		if(check_form("form_data")){
+		sendForm("form_data", "{:U('node/save')}",fix_url("{:U('node/index')}?s_pid=" + $("#s_pid").val()));
+		}
+	}
+
+	function test() {
+		form_search.submit();
+	};
+	function select_pid() {
+		winopen("{:U('winpop')}", 800, 800);
+	}
+
+	function showdata(result) {
+		for (var s in result.data) {
+			if (($("#" + s).attr("type")) === "select-one") {
+				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
+			} else {
+				$("#" + s).val(result.data[s]);
+			}
+		}
+		$("#node_name").val($("#node_list option[value='" + $("#pid").val() + "']").text());
+		$("#opmode").val("edit");
+	}
+
+	$(document).ready(function() {
+		$(".sub_left_menu .tree_menu a").click(function() {
+			$(".sub_left_menu .tree_menu  a").each(function() {
+				$(this).attr("class", "");
+			});
+			$(this).attr("class","active");
+			sendAjax("{:U('ajaxRead')}", "id=" + $(this).attr("node"), function(data) {
+				showdata(data);
+			});
+			return false;
+		})
+		sendAjax("{:U('ajaxRead')}", "id={$pid}", function(data) {
+			showdata(data);
+		});
+	});
+
+</script>
+<div class="admin" >
+	<div class="row-fluid title">
+		<span>节点管理</span>
+	</div>
+	<form name="form_search" method="post" action="">
+		<div class="row-fluid operate" >
+			<div class="left">
+				<html:select  name="s_pid" id="s_pid" options='groupList' selected='pid'  change='test()'/>
+			</div>
+			<div class="right">
+				<a onclick="add();" class="btn">新增</a>
+				<a onclick="save();"  class="btn">保存</a>
+			</div>
+		</div>
+	</form>
+	<!-- 功能操作区域结束 -->
+	<!-- 列表显示区域  -->
+	<div class="row-fluid">
+		<div class="span4 sub_left_menu">
+			<div class="wrap">
+				<?php echo $menu ?></div>
+		</div>
+		<div class="span8 sub_content">
+			<form id="form_data" name="form_data" method="post" action="">
+				<input type="hidden" name="id" id="id">
+				<input type="hidden" name="pid" id="pid" value="">
+				<input type="hidden" name="ajax" id="ajax" value="1">
+				<input type="hidden" name="opmode" id="opmode" value="">
+				<html:select id="node_list" name="node_list"  options="node_list" style="dis"/>
+				<div id="edit" class="" >
+					<table class="table table-bordered">
+						<tr>
+							<th>名称*</th>
+							<td>
+								<input type="text" id="name" name="name" check="require" msg="请输入名称"></td>
+						</tr>
+						<tr>
+							<th>地址</th>
+							<td>
+								<input type="text" id="url" name="url"></td>
+						</tr>
+						<tr>
+							<th>
+								<nobr>父节点</nobr>
+							</th>
+							<td>
+								<input type="text" id="node_name" name="node_name" readonly>
+								<input class="wd2 btn" type="button" value="选择父节点" onclick="select_pid();"></td>
+						</tr>
+						<tr>
+							<th>图标</th>
+							<td>
+								<input type="text" id="icon" name="icon"></td>
+						</tr>
+						<tr>
+							<th>子文件夹</th>
+							<td>
+								<input type="text" id="sub_folder" name="sub_folder" value=""></td>
+						</tr>
+						<tr>
+							<th>排序</th>
+							<td>
+								<input type="text" id="sort" name="sort"></td>
+						</tr>
+						<tr>
+							<th>核对权限</th>
+							<td>
+								<select class=""  name="check_auth" id="check_auth">
+									<option  value="1">启用</option>
+									<option value="0">禁用</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th>状态</th>
+							<td>
+								<select name="status" id="status">
+									<option  value="1">启用</option>
+									<option value="0">禁用</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th>备注</th>
+							<td>
+								<textarea id="remark" name="remark" rows="" cols=""></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
