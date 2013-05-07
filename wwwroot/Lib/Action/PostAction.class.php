@@ -11,7 +11,7 @@ class PostAction extends CommonAction {
 
 	public function del() {
 		$id = $_POST['id'];
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$post_user_id = M("Post") -> where($where) -> getfield('user_id');
 		if ($user_id == $post_user_id) {
 			$field = "status";

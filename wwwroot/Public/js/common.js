@@ -1,6 +1,7 @@
 /* 公用ready 开始 */
 
 $(document).ready(function(){
+	adv_search_init()
 	$(".left_menu .tree_menu a").click(function() {
 		return click_left_menu($(this));
 	})
@@ -108,11 +109,11 @@ $(document).ready(function(){
 		inputbox=$(this).parents(".controls");
 
 		data=$(this).data("data");
-		keyfield=inputbox.find("input.val").attr("keyfield");
-		if (keyfield==undefined){
-			keyfield="id";
+		key_field=inputbox.find("input.val").attr("key_field");
+		if (key_field==undefined){
+			key_field="id";
 		}
-		inputbox.find("input.key").val(data[keyfield]);			
+		inputbox.find("input.key").val(data[key_field]);			
 
 		val=$(this).text();
 		inputbox.find("input.val").val(val);							
@@ -151,11 +152,11 @@ $(document).ready(function(){
 				inputbox=$(this).parents(".controls");
 
 				data=inputbox.find(".search li.active").data("data");
-				keyfield=inputbox.find("input.val").attr("keyfield");
-				if (keyfield==undefined){
-					keyfield="id";
+				key_field=inputbox.find("input.val").attr("key_field");
+				if (key_field==undefined){
+					key_field="id";
 				}
-				inputbox.find("input.key").val(data[keyfield]);			
+				inputbox.find("input.key").val(data[key_field]);			
 
 				val=inputbox.find(".search li.active").text();
 				inputbox.find("input.val").val(val);							
@@ -257,20 +258,31 @@ function btn_search(){
 	return false;
 }
 
+function adv_search_init(){
+	if(get_cookie("adv_search")=="open"){
+		$("div.adv_search").show();
+	};
+	if(get_cookie("adv_search")=="close"){
+		$("div.adv_search").hide();
+	};
+}
 /* 点击高级搜索 */
 function adv_search(){
 	$("#form_search").submit();
+	set_cookie("adv_search","open");	
 	return false;
 }
 
 /* 打开高级搜索 */
 function open_search(){
 	$("div.adv_search").show();
+	set_cookie("adv_search","open");	
 	return false;
 }
 /* 打开关闭搜索 */
-function close_search(){
+function close_search(){	
 	$("div.adv_search").hide();
+	set_cookie("adv_search","close");		
 	return false;
 }
 

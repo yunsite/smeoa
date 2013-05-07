@@ -74,17 +74,16 @@
 		</div>
 		<div class="span8 sub_content ">
 			<form id="form_data" name="form_data"method="post" action="">
-				<input type="hidden" name="id" id="id">
-				<input type="hidden" name="pid" id="pid" value="">
+				<input type="hidden" name="id" id="id">				
 				<input type="hidden" name="ajax" id="ajax" value="1">
 				<input type="hidden" name="opmode" id="opmode" value="">
 				<html:select id="dept_list" name="dept_list"  options="dept_list" style="dis"/>
 				<div class="row-fluid form_box">
 					<div class="row-fluid form-horizontal">
 						<div class="control-group">
-							<label class="control-label" for="code">编码*：</label>
+							<label class="control-label" for="dept_no">编码*：</label>
 							<div class="controls">
-								<input type="text" id="code" name="code" check="require" msg="请输入分类编码"></div>
+								<input type="text" id="dept_no" name="dept_no" check="require" msg="请输入分类编码"></div>
 						</div>
 					</div>
 					<div class="row-fluid form-horizontal">
@@ -113,8 +112,15 @@
 						<div class="control-group">
 							<label class="control-label" for="dept_name">上级部门：</label>
 							<div class="controls">
-								<input type="text" id="dept_name" name="dept_name" readonly>
-								<input type="button" value="选择上级部门" onclick="select_pid();" class="btn"></div>
+								<div class="input-append">
+									<input name="dept_name" class="val" id="dept_name" type="text" msg="请选择上级部门" check="require" source="{:U('dept/json')}" />
+									<input name="pid" class="key" id="pid" type="hidden" msg="请选择上级部门" check="require" />
+									<button class="btn" onclick="select_pid()" type="button">选择</button>
+								</div>
+								<div class="search dropdown ">
+									<ul class="dropdown-menu"></ul>
+								</div>
+							</div>							
 						</div>
 					</div>
 					<div class="row-fluid form-horizontal">

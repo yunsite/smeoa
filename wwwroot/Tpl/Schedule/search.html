@@ -1,5 +1,5 @@
 <layout name='Layout/layout_main' />
-<tagLib name="html" />
+
 <link type="text/css" href="__PUBLIC__/css/jquery-ui.css" rel="stylesheet"/>
 <script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
 <script type="text/javascript">
@@ -15,7 +15,7 @@
 				min : 1,
 				max : 5,
 				value : 3,
-				slide : function(event, ui) {
+				slide : function(event, ui){
 					$("#important").val(ui.value);
 					$("div.slider_box div.ui-widget-header").css("background-color", schedule_bg(ui.value, $("#urgency").val()));
 				}
@@ -62,24 +62,24 @@
 			</div>
 			<div class="row-fluid form-horizontal">
 				<div class="control-group span6">
-					<label class="control-label" for="name">主题 ：</label>
+					<label class="control-label" for="li_name">主题 ：</label>
 					<div class="controls">
-						<input type="text" id="name" name="name"></div>
+						<input type="text" id="li_name" name="li_name"></div>
 				</div>
 				<div class="control-group span6">
-					<label class="control-label" for="location">地点：</label>
+					<label class="control-label" for="li_location">地点：</label>
 					<div class="controls">
-						<input type="text" id="location" name="location" ></div>
+						<input type="text" id="li_location" name="li_location" ></div>
 				</div>
 			</div>
 			<div class="row-fluid form-horizontal">
 				<div class="control-group span6">
-					<label class="control-label" for="content">内容：</label>
+					<label class="control-label" for="li_content">内容：</label>
 					<div class="controls">
-						<input type="text" id="content" name="content"></div>
+						<input type="text" id="li_content" name="li_content"></div>
 				</div>
 				<div class="control-group span6">
-					<label class="control-label" for="start_date">时间：</label>
+					<label class="control-label" for="start_date">日期：</label>
 					<div class="controls">
 						<input  type="text" name="start_date" id="start_date" class="input-date" value="{$start_date}"  readonly="readonly">
 						&nbsp;~&nbsp;
@@ -97,30 +97,30 @@
 					<span class="col2 right">地点</span>
 					<div class="auto autocut">标题</div>
 				</li>
-			<if condition="count($list) eq 0 ">
-				<li class="tbody text-center">
-					<h3>没找到相应的数据</h3>
-				</li>
-			</ul>
-		</div>
-	</form>	
-			<else/>
-				<foreach name="list" item="vo">
-					<li class="tbody">
-						<span class="col4 right">{$vo.end_date}</span>
-						<span class="col3 right">{$vo.start_date}</span>
-						<span class="col2 right">{$vo.location}&nbsp;</span>
-						<div class="auto autocut">
-							<a href="{:U('read2?id='.$vo['id'])}">
-								{$vo.name}
-								<eq name="vo.name|strlen" value="0">无标题</eq>
-							</a>
-						</div>
+				<if condition="count($list) eq 0 ">
+					<li class="tbody text-center">
+						<h3>没找到相应的数据</h3>
 					</li>
-				</foreach>
-			</ul>
-		</div>
-	</form>
-		<div class="page">{$page}</div>
-	</if>
+				</ul>
+			</div>
+		</form>
+		<else/>
+		<foreach name="list" item="vo">
+			<li class="tbody">
+				<span class="col4 right">{$vo.end_date}</span>
+				<span class="col3 right">{$vo.start_date}</span>
+				<span class="col2 right">{$vo.location}&nbsp;</span>
+				<div class="auto autocut">
+					<a href="{:U('read2?id='.$vo['id'])}">
+						{$vo.name}
+						<eq name="vo.name|strlen" value="0">无标题</eq>
+					</a>
+				</div>
+			</li>
+		</foreach>
+	</ul>
+</div>
+</form>
+<div class="page">{$page}</div>
+</if>
 </div>

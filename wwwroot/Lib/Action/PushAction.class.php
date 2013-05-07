@@ -8,7 +8,7 @@ class PushAction extends CommonAction {
 				exit();
 			}
 			$where=array();
-			$user_id = $user_id = $this -> get_user_id();
+			$user_id = $user_id = get_user_id();
 			session_write_close();
 			$where['user_id'] = $user_id;
 			$where['time'] = array('lt', time());
@@ -27,7 +27,7 @@ class PushAction extends CommonAction {
 	}
 
 	function add($status,$info,$data) {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = M("Push");
 		$model -> user_id = $user_id;
 		$model -> data = $data;

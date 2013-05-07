@@ -14,14 +14,14 @@ class DocAction extends CommonAction {
 			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])) {
-			$this -> set_search("start_date", $_POST['start_date']);
-			$this -> set_search("end_date", $_POST['end_date']);
+			$this -> _set_search("start_date", $_POST['start_date']);
+			$this -> _set_search("end_date", $_POST['end_date']);
 			$map['create_time'] = array( array('gt', date_to_int($_POST['start_date'])), array('lt', date_to_int($_POST['end_date'])));
 		}
 	}
 
 	public function index(){
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$map = $this -> _search();
 		if (method_exists($this, '_filter')) {
 			$this -> _filter($map);
@@ -99,7 +99,7 @@ class DocAction extends CommonAction {
 
 	public function _before_read() {
 		$id = $_REQUEST['id'];
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = M("Doc");
 		$folder_id = $model -> where("id=$id") -> getField('folder');
 		$this -> assign("auth", $auth = D("Folder") -> _get_folder_auth($folder_id));

@@ -72,6 +72,10 @@ class LoginAction extends Action {
 			//读取数据库模块列表生成菜单项
 			$menu = D("Node") -> access_list($authInfo['id']);
 
+			$common_list = D("Folder") -> get_common_list();
+			$personal_list = D("Folder") -> get_person_list();
+			$menu = array_merge($common_list, $personal_list, $menu);
+
 			//缓存菜单访问
 			session('menu' . $authInfo['id'], $menu);
 			//保存登录信息
@@ -100,8 +104,8 @@ class LoginAction extends Action {
 		$map['password'] = pwdHash($_POST['oldpassword']);
 		if (isset($_POST['account'])) {
 			$map['account'] = $_POST['account'];
-		} elseif (($this -> get_user_id())) {
-			$map['id'] = $this -> get_user_id();
+		} elseif ((get_user_id())) {
+			$map['id'] = get_user_id();
 		}
 		//检查用户
 		$User = M("User");
@@ -110,7 +114,7 @@ class LoginAction extends Action {
 		} else {
 			$User -> password = pwdHash($_POST['password']);
 			$User -> save();
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('密码修改成功！');
 		}
 	}
@@ -118,7 +122,7 @@ class LoginAction extends Action {
 	public function profile() {
 		$this -> checkUser();
 		$User = M("User");
-		$vo = $User -> getById($this -> get_user_id());
+		$vo = $User -> getById(get_user_id());
 		$this -> assign('vo', $vo);
 		$this -> display();
 	}

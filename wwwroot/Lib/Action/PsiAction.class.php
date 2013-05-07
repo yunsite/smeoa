@@ -21,7 +21,7 @@ class PsiAction extends CommonAction {
 	}
 
 	protected function mail_list() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = D('Mail');
 
 		//获取最新邮件
@@ -39,7 +39,7 @@ class PsiAction extends CommonAction {
 	}
 
 	protected function process_list() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = D('Process');
 		//带审批的列表
 		$ProcessLog = M("ProcessLog");
@@ -61,7 +61,7 @@ class PsiAction extends CommonAction {
 	}
 
 	protected function doc_list() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = D('Doc');
 		//获取最新邮件
 
@@ -79,7 +79,7 @@ class PsiAction extends CommonAction {
 	}
 
 	protected function schedule_list() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = M('Schedule');
 		//获取最新邮件
 		$start_date = date("Y-m-d");

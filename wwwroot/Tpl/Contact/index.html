@@ -31,12 +31,12 @@
 		if ($("#form_data .table input:checked").length == 0) {
 			$("li.tbody.active input:checkbox").attr("checked", true);
 		}
-		sendForm("form_data", "{:U('set_group')}","__URL__");
+		sendForm("form_data", "{:U('set_tag')}","__URL__");
 	}
 
-	function new_group1() {
+	function create_new_tag() {
 		$(".contact .cmd").hide();
-		$(".contact .new_group").css("display", "block");
+		$(".contact .new_tag").css("display", "block");
 		$(".contact .apply").show();
 	}
 
@@ -87,7 +87,7 @@
 			$(".table li").hide();
 			gid = $(this).attr("gid");
 			$(".title nobr").html($(this).text());
-			$(".table li div.group").each(function() {
+			$(".table li div.tag").each(function() {
 				if ($(this).text().indexOf(gid) >= 0) {
 					$(this).parents("li").show();
 				};
@@ -102,23 +102,23 @@
 			})
 			e.stopPropagation();
 		})
-		$(".group_list input:checkbox").bind("change propertychange", function() {
+		$(".tag_list input:checkbox").bind("change propertychange", function() {
 			$(".contact .cmd").hide();
 			$(".contact .apply").show();
 		})
-		$(".group_list li,.dropdown-menu .cmd li,.new_group input").click(function(e){
+		$(".tag_list li,.dropdown-menu .cmd li,.new_tag input").click(function(e){
 			e.stopPropagation();
 		})
 		$("li.tbody").click(function() {
 			$("li.tbody.active").removeClass("active");
 			$(this).addClass("active");
 			$(".table input:checkbox").attr("checked", false);
-			$(".group_list input[name='group[]']").attr("checked", false);
-			str=trim($(this).find(".group").text());
+			$(".tag_list input[name='tag[]']").attr("checked", false);
+			str=trim($(this).find(".tag").text());
 			strs=str.split(","); 
 			for (i=0;i<strs.length;i++)    
 			 {  
-				 $(".group_list input[name='group[]'][value='"+strs[i]+"']").attr("checked",true);
+				 $(".tag_list input[name='tag[]'][value='"+strs[i]+"']").attr("checked",true);
 			}
 		})
 	}); 
@@ -133,7 +133,7 @@
 				<li gid="">
 					<a>全部</a>
 				</li>
-				<foreach name="group_list" item="vo">
+				<foreach name="tag_list" item="vo">
 					<li gid="{$key}">
 						<a>{$vo}</a>
 					</li>
@@ -156,7 +156,7 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a onclick="manage_group();">管理组</a>
+							<a onclick="manage_tag();">管理组</a>
 						</li>
 						<li>
 							<a onclick="import_contact();">导入</a>
@@ -173,25 +173,25 @@
 						组
 						<span class="caret"></span>
 					</a>
-					<ul class="dropdown-menu group_list">
+					<ul class="dropdown-menu tag_list">
 						<li class="disabled">
 							<a>添加到</a>
 						</li>
-						<foreach name="group_list" item="vo">
+						<foreach name="tag_list" item="vo">
 							<li>
 								<a>
 									<label class="checkbox">
-										<input type="checkbox" name="group[]" value="{$key}">{$vo}</label>
+										<input type="checkbox" name="tag[]" value="{$key}">{$vo}</label>
 								</a>
 							</li>
 						</foreach>
-						<li class="new_group">
-							<input type="text" name="new_group" class="input-medium"></li>
+						<li class="new_tag">
+							<input type="text" name="new_tag" class="input-medium"></li>
 						<li class="divider"></li>
 						<li class="apply">
 							<input class="btn" type="button" value="应用" onclick="apply();"></li>
 						<li class="cmd">
-							<input class="btn input-mini" type="button" onclick="new_group1();" value="新组"></li>
+							<input class="btn input-mini" type="button" onclick="create_new_tag();" value="新组"></li>
 					</ul>
 				</div>
 			</div>
@@ -211,8 +211,8 @@
 			<foreach name="list" item="vo">
 				<li  class="tbody">
 					<div class="data" style="display:none">{$vo.letter}</div>
-					<div class="group" style="display:none">
-						<php>echo($group_data[$vo["id"]])</php>
+					<div class="tag" style="display:none">
+						<php>echo($tag_data[$vo["id"]])</php>
 					</div>
 						<div class="row-fluid">
 							<span class="span6" style="padding-left:30px;">

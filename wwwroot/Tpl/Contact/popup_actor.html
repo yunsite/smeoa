@@ -15,6 +15,7 @@
 
 	// 显示AJAX 读取的数据
 	function showdata(result) {
+		alert(result);
 		$("#addr_list").html("");
 		if ( type = $("input[name='type']:checked").val() == "company") {
 			var id = $("#company a.active").attr("node");

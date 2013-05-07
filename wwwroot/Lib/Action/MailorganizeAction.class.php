@@ -2,7 +2,7 @@
 class MailOrganizeAction extends CommonAction {
 
 	public function index() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$where["user_id"] = $user_id;
 		$list = M("MailOrganize") -> where($where) -> select();
 		$this -> assign("list", $list);
@@ -30,7 +30,7 @@ class MailOrganizeAction extends CommonAction {
 			$this -> error($model -> getError());
 		}
 		if (in_array('user_id', $model -> getDbFields())) {
-			$model -> user_id = $this -> get_user_id();
+			$model -> user_id = get_user_id();
 		};
 		if (in_array('user_name', $model -> getDbFields())) {
 			$model -> user_name = $this -> _session("user_name");
@@ -38,7 +38,7 @@ class MailOrganizeAction extends CommonAction {
 		//保存当前数据对象
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('编辑成功!');
 		} else {
 			//失败提示
@@ -51,12 +51,12 @@ class MailOrganizeAction extends CommonAction {
 		$id = $_REQUEST["id"];
 		$model = D("MailOrganize");
 
-		$where['user_id'] = $this -> get_user_id();
+		$where['user_id'] = get_user_id();
 		$where['id'] = $id;
 		$list = $model -> where($where) -> delete();
 
 		if ($list !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('删除成功!');
 		} else {
 			//失败提示

@@ -5,7 +5,7 @@ class ScheduleAction extends CommonAction {
 		if (!empty($_POST["name"])) {
 			$map['name'] = array('like', "%" . $_POST['name'] . "%");
 		}
-		$map['user_id'] = array('eq', $this -> get_user_id());
+		$map['user_id'] = array('eq', get_user_id());
 		$map['status'] = array('eq', '1');
 		if (!empty($_POST["start_date"])) {
 			$map['start_date'] = array("egt", $_POST["start_date"]);
@@ -38,7 +38,7 @@ class ScheduleAction extends CommonAction {
 		$this -> assign('prev', $prev);
 
 		$where['id'] = $id;
-		$where['user_id'] = $this -> get_user_id();
+		$where['user_id'] = get_user_id();
 
 		$vo = $model -> where($where) -> find();
 		$this -> assign('vo', $vo);
@@ -56,7 +56,7 @@ class ScheduleAction extends CommonAction {
 		}else{
 			$start_date=$_POST["start_date"];
 		}
-		if (empty($_POST["end_date"])) {
+		if (empty($_POST["end_date"])){
 			$end_date=toDate(mktime(0,0,0,date("m")+1,0,date("Y")),'Y-m-d');			
 			$map['end_date'] = array("elt",toDate(time(),'Y-m-d'));		
 		}else{
@@ -64,6 +64,7 @@ class ScheduleAction extends CommonAction {
 		}
 		$this->assign('start_date',$start_date);
 		$this->assign('end_date',$end_date);
+
 		$model = D("Schedule");
 
 		if (!empty($model)) {
@@ -91,7 +92,7 @@ class ScheduleAction extends CommonAction {
 
 		$id = $_REQUEST['id'];
 		$model = M('Schedule');
-		$where['user_id'] = $this -> get_user_id();
+		$where['user_id'] = get_user_id();
 		$where['id'] = $id;
 		$vo = $model -> where($where) -> find();
 
@@ -112,7 +113,7 @@ class ScheduleAction extends CommonAction {
 	function json() {
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Content-Type:text/html; charset=utf-8");
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$start_date = $_REQUEST["start_date"];
 		$end_date = $_REQUEST["end_date"];
 

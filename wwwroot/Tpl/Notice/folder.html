@@ -1,6 +1,12 @@
 <layout name='Layout/layout_main' />
 <link type="text/css" href="__PUBLIC__/css/jquery-ui.css" rel="stylesheet"/>
 <script type="text/javascript" src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<script>
+	$(document).ready(function(){
+		set_return_url();
+		$("#be_create_time,#en_create_time").datepicker();	
+	}); 
+</script>
 <div class="notice">
 	<form id="form_search" method='post' >
 		<div class="row-fluid title">
@@ -23,28 +29,28 @@
 			</div>
 			<div class="row-fluid form-horizontal">
 				<div class="control-group span6">
-					<label class="control-label" for="title">标题 ：</label>
+					<label class="control-label" for="li_title">标题 ：</label>
 					<div class="controls">
-						<input type="text" id="title" name="title"></div>
+						<input type="text" id="li_title" name="li_title"></div>
 				</div>
 				<div class="control-group span6">
-					<label class="control-label" for="content">内容：</label>
+					<label class="control-label" for="li_content">内容：</label>
 					<div class="controls">
-						<input type="text" id="content" name="content" ></div>
+						<input type="text" id="li_content" name="li_content" ></div>
 				</div>
 			</div>
 			<div class="row-fluid form-horizontal">
 				<div class="control-group span6">
-					<label class="control-label" for="user_name">登录人：</label>
+					<label class="control-label" for="eq_user_name">登录人：</label>
 					<div class="controls">
-						<input type="text" id="user_name" name="user_name"></div>
+						<input type="text" id="eq_user_name" name="eq_user_name"></div>
 				</div>
 				<div class="control-group span6">
-					<label class="control-label" for="start_date">登录时间：</label>
+					<label class="control-label" for="be_create_time">登录时间：</label>
 					<div class="controls">
-						<input  type="text" name="start_date" id="start_date" class="input-date" value="{$search['start_date']}"  readonly="readonly">
+						<input  type="text" name="be_create_time" id="be_create_time" class="input-date" readonly="readonly">
 						&nbsp;~&nbsp;
-						<input type="text" name="end_date" id="end_date" value="{$search['end_date']}" readonly="readonly" class="input-date" ></div>
+						<input type="text" name="en_create_time" id="en_create_time" readonly="readonly" class="input-date" ></div>
 				</div>
 			</div>
 		</div>

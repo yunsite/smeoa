@@ -9,33 +9,33 @@ class PayAction extends CommonAction {
 			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])){
-			$this -> set_search("start_date", $_POST['start_date']);
-			$this -> set_search("end_date", $_POST['end_date']);
+			$this -> _set_search("start_date", $_POST['start_date']);
+			$this -> _set_search("end_date", $_POST['end_date']);
 			$map['create_time'] = array( array('egt',$_POST['start_date']), array('elt', $_POST['end_date']));
 		}
 		if (!empty($_POST['supplier'])){
-			$this -> set_search("supplier", $_POST['supplier']);
+			$this -> _set_search("supplier", $_POST['supplier']);
 			$map['supplier'] = array('eq',$_POST['supplier']);
 		}
 		if (!empty($_POST['mat_no'])){
-			$this -> set_search("mat_no", $_POST['mat_no']);
+			$this -> _set_search("mat_no", $_POST['mat_no']);
 			$map['mat_no'] = array('eq',$_POST['mat_no']);
 		}
 		if (!empty($_POST['po_no'])){
-			$this -> set_search("po_no", $_POST['po_no']);
+			$this -> _set_search("po_no", $_POST['po_no']);
 			$map['po_no'] = array('eq',$_POST['po_no']);
 		}
 		if (!empty($_POST['user_id'])){
-			$this -> set_search("user_id", $_POST['user_id']);
+			$this -> _set_search("user_id", $_POST['user_id']);
 			$map['user_id'] = array('eq',$_POST['user_id']);
 		}
 		if (!empty($_POST['remark'])){
-			$this -> set_search("remark", $_POST['remark']);
+			$this -> _set_search("remark", $_POST['remark']);
 			$map['remark|item_remark'] = array('like', "%" . $_POST['remark'] . "%");
 		}
 	}
 	public function index() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$map = $this -> _search();
 		if (method_exists($this, '_filter')) {
 			$this -> _filter($map);
@@ -44,8 +44,8 @@ class PayAction extends CommonAction {
 		if (empty($_POST['start_date']) & empty($_POST['end_date'])){
 			$start_date=toDate(mktime(0,0,0,date("m"),1,date("Y")),'Y-m-d');	
 			$end_date=toDate(mktime(0,0,0,date("m")+1,0,date("Y")),'Y-m-d');	
-			$this -> set_search("start_date",$start_date);
-			$this -> set_search("end_date",$end_date);
+			$this -> _set_search("start_date",$start_date);
+			$this -> _set_search("end_date",$end_date);
 			$map['create_time'] = array( array('gt', date_to_int($start_date)), array('lt', date_to_int($end_date)));
 		}
 		$this->assign('start_date',$start_date);
@@ -90,7 +90,7 @@ class PayAction extends CommonAction {
 			$this -> error($po_model -> getError());
 		}
 		if (in_array('user_id', $po_model -> getDbFields())) {
-			$po_model -> user_id = $this -> get_user_id();
+			$po_model -> user_id = get_user_id();
 		};
 		if (in_array('user_name', $po_model -> getDbFields())) {
 			$po_model -> user_name = $this -> _session("user_name");
@@ -107,7 +107,7 @@ class PayAction extends CommonAction {
 				$this -> error($gi_model -> getError());
 			}
 			if (in_array('user_id', $gi_model -> getDbFields())) {
-				$gi_model -> user_id = $this -> get_user_id();
+				$gi_model -> user_id = get_user_id();
 			};
 			if (in_array('user_name', $gi_model -> getDbFields())) {
 				$gi_model -> user_name = $this -> _session("user_name");
@@ -163,7 +163,7 @@ class PayAction extends CommonAction {
 			M("Pay")->add($pay_data);
 		}
 		if ($po_result !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示
@@ -173,7 +173,7 @@ class PayAction extends CommonAction {
 
 	public function _before_read() {
 		$id = $_REQUEST['id'];
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = M("Po");
 		$folder_id = $model -> where("id=$id") -> getField('folder');
 		$this -> assign("auth", $auth = D("Folder") -> _get_folder_auth($folder_id));

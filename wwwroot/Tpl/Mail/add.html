@@ -31,11 +31,6 @@
 		}
 	}
 
-
-	$(document).ready(function() {
-		editor_init();
-		uploader_init();
-	})
 	function switch_bcc() {
 		if ($("#bcc").attr("class").indexOf("dis") < 0) {
 			$("#bcc").addClass("dis");
@@ -49,6 +44,10 @@
 	function popup_contact(){
 		winopen("{:U("contact/popup_contact")}",800,574);
 	}
+
+	$(document).ready(function() {
+		editor_init();		
+	})
 
 </script>
 <div class="mail">
@@ -104,7 +103,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row-fluid form-horizontal" id="bcc">
+			<div class="row-fluid form-horizontal dis" id="bcc">
 				<div class="control-group span12">
 					<label class="control-label" for="name">密送：</label>
 					<div class="controls">

@@ -15,19 +15,6 @@ class NoticeAction extends CommonAction {
 		}
 	}
 
-	public function index() {
-		$map = $this -> _search();
-		if (method_exists($this, '_filter')) {
-			$this -> _filter($map);
-		}
-		$model = D("Notice");
-		if (!empty($model)) {
-			$this -> _list($model, $map);
-		}
-		$this -> display();
-		return;
-	}
-
 	public function mark() {
 		$action = $_REQUEST['action'];
 		$id = $_REQUEST['notice_id'];
@@ -76,7 +63,7 @@ class NoticeAction extends CommonAction {
 
 	public function _before_read() {
 		$id = $_REQUEST['id'];
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = M("Notice");
 		$folder_id = $model -> where("id=$id") -> getField('folder');
 		$this -> assign("auth", $auth = D("Folder") -> _get_folder_auth($folder_id));

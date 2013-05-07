@@ -30,7 +30,7 @@
 	}
 
 	// 显示AJAX 读取的数据
-	function showdata(result) {
+	function showdata(result) {		
 		$("#addr_list").html("");
 		if ( type = $("input[name='type']:checked").val() == "company") {
 			var id = $("#company a.active").attr("node");
@@ -40,10 +40,10 @@
 			$("#addr_list").html(html_string);
 		}
 		for (s in result.data) {
-			var id = result.data[s].id;
+			var id = result.data[s].id;			
 			var position_name = result.data[s].position_name;
 			var emp_no = result.data[s].emp_no;
-			var emp_name = result.data[s].emp_name;
+			var emp_name = result.data[s].name;
 			var email = result.data[s].email;
 			if (position_name == undefined){
 				var html_string = "<label><input type=\"checkbox\" name=\"addr_id\" value=\"" + emp_no + "\"><a  title=" + email + " onmousedown=\"return false\" href=\"javascript:void(0);\">" + emp_name + " &lt;" + email + "&gt; </a></label>";
@@ -220,7 +220,13 @@
 				<div id="company" class="dis" style="height:200px;">{$list_company}</div>
 				<div id="rank" class="dis" style="height:200px;">{$list_rank}</div>
 				<div id="position" class="dis" style="height:200px;">{$list_position}</div>
-				<div id="personal" class="dis" style="height:200px;">{$list_personal}</div>
+				<div id="personal" class="dis" style="height:200px;">
+					<ul class="tree_menu">
+						<volist name="list_personal" id="vo">
+							<li><a class="" node="{$key}"><i class="icon level1"></i><span>{$vo}</span></a></li>
+						</volist>
+					</ul>						
+				</div>
 			</div>
 			<div class="row-fluid">
 				<div id="addr_list" style="width:100%;height:200px;"></div>

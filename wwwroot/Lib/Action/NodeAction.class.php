@@ -65,7 +65,7 @@ class NodeAction extends CommonAction {
 	}
 
 	function winpop() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		if ($user_id) {
 			if ($this -> _session('menu' . $user_id)) {
 				//如果已经缓存，直接读取缓存

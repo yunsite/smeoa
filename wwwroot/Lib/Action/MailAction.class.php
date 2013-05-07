@@ -7,17 +7,17 @@ class MailAction extends CommonAction {
 
 	function _filter(&$map){
 		$map['status'] = array('eq', '1');
-		$map['user_id'] = array('eq', $this ->get_user_id());
+		$map['user_id'] = array('eq', get_user_id());
 		if (!empty($_POST['from'])) {
 			$map['from'] = array('like', '%' . $_POST['from'] . '%');
 		}
 		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])) {
-			$this -> set_search("start_date", $_POST['start_date']);
-			$this -> set_search("end_date", $_POST['end_date']);
+			$this -> _set_search("start_date", $_POST['start_date']);
+			$this -> _set_search("end_date", $_POST['end_date']);
 			$map['create_time'] = array( array('gt', date_to_int($_POST['start_date'])), array('lt', date_to_int($_POST['end_date'])));
 		}
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
-			$this -> set_search("keyword", $_POST['keyword']);
+			$this -> _set_search("keyword", $_POST['keyword']);
 			$map['title'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 	}
@@ -43,7 +43,7 @@ class MailAction extends CommonAction {
 		if (empty($folder)) {
 			$folder = "user";
 		}
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$this -> _assign_mail_folder_list();
 
 		$model = D('Mail');
@@ -185,7 +185,7 @@ class MailAction extends CommonAction {
 				break;
 		}
 		if ($result !== false) {
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('操作成功!');
 		} else {
 			//失败提示
@@ -216,7 +216,7 @@ class MailAction extends CommonAction {
 
 	private function organize(&$model) {
 
-		$where['user_id'] = $this ->get_user_id();
+		$where['user_id'] = get_user_id();
 		$where['status'] = 1;
 		$list = M("MailOrganize") -> where($where) -> order('sort') -> select();
 
@@ -270,7 +270,7 @@ class MailAction extends CommonAction {
 	//--------------------------------------------------------------------
 	private function _check_mail_account() {
 		if (empty($this -> config)) {
-			$user_id = $this ->get_user_id();
+			$user_id = get_user_id();
 			$model = M('MailAccount');
 			$list = $model -> field('mail_name,email,pop3svr,smtpsvr,mail_id,mail_pwd') -> find($user_id);
 			if (empty($list['mail_name']) || empty($list['email']) || empty($list['pop3svr']) || empty($list['smtpsvr']) || empty($list['mail_id']) || empty($list['mail_pwd'])) {
@@ -305,7 +305,7 @@ class MailAction extends CommonAction {
 		$model = M('Mail');
 		$id = $_REQUEST['id'];
 		$where['id'] = array('eq', $id);
-		$where['user_id'] = array('eq', $this ->get_user_id());
+		$where['user_id'] = array('eq', get_user_id());
 
 		$model -> where($where) -> setField('read', '1');
 
@@ -337,7 +337,7 @@ class MailAction extends CommonAction {
 		$model = M('Mail');
 		$id = $_REQUEST['id'];
 		$where['id'] = array('eq', $id);
-		$where['user_id'] = array('eq', $this ->get_user_id());
+		$where['user_id'] = array('eq', get_user_id());
 		$model -> where($where) -> setField('read', '1');
 
 		$vo = $model -> getById($id);
@@ -365,7 +365,7 @@ class MailAction extends CommonAction {
 
 		$where['folder'] = array("eq", $folder_id);
 		$where['_string'] = "create_time>$create_time";
-		$where['user_id'] = array('eq', $this ->get_user_id());
+		$where['user_id'] = array('eq', get_user_id());
 
 		$prev = $model -> where($where) -> field("id,title") -> order('create_time asc') -> limit('1') -> select();
 		if ($prev) {
@@ -380,7 +380,7 @@ class MailAction extends CommonAction {
 		$where = array();
 		$where['folder'] = array("eq", $folder_id);
 		$where['_string'] = "create_time<$create_time";
-		$where['user_id'] = array('eq', $this ->get_user_id());
+		$where['user_id'] = array('eq', get_user_id());
 
 		$next = $model -> where($where) -> field("id,title") -> order('create_time desc') -> limit('1') -> select();
 
@@ -426,7 +426,7 @@ class MailAction extends CommonAction {
 			$this -> ajaxReturn(1, "请设置邮箱帐号", 0);
 			die();
 		}
-		$user_id = $this ->get_user_id();
+		$user_id = get_user_id();
 		session_write_close();
 		vendor("Mail.class#receve2");
 		$mail_list = array();
@@ -520,7 +520,7 @@ class MailAction extends CommonAction {
 		if (false === $model -> create()) {
 			$this -> error($model -> getError());
 		}
-		$model -> __set('user_id', $this ->get_user_id());
+		$model -> __set('user_id', get_user_id());
 		$model -> __set('folder', 3);
 		$model -> __set('from', $this -> config['mail_name'] . '|' . $this -> config['email']);
 		$model -> __set('reply_to', $this -> config['mail_name'] . '|' . $this -> config['email']);
@@ -542,7 +542,7 @@ class MailAction extends CommonAction {
 	//--------------------------------------------------------------------
 	private function _get_recent() {
 		$model = M("Recent");
-		$user_id = $this ->get_user_id();
+		$user_id = get_user_id();
 		return $model -> where("user_id=$user_id") -> getField("recent");
 	}
 
@@ -550,7 +550,7 @@ class MailAction extends CommonAction {
 	//  设置最近联系人
 	//--------------------------------------------------------------------
 	private function _set_recent($address_list) {
-		$user_id = $this ->get_user_id();
+		$user_id = get_user_id();
 		$data["user_id"] = $user_id;
 		$model = M("Recent");
 		$recent = $model -> where("user_id=$user_id") -> getField("recent");
@@ -699,7 +699,7 @@ class MailAction extends CommonAction {
 			if (false === $model -> create()) {
 				$this -> error($model -> getError());
 			}
-			$model -> __set('user_id', $this ->get_user_id());
+			$model -> __set('user_id', get_user_id());
 			$model -> __set('folder', 2);
 			$model -> __set('read', 1);
 			$model -> __set('from', $this -> config['mail_name'] . '|' . $this -> config['email']);
@@ -712,6 +712,7 @@ class MailAction extends CommonAction {
 			}
 
 			if ($mail -> Send()) {
+				cookie("left_menu",105);
 				$this -> assign('jumpUrl', U('mail/mail_list?folder=outbox'));
 				$this -> success("发送成功");
 			} else {

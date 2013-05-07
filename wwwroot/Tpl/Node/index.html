@@ -82,7 +82,6 @@
 		<div class="span8 sub_content">
 			<form id="form_data" name="form_data" method="post" action="">
 				<input type="hidden" name="id" id="id">
-				<input type="hidden" name="pid" id="pid" value="">
 				<input type="hidden" name="ajax" id="ajax" value="1">
 				<input type="hidden" name="opmode" id="opmode" value="">
 				<html:select id="node_list" name="node_list"  options="node_list" style="dis"/>
@@ -103,13 +102,17 @@
 								<nobr>父节点</nobr>
 							</th>
 							<td>
-								<input type="text" id="node_name" name="node_name" readonly>
-								<input class="wd2 btn" type="button" value="选择父节点" onclick="select_pid();"></td>
-						</tr>
-						<tr>
-							<th>图标</th>
-							<td>
-								<input type="text" id="icon" name="icon"></td>
+								<div class="controls">
+									<div class="input-append">
+										<input name="node_name" class="val" id="node_name" type="text" msg="请选择父节点" check="require" source="{:U('dept/json')}" />
+										<input name="pid" class="key" id="pid" type="hidden" msg="请选择父节点" check="require" />
+										<button class="btn" onclick="select_pid()" type="button">选择</button>
+									</div>
+									<div class="search dropdown ">
+										<ul class="dropdown-menu"></ul>
+									</div>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<th>子文件夹</th>
