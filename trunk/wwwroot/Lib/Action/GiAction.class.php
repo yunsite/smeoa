@@ -14,32 +14,32 @@ class GiAction extends CommonAction {
 			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])){
-			$this -> set_search("start_date", $_POST['start_date']);
-			$this -> set_search("end_date", $_POST['end_date']);
+			$this -> _set_search("start_date", $_POST['start_date']);
+			$this -> _set_search("end_date", $_POST['end_date']);
 			$map['gi_date'] = array( array('egt',$_POST['start_date']), array('elt', $_POST['end_date']));			
 		}
 		if (!empty($_POST['supplier'])){
-			$this -> set_search("supplier", $_POST['supplier']);
+			$this -> _set_search("supplier", $_POST['supplier']);
 			$map['supplier'] = array('eq',$_POST['supplier']);
 		}
 		if (!empty($_POST['mat_no'])){
-			$this -> set_search("mat_no", $_POST['mat_no']);
+			$this -> _set_search("mat_no", $_POST['mat_no']);
 			$map['mat_no'] = array('eq',$_POST['mat_no']);
 		}
 		if (!empty($_POST['gi_no'])){
-			$this -> set_search("gi_no", $_POST['gi_no']);
+			$this -> _set_search("gi_no", $_POST['gi_no']);
 			$map['gi_no'] = array('eq',$_POST['gi_no']);
 		}
 		if (!empty($_POST['po_no'])){
-			$this -> set_search("gi_no", $_POST['po_no']);
+			$this -> _set_search("gi_no", $_POST['po_no']);
 			$map['po_no'] = array('eq',$_POST['po_no']);
 		}		
 		if (!empty($_POST['user_id'])){
-			$this -> set_search("user_id", $_POST['user_id']);
+			$this -> _set_search("user_id", $_POST['user_id']);
 			$map['user_id'] = array('eq',$_POST['user_id']);
 		}
 		if (!empty($_POST['remark'])){
-			$this -> set_search("remark", $_POST['remark']);
+			$this -> _set_search("remark", $_POST['remark']);
 			$map['remark|item_remark'] = array('like', "%" . $_POST['remark'] . "%");
 		}
 	}
@@ -53,8 +53,8 @@ class GiAction extends CommonAction {
 		if (empty($_POST['start_date']) & empty($_POST['end_date'])){
 			$start_date=toDate(mktime(0,0,0,date("m")-1,1,date("Y")),'Y-m-d');	
 			$end_date=toDate(mktime(0,0,0,date("m")+1,0,date("Y")),'Y-m-d');	
-			$this -> set_search("start_date",$start_date);
-			$this -> set_search("end_date",$end_date);
+			$this -> _set_search("start_date",$start_date);
+			$this -> _set_search("end_date",$end_date);
 			$map['po_date'] = array( array('egt',$start_date), array('elt',$end_date));			
 		}else{
 			$start_date=$_POST['start_date'];
@@ -94,8 +94,8 @@ class GiAction extends CommonAction {
 		if (empty($_POST['start_date']) & empty($_POST['end_date'])){
 			$start_date=toDate(mktime(0,0,0,date("m"),1,date("Y")),'Y-m-d');	
 			$end_date=toDate(mktime(0,0,0,date("m")+1,0,date("Y")),'Y-m-d');	
-			$this -> set_search("start_date",$start_date);
-			$this -> set_search("end_date",$end_date);
+			$this -> _set_search("start_date",$start_date);
+			$this -> _set_search("end_date",$end_date);
 			$map['gi_date'] = array( array('egt',$start_date), array('elt',$end_date));
 		}else{
 			$start_date=$_POST['start_date'];
@@ -163,7 +163,7 @@ class GiAction extends CommonAction {
 			$this -> error($gi_model -> getError());
 		}
 		if (in_array('user_id', $gi_model -> getDbFields())) {
-			$gi_model -> user_id = $this -> get_user_id();
+			$gi_model -> user_id = get_user_id();
 		};
 		if (in_array('user_name', $gi_model -> getDbFields())) {
 			$gi_model -> user_name = $this -> _session("user_name");
@@ -182,7 +182,7 @@ class GiAction extends CommonAction {
 			$gi_item_result=$gi_item_model->add($data);			
 		}
 		if ($gi_result !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示

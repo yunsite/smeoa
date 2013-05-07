@@ -2,21 +2,12 @@
 class TodoAction extends CommonAction {
 	//过滤查询字段
 	function _filter(&$map) {
-		$map['name'] = array('like', "%" . $_POST['name'] . "%");
-		$map['user_id'] = array('eq', $this -> get_user_id());
-		$map['status'] = array('eq', '1');
-		if (!empty($_POST["start_date"])) {
-			$map['start_date'] = array(gt, $_POST["start_date"]);
-		}
-		if (!empty($_POST["end_date"])) {
-			$map['end_date'] = array(lt, $_POST["end_date"]);
-		}
-		$map['tag'] = array('like', "%" . $_POST['tag'] . "%");
+		$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		$map['status'] = array('eq', '1');
 	}
 
 	public function index() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$where['user_id'] = $user_id;
 		$where['status'] = array("in", "1,2");
 		if(!empty($_POST['keyword'])){
@@ -53,29 +44,10 @@ class TodoAction extends CommonAction {
 		$this -> assign('prev', $prev);
 
 		$where['id'] = $id;
-		$where['user_id'] = $this -> get_user_id();
+		$where['user_id'] = get_user_id();
 		$vo = $model -> where($where) -> find();
 		$this -> assign('vo', $vo);
 		$this -> display();
-	}
-
-	function search() {
-		C('SHOW_RUN_TIME', false);
-		// 运行时间显示
-		C('SHOW_PAGE_TRACE', false);
-		$map = $this -> _search();
-		if (method_exists($this, '_filter')) {
-			$this -> _filter($map);
-		}
-
-		$model = D("Todo");
-
-		if (!empty($model)) {
-			$this -> _list($model, $map);
-		}
-		$this -> assign('type_data', $this -> type_data);
-		$this -> display();
-		return;
 	}
 
 	public function down() {
@@ -86,10 +58,10 @@ class TodoAction extends CommonAction {
 	function del() {
 		$id = $_REQUEST['id'];
 		$where['id'] = $id;
-		$where['user_id'] = $this -> get_user_id();
+		$where['user_id'] = get_user_id();
 		$result = M("Todo") -> where($where) -> delete();
 		if ($result !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('删除成功!');
 		} else {
 			//失败提示
@@ -109,7 +81,7 @@ class TodoAction extends CommonAction {
 
 		$id = $_REQUEST['id'];
 		$model = M('Todo');
-		$where['user_id'] = $this -> get_user_id();
+		$where['user_id'] = get_user_id();
 		$where['id'] = $id;
 		$vo = $model -> where($where) -> find();
 
@@ -126,16 +98,12 @@ class TodoAction extends CommonAction {
 
 		$model = M("Todo");
 		// 实例化User对象
-		$where['user_id'] = $this -> get_user_id();
+		$where['user_id'] = get_user_id();
 		foreach ($node as $key => $val) {
 			$data = array('priority' => $priority[$key], 'sort' => $sort[$key]);
 			$where['id'] = $val;
 			$model -> where($where) -> setField($data);
 		}
-	}
-
-	public function read2() {
-		$this -> read();
 	}
 
 	public function mark_status() {
@@ -146,13 +114,13 @@ class TodoAction extends CommonAction {
 			$date = date("Y-m-d");
 			$model = M("Todo");
 			$where['id'] = $id;
-			$where['user_id'] = array('eq', $this -> get_user_id());
+			$where['user_id'] = array('eq', get_user_id());
 			$list = $model -> where($where) -> setField($field, $date);
 		}
 		$field = 'status';
 		$result = $this -> set_field($id, $field, $val);
 		if ($result !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('删除成功!');
 		} else {
 			//失败提示
@@ -163,7 +131,7 @@ class TodoAction extends CommonAction {
 	function json() {
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Content-Type:text/html; charset=utf-8");
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$start_date = $_REQUEST["start_date"];
 		$end_date = $_REQUEST["end_date"];
 
@@ -172,6 +140,5 @@ class TodoAction extends CommonAction {
 		$list = M("Todo") -> where($where) -> order('start_date,priority desc') -> select();
 		exit(json_encode($list));
 	}
-
 }
 ?>

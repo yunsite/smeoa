@@ -6,11 +6,10 @@ class ForumAction extends CommonAction {
 
 	//过滤查询字段
 	function _filter(&$map) {
-		$map['title'] = array('like', "%" . $_POST['title'] . "%");
-		$map['user_name'] = array('like', "%" . $_POST['user_name'] . "%");
-		$map['content'] = array('like', "%" . $_POST['content'] . "%");
-		$map['notice_no'] = array('like', "%" . $_POST['notice_no'] . "%");
 		$map['status'] = array('eq', '1');
+		if(!empty($_REQUEST['fid'])){
+			$map['folder'] = $_REQUEST['fid'];
+		}
 	}
 
 	public function _conv_data(&$item) {
@@ -53,7 +52,7 @@ class ForumAction extends CommonAction {
 		$this -> assign('vo', $vo);
 
 		$id = $_REQUEST['id'];
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$user['user_id'] = $user_id;
 
 		$user = $this -> _conv_data($user);
@@ -84,18 +83,16 @@ class ForumAction extends CommonAction {
 	}
 
 	public function folder() {
-
-		$folder_id = $_REQUEST['fid'];
-		if (!empty($_REQUEST['name'])) {
-			$where['name'] = array("like", "%" . $_REQUEST['name'] . "%");
+		$map = $this -> _search();
+		if (method_exists($this, '_filter')) {
+			$this -> _filter($map);
 		}
-		$where['folder'] = $folder_id;
-		$where['status'] = 1;
 		$model = M("Forum");
 		if (!empty($model)) {
-			$this -> _list($model, $where);
+			$this -> _list($model,$map);
 		}
 		$where = array();
+		$folder_id=$map['folder'];
 		$where['id'] = array('eq', $folder_id);
 		$folder_name = M("Folder") -> where($where) -> getField("name");
 		$this -> assign("folder_name", $folder_name);
@@ -127,7 +124,7 @@ class ForumAction extends CommonAction {
 
 	public function move_folder() {
 		$id = $_REQUEST['id'];
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 
 		$where['id'] = array('in', explode(',', $id));
 		$list = $list = M("Forum") -> where($where) -> getfield('id,folder,user_id');

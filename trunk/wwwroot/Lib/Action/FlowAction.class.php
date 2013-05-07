@@ -12,13 +12,7 @@ class FlowAction extends CommonAction {
 	}
 
 	function _filter(&$map) {
-		$map['title'] = array('like', "%" . $_POST['title'] . "%");
-		$map['user_name'] = array('like', "%" . $_POST['user_name'] . "%");
-		$map['content'] = array('like', "%" . $_POST['content'] . "%");
 		$map['status'] = array('eq', '1');
-		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])) {
-			$map['create_time'] = array( array('gt', date_to_int($_POST['start_date'])), array('lt', date_to_int($_POST['end_date'])));
-		}
 	}
 
 	public function upload() {
@@ -46,7 +40,7 @@ class FlowAction extends CommonAction {
 		$folder = $_REQUEST['folder'];
 		$this -> assign("folder", $folder);
 		$emp_no = $_SESSION['emp_no'];
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 
 		$map = $this -> _search();
 		if (method_exists($this, '_filter')) {
@@ -102,7 +96,7 @@ class FlowAction extends CommonAction {
 	}
 
 	function new_count() {
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$model = M("FlowLog");
 		$where['emp_no'] = $_SESSION['emp_no'];
 		$where['_string'] = "result is null";
@@ -171,7 +165,7 @@ class FlowAction extends CommonAction {
 		}
 		$model -> result = 1;
 		if (in_array('user_id', $model -> getDbFields())) {
-			$model -> user_id = $this -> get_user_id();
+			$model -> user_id = get_user_id();
 		};
 		if (in_array('user_name', $model -> getDbFields())) {
 			$model -> user_name = $this -> _session("user_name");
@@ -186,7 +180,7 @@ class FlowAction extends CommonAction {
 
 		if ($list !== false) {//保存成功
 			D("Flow") -> next_step($flow_id, $step);
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('操作成功!');
 		} else {
 			//失败提示
@@ -201,7 +195,7 @@ class FlowAction extends CommonAction {
 		}
 		$model -> result = 0;
 		if (in_array('user_id', $model -> getDbFields())) {
-			$model -> user_id = $this -> get_user_id();
+			$model -> user_id = get_user_id();
 		};
 		if (in_array('user_name', $model -> getDbFields())) {
 			$model -> user_name = $this -> _session("user_name");
@@ -217,7 +211,7 @@ class FlowAction extends CommonAction {
 
 		if ($list !== false) {//保存成功
 			D("Flow") -> where("id=$flow_id") -> setField('step', 0);
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('操作成功!');
 		} else {
 			//失败提示

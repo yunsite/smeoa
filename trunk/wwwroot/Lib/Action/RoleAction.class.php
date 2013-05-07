@@ -13,6 +13,7 @@ class RoleAction extends CommonAction {
 		$menu = $node -> field('id,pid,name,check_auth,"#" as url') -> order('sort asc') -> select();
 		$tree = list_to_tree($menu, $pid);
 		$this -> assign('pid', $pid);
+		
 		$list = tree_to_list($tree);
 		$this -> assign('node_list', $list);
 		//$this->assign('menu',sub_tree_menu($list));
@@ -65,7 +66,7 @@ class RoleAction extends CommonAction {
 		if ($result === false) {
 			$this -> error('操作失败！');
 		} else {
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('操作成功！');
 		}
 	}
@@ -91,7 +92,7 @@ class RoleAction extends CommonAction {
 		if ($result === false) {
 			$this -> error('操作失败！');
 		} else {
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('操作成功！');
 		}
 	}
@@ -140,7 +141,7 @@ class RoleAction extends CommonAction {
 		if ($result === false) {
 			$this -> error('操作失败！');
 		} else {
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('操作成功！');
 		}
 	}

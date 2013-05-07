@@ -2,15 +2,12 @@
 class FlowTypeAction extends CommonAction {
 	//过滤查询字段
 	function _filter(&$map) {
-		if (!empty($_POST['name'])){
-			$map['name'] = array('like', "%" . $_POST['name'] . "%");
-		}
-		if (!empty($_POST['group'])){
-			$map['group'] = $_POST['group'];
+		if (!empty($_POST['keyword'])){
+			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
 	}
 
-	function index() {
+	function index(){
 		$model = M("FlowType");
 		$map = $this -> _search();
 		if (method_exists($this, '_filter')) {
@@ -29,17 +26,17 @@ class FlowTypeAction extends CommonAction {
 		$field = 'group';
 		$result=$this -> set_field($id, $field, $val);
 		if ($result !== false) {
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('操作成功!');
 		} else {
 			//失败提示
 			$this -> error('操作失败!');
-		}		
+		}
 	}
 
 	function _before_add() {
 		$this -> group_list();
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$this -> assign("user_id", $user_id);
 	}
 
@@ -54,7 +51,7 @@ class FlowTypeAction extends CommonAction {
 
 	function _before_edit() {
 		$this -> group_list();
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$this -> assign("user_id", $user_id);
 	}
 
@@ -69,7 +66,7 @@ class FlowTypeAction extends CommonAction {
 		//保存当前数据对象
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示
@@ -88,7 +85,7 @@ class FlowTypeAction extends CommonAction {
 		$list = $model -> save();
 		if (false !== $list) {
 			//成功提示
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('编辑成功!');
 		} else {
 			//错误提示
@@ -129,7 +126,7 @@ class FlowTypeAction extends CommonAction {
 					$id = "";
 				$where['group'] = array('eq', $id);
 				$where['email'] = array('neq', '');
-				$where['user_id'] = array('eq', $this -> get_user_id());
+				$where['user_id'] = array('eq', get_user_id());
 				$data = $model -> where($where) -> field('id,name as emp_name,email') -> select();
 				break;
 
@@ -161,7 +158,7 @@ class FlowTypeAction extends CommonAction {
 		$where['_logic'] = 'or';
 		$map['_complex'] = $where;
 		$map['email'] = array('neq', '');
-		$map['user_id'] = array('eq', $this -> get_user_id());
+		$map['user_id'] = array('eq', get_user_id());
 		$personal = $model -> where($map) -> field('id,name,email') -> select();
 
 		if (empty($company)) {

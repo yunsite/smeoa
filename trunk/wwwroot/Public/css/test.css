@@ -23,8 +23,14 @@ a:hover{
 .input-date{
 	width:80px;
 }
+.search.dropdown .dropdown-menu{
+	display: none;
+}
 .table input,.table select,.table textar{
 	margin-bottom: 0px;
+}
+.input-append{
+	margin: 0px;
 }
 .dropdown-menu .level1 a{
 	padding-left:20px;
@@ -548,7 +554,7 @@ Left Menu ---------------------------*/
 .contact .dropdown-menu{
 	width:200px;
 }
-.contact .dropdown-menu .apply,.contact .dropdown-menu .cmd,.contact .dropdown-menu .new_group{
+.contact .dropdown-menu .apply,.contact .dropdown-menu .cmd,.contact .dropdown-menu .new_tag{
 	margin-left: 20px;
 }
 .contact label.checkbox{
@@ -560,7 +566,7 @@ Left Menu ---------------------------*/
 	padding-top:3px;
 	text-align: left;
 }
-.contact .new_group{
+.contact .new_tag{
 	margin-right:40px;
 	display:none;
 }
@@ -1685,7 +1691,7 @@ dig ---------------------------------------*/
 .customer .dropdown-menu{
 	width:200px;
 }
-.customer .dropdown-menu .apply,.customer .dropdown-menu .cmd,.customer .dropdown-menu .new_group{
+.customer .dropdown-menu .apply,.customer .dropdown-menu .cmd,.customer .dropdown-menu .new_tag{
 	margin-left: 20px;
 }
 .customer label.checkbox{
@@ -1697,7 +1703,7 @@ dig ---------------------------------------*/
 	padding-top:3px;
 	text-align: left;
 }
-.customer .new_group{
+.customer .new_tag{
 	margin-right:40px;
 	display:none;
 }
@@ -1712,7 +1718,7 @@ dig ---------------------------------------*/
 .supplier .dropdown-menu{
 	width:200px;
 }
-.supplier .dropdown-menu .apply,.supplier .dropdown-menu .cmd,.supplier .dropdown-menu .new_group{
+.supplier .dropdown-menu .apply,.supplier .dropdown-menu .cmd,.supplier .dropdown-menu .new_tag{
 	margin-left: 20px;
 }
 .supplier label.checkbox{
@@ -1724,7 +1730,7 @@ dig ---------------------------------------*/
 	padding-top:3px;
 	text-align: left;
 }
-.supplier .new_group{
+.supplier .new_tag{
 	margin-right:40px;
 	display:none;
 }

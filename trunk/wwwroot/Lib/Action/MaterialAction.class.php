@@ -29,7 +29,7 @@ class MaterialAction extends CommonAction {
 		//dump($map);
 	}
 
-	function index() {
+	function index(){
 		$model = D("MaterialView");
 		$map = $this -> _search();
 		if (method_exists($this, '_filter')){
@@ -133,7 +133,7 @@ class MaterialAction extends CommonAction {
 				if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . $inputFileName)) {
 					unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $inputFileName);
 				}
-				$this -> assign('jumpUrl', $this -> get_return_url());
+				$this -> assign('jumpUrl', $this -> _get_return_url());
 				$this -> success('导入成功！');
 			}
 		} else {
@@ -171,10 +171,10 @@ class MaterialAction extends CommonAction {
 		}
 	}
 
-	function group_list() {
-		$model = D("Class");
-		$group_list = $model -> get_list('Material', 'id,name');
-		$this -> assign("group_list", $group_list);
+	function tag_list() {
+		$model = D("Tag");
+		$tag_list = $model -> get_list('Material', 'id,name');
+		$this -> assign("tag_list", $tag_list);
 	}
 	
 	function _before_edit(){
@@ -189,11 +189,11 @@ class MaterialAction extends CommonAction {
 			$this -> error($model -> getError());
 		}
 		$model -> __set('letter', get_letter($model -> __get('name')));
-		$model -> __set('user_id', $this -> get_user_id());
+		$model -> __set('user_id', get_user_id());
 		//保存当前数据对象
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示
@@ -213,7 +213,7 @@ class MaterialAction extends CommonAction {
 		$list = $model -> save();
 		if (false !== $list) {
 			//成功提示
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('编辑成功!');
 		} else {
 			//错误提示
@@ -229,9 +229,9 @@ class MaterialAction extends CommonAction {
 				$Material_list = explode(",", $Material_list);
 			}
 			$where['id'] = array('in', $Material_list);
-			$where['user_id'] = $this -> get_user_id();
+			$where['user_id'] = get_user_id();
 			$model -> where($where) -> delete();
-			$model = D("Class");
+			$model = D("Tag");
 			$result = $model -> del_data_by_obj($_POST['Material_id'], 'Material');
 		};
 		if ($result !== false) {//保存成功

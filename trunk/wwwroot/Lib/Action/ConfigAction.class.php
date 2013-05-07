@@ -1,7 +1,7 @@
 <?php
 class ConfigAction extends CommonAction {
 	public function index() {
-		$config = M("Config") -> find($this -> get_user_id());
+		$config = M("Config") -> find(get_user_id());
 		$this -> assign("config", $config);
 		if (count($config)) {
 			$this -> assign('opmode', 'edit');
@@ -27,7 +27,7 @@ class ConfigAction extends CommonAction {
 			$this -> error($model -> getError());
 		}
 		if (in_array('id', $model -> getDbFields())) {
-			$model -> id = $this -> get_user_id();
+			$model -> id = get_user_id();
 		};
 		if (in_array('user_name', $model -> getDbFields())) {
 			$model -> user_name = $this -> _session("user_name");
@@ -37,7 +37,7 @@ class ConfigAction extends CommonAction {
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
 			$this -> _set_email($email);
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示
@@ -54,13 +54,13 @@ class ConfigAction extends CommonAction {
 			$this -> error($model -> getError());
 		}
 		if (in_array('id', $model -> getDbFields())) {
-			$model -> id = $this -> get_user_id();
+			$model -> id = get_user_id();
 		};
 		// 更新数据
 		$list = $model -> save();
 		if (false !== $list) {
 			//成功提示
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('编辑成功!');
 		} else {
 			//错误提示

@@ -67,7 +67,7 @@
 	}
 
 	$(document).ready(function(){		
-		uploader_init();
+		
 
 		$(".sub_left_menu  tr").click(function() {
 			$(".sub_left_menu  tr.active").removeClass("active");
@@ -145,16 +145,24 @@
 					<tr>
 						<th>部门*</th>
 						<td>
-							<input type="text" name="dept_name" id="dept_name" readonly="readonly" class="input-small">
-							<input type="hidden" name="dept_id" id="dept_id" check="require" msg="请输入部门">
-							<input type="button" class="btn" name="btn_select_dept" value="选择部门" onclick="select_dept();"></td>
+							<div class="controls">
+								<div class="input-append">
+									<input name="dept_name" class="val input-small" id="dept_name" type="text" msg="请选择部门" check="require" source="{:U('dept/json')}" />
+									<input name="dept_id" class="key" id="dept_id" type="hidden" msg="请选择部门" check="require" />
+									<button class="btn" onclick="select_dept()" type="button">选择</button>
+								</div>
+								<div class="search dropdown ">
+									<ul class="dropdown-menu"></ul>
+								</div>
+							</div>
+						</td>
 					</tr>
 					<tr>
 						<th>电子邮箱</th>
 						<td>
 							<input type="text" id="email" name="email" class="input-small"></td>
 						<td>
-								<include file="Layout:uploader" />
+							<include file="Layout:uploader" />
 						</td>
 					</tr>
 					<tr>
@@ -180,9 +188,9 @@
 						</td>
 					</tr>
 					<tr>
-						<th>负责业务</th>
+						<th><nobr>负责业务</nobr></th>
 						<td colspan="3">
-							<input type="text" id="duty" name="duty"></td>
+							<input type="text" id="duty" name="duty" class="span12"></td>
 					</tr>
 					<tr>
 						<th>办公室电话</th>

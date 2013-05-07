@@ -7,7 +7,7 @@ class FlowLogAction extends CommonAction {
 		}
 		$model -> result = 1;
 		if (in_array('user_id', $model -> getDbFields())) {
-			$model -> user_id = $this -> get_user_id();
+			$model -> user_id = get_user_id();
 		};
 		if (in_array('user_name', $model -> getDbFields())) {
 			$model -> user_name = $this -> _session("user_name");
@@ -18,7 +18,7 @@ class FlowLogAction extends CommonAction {
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
 			D("Flow") -> next_step($flow_id, $step);
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示

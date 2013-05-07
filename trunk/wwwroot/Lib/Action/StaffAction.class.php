@@ -9,10 +9,10 @@ class StaffAction extends CommonAction {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
 		$map['letter'] = array('like', "%" . $_POST['letter'] . "%");
 		$map['status'] = array('eq', '1');
-		if (!empty($_POST['group'])) {
-			$map['group'] = $_POST['group'];
+		if (!empty($_POST['tag'])) {
+			$map['group'] = $_POST['tag'];
 		}
-		$map['user_id'] = array('eq', $this -> get_user_id());
+		$map['user_id'] = array('eq', get_user_id());
 	}
 
 	function index() {
@@ -23,17 +23,17 @@ class StaffAction extends CommonAction {
 		$this -> assign('menu', popup_tree_menu($tree));
 				
 		$model = D("UserView");
-		$where['user_id'] = array('eq', $this -> get_user_id());
+		$where['user_id'] = array('eq', get_user_id());
 		$list = $model -> where($where) -> select();
 		$this -> assign('list', $list);
 		
-		$group_data = D("Class") -> get_data_list("contact");
+		$tag_data = D("Tag") -> get_data_list();
 		$new = array();
-		foreach ($group_data as $val) {
-			$new[$val['obj_id']] = $new[$val['obj_id']] . $val['class_id'] . ",";
+		foreach ($tag_data as $val) {
+			$new[$val['row_id']] = $new[$val['row_id']] . $val['class_id'] . ",";
 		}
 		$this -> assign('group_data', $new);
-		$this -> group_list();
+		$this -> tag_list();
 		$this -> display();
 		return;
 	}
@@ -41,7 +41,7 @@ class StaffAction extends CommonAction {
 	
 	function export() {
 		$model = M("Contact");
-		$where['user_id'] = array('eq', $this -> get_user_id());
+		$where['user_id'] = array('eq', get_user_id());
 		$list = $model -> where($where) -> select();
 
 		//导入thinkphp第三方类库
@@ -110,7 +110,7 @@ class StaffAction extends CommonAction {
 					$data['website'] = $sheetData[$i]["I"];
 					$data['im'] = $sheetData[$i]["H"];
 					$data['address'] = $sheetData[$i]["J"];
-					$data['user_id'] = $this -> get_user_id();
+					$data['user_id'] = get_user_id();
 					$data['remark'] = $sheetData[$i]["K"];
 					$data['status'] = 1;
 					$model -> add($data);
@@ -119,7 +119,7 @@ class StaffAction extends CommonAction {
 				if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . $inputFileName)) {
 					unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $inputFileName);
 				}
-				$this -> assign('jumpUrl', $this -> get_return_url());
+				$this -> assign('jumpUrl', $this -> _get_return_url());
 				$this -> success('导入成功！');
 			}
 		} else {
@@ -137,10 +137,10 @@ class StaffAction extends CommonAction {
 		}
 	}
 
-	function group_list() {
-		$model = D("Class");
-		$group_list = $model -> get_list('contact', 'id,name');
-		$this -> assign("group_list", $group_list);
+	function tag_list() {
+		$model = D("Tag");
+		$tag_list = $model -> get_list('contact', 'id,name');
+		$this -> assign("tag_list", $tag_list);
 	}
 
 	function insert() {
@@ -149,11 +149,11 @@ class StaffAction extends CommonAction {
 			$this -> error($model -> getError());
 		}
 		$model -> __set('letter', get_letter($model -> __get('name')));
-		$model -> __set('user_id', $this -> get_user_id());
+		$model -> __set('user_id', get_user_id());
 		//保存当前数据对象
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示
@@ -173,7 +173,7 @@ class StaffAction extends CommonAction {
 		$list = $model -> save();
 		if (false !== $list) {
 			//成功提示
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('编辑成功!');
 		} else {
 			//错误提示
@@ -189,10 +189,10 @@ class StaffAction extends CommonAction {
 				$contact_list = explode(",", $contact_list);
 			}
 			$where['id'] = array('in', $contact_list);
-			$where['user_id'] = $this -> get_user_id();
+			$where['user_id'] = get_user_id();
 			$model -> where($where) -> delete();
-			$model = D("Class");
-			$result = $model -> del_data_by_obj($_POST['contact_id'], 'contact');
+			$model = D("Tag");
+			$result = $model -> del_data_by_row($_POST['contact_id'], 'contact');
 		};
 		if ($result !== false) {//保存成功
 			$this -> assign('jumpUrl', $this->get_return_url());
@@ -223,29 +223,29 @@ class StaffAction extends CommonAction {
 		}
 	}
 
-	function set_group() {
+	function set_tag() {
 		if (!empty($_POST['contact_id'])) {
-			$model = D("Class");
-			$model -> del_data_by_obj($_POST['contact_id'], 'contact');
-			if (!empty($_POST['group'])) {
-				$result = $model -> set_class($_POST['contact_id'], $_POST['group'], "contact");
+			$model = D("Tag");
+			$model -> del_data_by_row($_POST['contact_id'], 'contact');
+			if (!empty($_POST['tag'])) {
+				$result = $model -> set_tag($_POST['contact_id'], $_POST['tag'], "contact");
 			}
 		};
-		if (!empty($_POST['new_group'])) {
-			$model = M("Class");
-			$model -> type = "contact";
-			$model -> name = $_POST['new_group'];
+		if (!empty($_POST['new_tag'])) {
+			$model = M("Tag");
+			$model -> module = MODULE_NAME;
+			$model -> name = $_POST['new_tag'];
 			$model -> status = 1;
-			$model -> user_id = $this -> get_user_id();
-			$new_group_id = $model -> add();
+			$model -> user_id = get_user_id();
+			$new_tag_id = $model -> add();
 			if (!empty($_POST['contact_id'])) {
-				$model = D("Class");
-				$result = $model -> set_class($_POST['contact_id'], $new_group_id, "contact");
+				$model = D("Tag");
+				$result = $model -> set_tag($_POST['contact_id'], $new_tag_id, "contact");
 			}
 		};
 		if ($result !== false) {//保存成功
 			if ($ajax || $this -> isAjax())
-				$this -> ajaxReturn($list, dump($_POST['group'], false) . "操作成功", 1);
+				$this -> ajaxReturn($list, dump($_POST['tag'], false) . "操作成功", 1);
 			$this -> assign('jumpUrl', $this->get_return_url());
 			$this -> success('操作成功!');
 		} else {
@@ -286,11 +286,11 @@ class StaffAction extends CommonAction {
 		$list = list_to_tree($list);
 		$this -> assign('list_position', popup_tree_menu($list));
 
-		$model = D("Class");
+		$model = D("Tag");
 
-		$group_list = $model -> get_list("contact", "id,name,pid");
-		$group_list = array_merge($group_list, array( array("id" => "#", "name" => "未分组")));
-		$this -> assign("list_personal", popup_tree_menu($group_list));
+		$tag_list = $model -> get_list("contact", "id,name,pid");
+		$tag_list = array_merge($tag_list, array( array("id" => "#", "name" => "未分组")));
+		$this -> assign("list_personal", popup_tree_menu($tag_list));
 
 		$this -> assign('type', 'rank');
 		$this -> display();
@@ -417,7 +417,7 @@ class StaffAction extends CommonAction {
 		$where['_logic'] = 'or';
 		$map['_complex'] = $where;
 		$map['email'] = array('neq', '');
-		$map['user_id'] = array('eq', $this -> get_user_id());
+		$map['user_id'] = array('eq', get_user_id());
 		$personal = $model -> where($map) -> field('id,name,email') -> select();
 
 		if (empty($company)) {

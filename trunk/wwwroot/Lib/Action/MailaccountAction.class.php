@@ -2,7 +2,7 @@
 class MailaccountAction extends CommonAction {
 
 	public function index() {
-		$mail_user = M("MailAccount") -> find($this -> get_user_id());
+		$mail_user = M("MailAccount") -> find(get_user_id());
 
 		$this -> assign('mail_user', $mail_user);
 		if (count($mail_user)) {
@@ -15,7 +15,7 @@ class MailaccountAction extends CommonAction {
 
 	function _set_email($email) {
 		$model = M("User");
-		$user_id = $this -> get_user_id();
+		$user_id = get_user_id();
 		$data['id'] = $user_id;
 		$data['email'] = $email;
 		$model -> save($data);
@@ -27,7 +27,7 @@ class MailaccountAction extends CommonAction {
 			$this -> error($model -> getError());
 		}
 		if (in_array('id', $model -> getDbFields())) {
-			$model -> id = $this -> get_user_id();
+			$model -> id = get_user_id();
 		};
 		if (in_array('user_name', $model -> getDbFields())) {
 			$model -> user_name = $this -> _session("user_name");
@@ -37,7 +37,7 @@ class MailaccountAction extends CommonAction {
 		$list = $model -> add();
 		if ($list !== false) {//保存成功
 			$this -> _set_email($email);
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('新增成功!');
 		} else {
 			//失败提示
@@ -53,7 +53,7 @@ class MailaccountAction extends CommonAction {
 			$this -> error($model -> getError());
 		}
 		if (in_array('id', $model -> getDbFields())) {
-			$model -> id = $this -> get_user_id();
+			$model -> id = get_user_id();
 		};
 		// 更新数据
 		$email = $_POST['email'];
@@ -61,7 +61,7 @@ class MailaccountAction extends CommonAction {
 		if (false !== $list) {
 			//成功提示
 			$this -> _set_email($email);
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('编辑成功!');
 		} else {
 			//错误提示

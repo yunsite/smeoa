@@ -14,7 +14,7 @@ class FileAction extends CommonAction {
 		$File -> save();
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . C("SAVE_PATH") . $savename)) {
 			unlink($_SERVER["DOCUMENT_ROOT"] . "/" . C("SAVE_PATH") . $savename);
-			$this -> assign('jumpUrl', $this -> get_return_url());
+			$this -> assign('jumpUrl', $this -> _get_return_url());
 			$this -> success('', "删除成功", 1);
 		}
 	}
@@ -43,7 +43,7 @@ class FileAction extends CommonAction {
 			$File = M("File");
 			$File -> create($uploadList[0]);
 			$File -> create_time = time();
-			$user_id = $this -> get_user_id();
+			$user_id = get_user_id();
 			$File -> user_id = $user_id;
 			$fileId = $File -> add();
 

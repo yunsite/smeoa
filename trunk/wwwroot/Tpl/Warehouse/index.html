@@ -1,5 +1,5 @@
 <layout name='Layout/layout_main' />
-<tagLib name="html" />
+
 <script type="text/javascript">
 	function add() {
 		$("#form_data input").each(function() {
@@ -82,7 +82,7 @@
 			</tr>
 			<volist name="list" id="data">
 				<tr id="{$data.id}">
-					<td>{$data.code}</td>
+					<td>{$data.warehouse_no}</td>
 					<td>{$data.name}</td>
 					<td>{$data.status|status}</td>
 				</tr>
@@ -101,7 +101,7 @@
 							<nobr>编号</nobr>
 						</th>
 						<td>
-							<input type="text" id="code" name="code" check="require" msg="请输入编号"></td>
+							<input type="text" id="warehouse_no" name="warehouse_no" check="require" msg="请输入编号"></td>
 					</tr>
 					<tr>
 						<th>名称</th>
