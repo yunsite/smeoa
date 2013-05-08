@@ -21,7 +21,7 @@ class NodeModel extends CommonModel {
 	}
 	
 	public function access_list($emp_id){
-		$sql="		SELECT distinct c.id, c.pid, c.name, c.url,c.icon ";
+		$sql="		SELECT distinct c.id, c.pid, c.name, c.url";
 		$sql.="		FROM ".$this->tablePrefix."role_user AS a, ".$this->tablePrefix."role_node b, ".$this->tablePrefix."node AS c ";
 		$sql.="		WHERE a.role_id = b.role_id and c.status=1 ";
 		$sql.="		AND a.user_id =$emp_id ";
