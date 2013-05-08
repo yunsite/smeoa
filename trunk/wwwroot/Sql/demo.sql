@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.1.41)
-# Date: 2013-05-07 14:13:02
+# Date: 2013-05-08 14:03:16
 # Generator: MySQL-Front 5.3  (Build 2.28)
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -201,7 +201,7 @@ CREATE TABLE `think_file` (
   `create_time` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=596 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=597 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "think_file"
@@ -358,7 +358,7 @@ CREATE TABLE `think_forum` (
 # Data for table "think_forum"
 #
 
-INSERT INTO `think_forum` VALUES (8,17,1,'管理员','发表主题 ','<span>发表主题</span>',7,0,0,'',0,1,1366872802,0);
+INSERT INTO `think_forum` VALUES (8,17,1,'管理员','发表主题 ','<span>发表主题</span>',10,0,0,'',0,1,1366872802,0);
 
 #
 # Source for table "think_gi"
@@ -432,7 +432,7 @@ CREATE TABLE `think_mail` (
   `status` tinyint(1) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `mid` (`mid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1031 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1033 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "think_mail"
@@ -576,7 +576,7 @@ CREATE TABLE `think_node` (
 # Data for table "think_node"
 #
 
-INSERT INTO `think_node` VALUES (2,'节点管理',1,'node/index',NULL,'','3',1,2,NULL),(83,'公告',1,'notice/index','','','7',0,1,1),(84,'管理',1,'user/index','','','999',0,1,1),(85,'邮件',1,'mail/mail_list?folder=inbox','','','1',0,1,NULL),(87,'审批',1,'flow/index','','','2',0,1,1),(88,'文档',1,'doc/index','','','3',0,1,1),(91,'日程',1,'schedule/index','','','4',0,1,1),(94,'职位',1,'position/index',NULL,'','',1,0,NULL),(97,'部门',1,'dept/index',NULL,'','',1,0,NULL),(100,'写信',1,'mail/add','','','1',85,0,NULL),(101,'收件箱',1,'mail/index','mail/mail_list','','3',85,0,1),(102,'邮件设置',1,'','','','4',85,0,NULL),(104,'垃圾箱',1,'mail/mail_list?folder=spambox',NULL,'','5',101,0,NULL),(105,'发件箱',1,'mail/mail_list?folder=outbox',NULL,'','2',101,0,NULL),(106,'已删除',1,'mail/mail_list?folder=delbox',NULL,'','3',101,0,NULL),(107,'草稿箱',1,'mail/mail_list?folder=darftbox',NULL,'','4',101,0,NULL),(108,'邮件帐户设置',1,'mailaccount/index',NULL,'','1',102,0,NULL),(110,'公司信息管理',1,'',NULL,'','1',84,0,NULL),(111,'员工信息管理',1,'',NULL,'','2',84,0,NULL),(112,'权限管理',1,'',NULL,'','3',84,0,NULL),(113,'系统设定',1,'',NULL,'','4',84,0,NULL),(114,'公司信息',1,'',NULL,'','1',110,0,NULL),(115,'组织图管理',1,'dept/index',NULL,'','2',110,0,NULL),(116,'员工登记',1,'user/index',NULL,'','1',111,0,NULL),(118,'权限编码登记',1,'role/index',NULL,'','1',112,0,NULL),(119,'权限编码-菜单映射',1,'role/node',NULL,'','2',112,0,NULL),(120,'权限编码-用户映射',1,'role/user',NULL,'','3',112,0,NULL),(121,'菜单信息设置',1,'node/index',NULL,'','1',113,0,NULL),(122,'职级',1,'rank/index',NULL,'','3',113,0,NULL),(123,'职位',1,'position/index',NULL,'','2',113,0,NULL),(124,'文件夹设置',1,'mailfolder/index',NULL,'','2',102,0,NULL),(125,'联系人',1,'contact/index','','','1',157,0,0),(126,'文件搜索',1,'doc/index','','','1',88,0,NULL),(127,'文档库管理',1,'',NULL,'','4',88,0,NULL),(128,'基础资料',1,'refer/index','','','4',113,0,NULL),(130,'个人文档库管理',1,'docfolder/personal',NULL,'','',127,0,NULL),(131,'公用文档库管理',1,'docfolder/common',NULL,'','',127,0,NULL),(132,'公用文档库',1,'','/doc/common/','','2',88,0,NULL),(133,'个人文档库',1,'','/doc/personal/','','3',88,0,NULL),(134,'公告',1,'','/notice/folder/','','1',83,0,NULL),(136,'消息',0,'message/index','','','4',83,0,NULL),(137,'论坛',1,'forum/index','/forum/folder/','','3',0,0,NULL),(138,'公告管理',1,'noticefolder/index',NULL,'','4',134,0,NULL),(139,'论坛管理',1,'forumfolder/index',NULL,'','',137,0,NULL),(140,'按月查看',1,'schedule/index','','','1',91,0,NULL),(141,'日程查询',1,'schedule/search','','','2',91,0,NULL),(142,'按日查看',1,'schedule/day_view','','','2',91,0,NULL),(143,'邮件分类',1,'mailorganize/index',NULL,'','',102,0,NULL),(144,'起案',1,'flow/index','','','1',87,0,1),(145,'审批箱',1,'','','','2',87,0,1),(146,'流程管理',1,'flowtype/index','','','3',87,0,NULL),(147,'待审批',1,'flow/flow_list?folder=confirm','','','',145,0,NULL),(148,'已办理',1,'flow/flow_list?folder=finish','','','',145,0,NULL),(149,'草稿箱',1,'flow/flow_list?folder=darft','','','',145,0,NULL),(150,'已提交',1,'flow/flow_list?folder=submit','','','',145,0,NULL),(151,'收信',1,'mail/mail_list?folder=receve','','','2',85,0,1),(152,'待办事项',1,'todo/index','','','4',91,0,NULL),(153,'部门级别',1,'deptgrade/index','','','3',110,0,NULL),(154,'业务权限',1,'duty/index','','','',112,0,NULL),(155,'权限编码-业务权限',1,'role/duty','','','',112,0,1),(156,'客户',1,'customer/index','','','2',157,0,0),(157,'人脉',1,'contact/index','','','5',0,0,0),(158,'供应商',1,'supplier/index','','','3',157,0,0),(159,'进销存',1,'psi/index','','','7',0,0,0),(160,'采购',1,'','','','1',159,0,0),(161,'销售',1,'sales/index','','','4',159,0,0),(162,'库存',1,'inventroy/index','','','6',159,0,0),(163,'资材分类',1,'materialclass/index','','','4',168,0,0),(164,'资材',1,'material/index','','','',168,0,0),(165,'入库',1,'gi/index','','','2',160,0,0),(166,'出库',1,'go/index','','','5',159,0,0),(167,'加工',1,'gp/index','','','31',159,0,0),(168,'基础数据',1,'','','','99',159,0,0),(169,'职员',1,'staff/index','','','',157,0,0),(170,'仓库',1,'warehouse/index','','','',168,0,0),(171,'应付',1,'pay/index','','','5',160,0,0),(172,'订单查询',1,'po/index','','','2',160,0,0),(173,'新建订单',1,'po/add','','','1',160,0,0),(174,'待入库订单',1,'gi/wait','','','3',160,0,0);
+INSERT INTO `think_node` VALUES (2,'节点管理',1,'node/index',NULL,'','3',1,2,NULL),(83,'公告',1,'notice/index','','','4',0,1,1),(84,'管理',1,'user/index','','','999',0,1,1),(85,'邮件',1,'mail/mail_list?folder=inbox','','','1',0,1,NULL),(87,'审批',1,'flow/index','','','2',0,1,1),(88,'文档',1,'doc/index','','','3',0,1,1),(91,'日程',1,'schedule/index','','','6',0,1,1),(94,'职位',1,'position/index',NULL,'','',1,0,NULL),(97,'部门',1,'dept/index',NULL,'','',1,0,NULL),(100,'写信',1,'mail/add','','','1',85,0,NULL),(101,'收件箱',1,'mail/index','mail/mail_list','','3',85,0,1),(102,'邮件设置',1,'','','','4',85,0,NULL),(104,'垃圾箱',1,'mail/mail_list?folder=spambox',NULL,'','5',101,0,NULL),(105,'发件箱',1,'mail/mail_list?folder=outbox',NULL,'','2',101,0,NULL),(106,'已删除',1,'mail/mail_list?folder=delbox',NULL,'','3',101,0,NULL),(107,'草稿箱',1,'mail/mail_list?folder=darftbox',NULL,'','4',101,0,NULL),(108,'邮件帐户设置',1,'mailaccount/index',NULL,'','1',102,0,NULL),(110,'公司信息管理',1,'',NULL,'','1',84,0,NULL),(111,'员工信息管理',1,'',NULL,'','2',84,0,NULL),(112,'权限管理',1,'',NULL,'','3',84,0,NULL),(113,'系统设定',1,'',NULL,'','4',84,0,NULL),(114,'公司信息',1,'',NULL,'','1',110,0,NULL),(115,'组织图管理',1,'dept/index',NULL,'','2',110,0,NULL),(116,'员工登记',1,'user/index',NULL,'','1',111,0,NULL),(118,'权限编码登记',1,'role/index',NULL,'','1',112,0,NULL),(119,'权限编码-菜单映射',1,'role/node',NULL,'','2',112,0,NULL),(120,'权限编码-用户映射',1,'role/user',NULL,'','3',112,0,NULL),(121,'菜单信息设置',1,'node/index',NULL,'','1',113,0,NULL),(122,'职级',1,'rank/index',NULL,'','3',113,0,NULL),(123,'职位',1,'position/index',NULL,'','2',113,0,NULL),(124,'文件夹设置',1,'mailfolder/index',NULL,'','2',102,0,NULL),(125,'联系人',1,'contact/index','','','1',157,0,0),(126,'文件搜索',1,'doc/index','','','1',88,0,NULL),(127,'文档库管理',1,'',NULL,'','4',88,0,NULL),(128,'基础资料',1,'refer/index','','','4',113,0,NULL),(130,'个人文档库管理',1,'docfolder/personal',NULL,'','',127,0,NULL),(131,'公用文档库管理',1,'docfolder/common',NULL,'','',127,0,NULL),(132,'公用文档库',1,'','/doc/common/','','2',88,0,NULL),(133,'个人文档库',1,'','/doc/personal/','','3',88,0,NULL),(134,'公告',1,'','/notice/folder/','','1',83,0,NULL),(136,'消息',0,'message/index','','','4',83,0,NULL),(137,'论坛',1,'forum/index','/forum/folder/','','5',0,0,NULL),(138,'公告管理',1,'noticefolder/index',NULL,'','4',134,0,NULL),(139,'论坛管理',1,'forumfolder/index',NULL,'','',137,0,NULL),(140,'按月查看',1,'schedule/index','','','1',91,0,NULL),(141,'日程查询',1,'schedule/search','','','2',91,0,NULL),(142,'按日查看',1,'schedule/day_view','','','2',91,0,NULL),(143,'邮件分类',1,'mailorganize/index',NULL,'','',102,0,NULL),(144,'起案',1,'flow/index','','','1',87,0,1),(145,'审批箱',1,'','','','2',87,0,1),(146,'流程管理',1,'flowtype/index','','','3',87,0,NULL),(147,'待审批',1,'flow/flow_list?folder=confirm','','','',145,0,NULL),(148,'已办理',1,'flow/flow_list?folder=finish','','','',145,0,NULL),(149,'草稿箱',1,'flow/flow_list?folder=darft','','','',145,0,NULL),(150,'已提交',1,'flow/flow_list?folder=submit','','','',145,0,NULL),(151,'收信',1,'mail/mail_list?folder=receve','','','2',85,0,1),(152,'待办事项',1,'todo/index','','','4',91,0,NULL),(153,'部门级别',1,'deptgrade/index','','','3',110,0,NULL),(154,'业务权限',1,'duty/index','','','',112,0,NULL),(155,'权限编码-业务权限',1,'role/duty','','','',112,0,1),(156,'客户',1,'customer/index','','','2',157,0,0),(157,'人脉',1,'contact/index','','','8',0,0,0),(158,'供应商',1,'supplier/index','','','3',157,0,0),(159,'进销存',1,'psi/index','','','7',0,0,0),(160,'采购',1,'','','','1',159,0,0),(161,'销售',1,'sales/index','','','4',159,0,0),(162,'库存',1,'inventroy/index','','','6',159,0,0),(163,'资材分类',1,'materialclass/index','','','4',168,0,0),(164,'资材',1,'material/index','','','',168,0,0),(165,'入库',1,'gi/index','','','2',160,0,0),(166,'出库',1,'go/index','','','5',159,0,0),(167,'加工',1,'gp/index','','','31',159,0,0),(168,'基础数据',1,'','','','99',159,0,0),(169,'职员',1,'staff/index','','','',157,0,0),(170,'仓库',1,'warehouse/index','','','',168,0,0),(171,'应付',1,'pay/index','','','5',160,0,0),(172,'订单查询',1,'po/index','','','2',160,0,0),(173,'新建订单',1,'po/add','','','1',160,0,0),(174,'待入库订单',1,'gi/wait','','','3',160,0,0);
 
 #
 # Source for table "think_notice"
@@ -740,7 +740,7 @@ CREATE TABLE `think_push` (
   `time` int(11) NOT NULL,
   `info` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=532 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=534 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "think_push"
@@ -907,7 +907,7 @@ CREATE TABLE `think_schedule` (
   `status` int(11) NOT NULL,
   `priority` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "think_schedule"
@@ -961,7 +961,7 @@ CREATE TABLE `think_tag` (
   `sort` varchar(20) NOT NULL,
   `remark` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "think_tag"
@@ -1045,7 +1045,7 @@ CREATE TABLE `think_user` (
 # Data for table "think_user"
 #
 
-INSERT INTO `think_user` VALUES (1,'admin','管理员','GLY','21232f297a57a5a743894a0e4a801fc3',12,4,1,'male','0000-00-00','127.0.0.1',1700,'file/201304/517a2ab91564d.png','smeoa_admin@163.com','asdf','8691-0038','1',1222907803,1366960827,1),(2,'demo','演示','YS','fe01ce2a7fbac8fafaed7c982a04e229',9,3,3,'male','2012-03-09','127.0.0.1',109,'','demo@smeoa.com','asdf','','2',1239783735,1358235897,1),(3,'member','员工','YG','202cb962ac59075b964b07152d234b70',6,4,4,'male','2012-03-15','127.0.0.1',19,'','member@smeoa.com','asd','','3',1253514375,1358235911,1),(4,'leader','领导','LD','c444858e0aaeb727da73d2eae62321ad',6,2,1,'male','2012-03-16','127.0.0.1',15,'','leader@smeoa.com','fa','领导','4',1253514575,1358235923,1),(35,'test1','test','TEST','098f6bcd4621d373cade4e832627b4f6',11,1,1,'male','0000-00-00','127.0.0.1',1,'','test1@smeoa.com','sdfa','tuser1','56',1329984605,1358235934,1),(36,'test','test233','TEST','098f6bcd4621d373cade4e832627b4f6',11,1,1,'male','2012-03-14','127.0.0.1',NULL,'','test@smeoa.com','sdf','1234','6',1331997666,1358235951,1);
+INSERT INTO `think_user` VALUES (1,'admin','管理员','GLY','21232f297a57a5a743894a0e4a801fc3',12,4,1,'male','0000-00-00','127.0.0.1',1718,'file/201304/517a2ab91564d.png','smeoa_admin@163.com','asdf','8691-0038','1',1222907803,1366960827,1),(2,'demo','演示','YS','fe01ce2a7fbac8fafaed7c982a04e229',9,3,3,'male','2012-03-09','127.0.0.1',109,'','demo@smeoa.com','asdf','','2',1239783735,1358235897,1),(3,'member','员工','YG','202cb962ac59075b964b07152d234b70',6,4,4,'male','2012-03-15','127.0.0.1',19,'','member@smeoa.com','asd','','3',1253514375,1358235911,1),(4,'leader','领导','LD','c444858e0aaeb727da73d2eae62321ad',6,2,1,'male','2012-03-16','127.0.0.1',15,'','leader@smeoa.com','fa','领导','4',1253514575,1358235923,1),(35,'test1','test','TEST','098f6bcd4621d373cade4e832627b4f6',11,1,1,'male','0000-00-00','127.0.0.1',1,'','test1@smeoa.com','sdfa','tuser1','56',1329984605,1358235934,1),(36,'test','test233','TEST','098f6bcd4621d373cade4e832627b4f6',11,1,1,'male','2012-03-14','127.0.0.1',NULL,'','test@smeoa.com','sdf','1234','6',1331997666,1358235951,1);
 
 #
 # Source for table "think_warehouse"

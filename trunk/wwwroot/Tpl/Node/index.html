@@ -29,12 +29,8 @@
 	}
 
 	function showdata(result) {
-		for (var s in result.data) {
-			if (($("#" + s).attr("type")) === "select-one") {
-				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
-			} else {
-				$("#" + s).val(result.data[s]);
-			}
+		for (var s in result.data){
+			set_val(s,result.data[s]);
 		}
 		$("#node_name").val($("#node_list option[value='" + $("#pid").val() + "']").text());
 		$("#opmode").val("edit");
@@ -104,8 +100,8 @@
 							<td>
 								<div class="controls">
 									<div class="input-append">
-										<input name="node_name" class="val" id="node_name" type="text" msg="请选择父节点" check="require" source="{:U('dept/json')}" />
-										<input name="pid" class="key" id="pid" type="hidden" msg="请选择父节点" check="require" />
+										<input name="node_name" class="val" id="node_name" type="text"  source="{:U('dept/json')}" />
+										<input name="pid" class="key" id="pid" type="hidden" msg="请选择父节点" check="require"  />
 										<button class="btn" onclick="select_pid()" type="button">选择</button>
 									</div>
 									<div class="search dropdown ">

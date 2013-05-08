@@ -14,7 +14,9 @@
 	}
 
 	$(document).ready(function(){
+		alert($("#type option").length);
 		$("#type").change(function(){
+			
 			if($(this).val()==1){
 				$("#warehouse").attr("disabled","disabled");
 			}

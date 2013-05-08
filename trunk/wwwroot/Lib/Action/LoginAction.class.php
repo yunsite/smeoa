@@ -15,7 +15,8 @@ class LoginAction extends Action {
 	public function index() {
 		//如果通过认证跳转到首页
 		//redirect(__APP__);
-		if (!$this -> _session(C('USER_AUTH_KEY'))) {
+		$auth_id=session(C('USER_AUTH_KEY'));
+		if (!isset($auth_id)) {
 			$this -> display();
 		} else {
 			redirect(__APP__);
@@ -24,8 +25,11 @@ class LoginAction extends Action {
 
 	// 用户登出
 	public function logout() {
-		if ($this -> _session(C('USER_AUTH_KEY'))) {
-			session(C('USER_AUTH_KEY'), null);
+		$auth_id=session(C('USER_AUTH_KEY'));
+		if (isset($auth_id)){
+			session(C('USER_AUTH_KEY'),null);
+			session('top_menu' .$auth_id,null);
+			//dump($_SESSION);
 			//die();
 			$this -> assign("jumpUrl", __URL__ . '/');
 			$this -> success('登出成功！');
@@ -56,7 +60,6 @@ class LoginAction extends Action {
 			if ($authInfo['password'] != md5($_POST['password'])) {
 				$this -> error('帐号或密码错误！');
 			}
-			session('[start]');
 			session(C('USER_AUTH_KEY'), $authInfo['id']);
 			session('emp_no', $authInfo['emp_no']);
 			session('email', $authInfo['email']);
@@ -64,17 +67,16 @@ class LoginAction extends Action {
 			session('last_login_time', $authInfo['last_login_time']);
 			session('login_count', $authInfo['login_count']);
 			session('dept_id', $authInfo['dept_id']);
-
 			if ($authInfo['emp_no'] == 'admin') {
-				session('administrator', true);
+				session(C('ADMIN_AUTH_KEY'), true);
 			}
 
 			//读取数据库模块列表生成菜单项
 			$menu = D("Node") -> access_list($authInfo['id']);
-
 			$common_list = D("Folder") -> get_common_list();
 			$personal_list = D("Folder") -> get_person_list();
 			$menu = array_merge($common_list, $personal_list, $menu);
+
 
 			//缓存菜单访问
 			session('menu' . $authInfo['id'], $menu);

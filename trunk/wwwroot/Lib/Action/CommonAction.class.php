@@ -4,9 +4,10 @@ class CommonAction extends Action {
 	public $_search;
 	public $_config;
 
-	function _initialize(){
-		$user_id = $this -> _session(C('USER_AUTH_KEY'));
-		if (!$user_id) {
+	function _initialize() {
+
+		$auth_id = session(C('USER_AUTH_KEY'));
+		if (!isset($auth_id)) {
 			//跳转到认证网关
 			redirect(U(C('USER_AUTH_GATEWAY')));
 		}
@@ -154,7 +155,7 @@ class CommonAction extends Action {
 		$access_list = array_map("get_module", $access_list);
 		$access_list = array_unique($access_list);
 		$access_list = array_filter($access_list);
-		$public_list=array('Push',"Login","Home","Index","File");
+		$public_list = explode(",", C('NOT_AUTH_MODULE'));
 		if (in_array(MODULE_NAME, $public_list)) {
 			return true;
 		} else {
@@ -169,11 +170,10 @@ class CommonAction extends Action {
 
 		$model = M("Node");
 		$top_menu_list = session('top_menu' . $user_id);
-
 		if (!empty($top_menu_list)) {
 			$list = $top_menu_list;
 		} else {
-			if ($this -> _session('administrator')) {
+			if ($this -> _session(C('ADMIN_AUTH_KEY'))) {
 				$where = array('status' => 1, 'pid' => 0, );
 			} else {
 				$where = array('status' => 1, 'pid' => 0, 'id' => array('neq', 84));
@@ -184,26 +184,24 @@ class CommonAction extends Action {
 
 		$this -> assign('list_top_menu', $list);
 
+		if (session('menu' . $user_id)) {
+			//如果已经缓存，直接读取缓存
+			$menu = session('menu' . $user_id);
+		} else {
+			//读取数据库模块列表生成菜单项
+			$menu = D("Node") -> access_list($user_id);
+			$common_list = D("Folder") -> get_common_list();
+			$personal_list = D("Folder") -> get_person_list();
+			$menu = array_merge($common_list, $personal_list, $menu);
+			//缓存菜单访问
+			session('menu' . $user_id, $menu);
+		}
+		
 		if (!empty($top_menu)) {
 			$this -> assign("top_menu_name", $model -> where("id=$top_menu") -> getField('name'));
 		}
-
-		if ($user_id) {
-			if (session('menu' . $user_id)) {
-				//如果已经缓存，直接读取缓存
-				$menu = session('menu' . $user_id);
-			} else {
-				//读取数据库模块列表生成菜单项
-				$menu = D("Node") -> access_list($user_id);
-				$common_list = D("Folder") -> get_common_list();
-				$personal_list = D("Folder") -> get_person_list();
-				$menu = array_merge($common_list, $personal_list, $menu);
-				//缓存菜单访问
-				session('menu' . $user_id, $menu);
-			}
-			$tree = list_to_tree($menu, $top_menu);
-			$this -> assign('html_left_menu', left_menu($tree));
-		}
+		$tree = list_to_tree($menu, $top_menu);
+		$this -> assign('html_left_menu', left_menu($tree));
 	}
 
 	protected function _assign_folder_list($folder, $public) {

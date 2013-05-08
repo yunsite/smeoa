@@ -184,7 +184,6 @@
 						</div>
 					</span>
 					<span style="width:100px;float:right;text-center:center;"  >时间</span>
-					<span style="width:20px;float:right;" class="ico_mailtitle"></span>
 					<span class="autocut auto">主题</span>
 				</li>
 				<if condition="count($list) eq 0 ">
@@ -196,7 +195,7 @@
 			<else/>
 			<foreach name="list" item="vo">
 				<li class="tbody <eq name='vo.read' value='1'>normal</eq><eq name='vo.read' value='0'>bold</eq>" style="padding-left:30px">
-				<span  style="width:140px;" class="autocut checkbox" >
+				<span  style="width:140px;" class="checkbox" >
 					<input name="mail_id[]" type="checkbox" value="{$vo.id}"/>
 					<div class="wrap">
 						<in name="folder" value="darftbox,outbox">
@@ -207,15 +206,6 @@
 					</div>
 				</span>
 				<span  style="width:100px;float:right;text-align:center;">{$vo.create_time|toDate='Y-m-d'}</span>
-				<span style="width:20px;float:right;">
-					<div   class="<eq name="vo.read" value="1">readed</eq>
-					<eq name="vo.read" value="0">unread</eq>
-					">
-				</div>
-				<div class="<gt name="vo.add_file|strlen" value="3">attach</gt>
-				">
-			</div>
-		</span>
 		<span class="autocut auto">
 			<notempty name = "vo['add_file']" >
 				<i class="icon-paper-clip"></i>

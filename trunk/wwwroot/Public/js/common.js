@@ -5,11 +5,14 @@ $(document).ready(function(){
 	$(".left_menu .tree_menu a").click(function() {
 		return click_left_menu($(this));
 	})
+	
 	top_menu=get_cookie("top_menu");
 	$('.nav li a[node='+top_menu+']').addClass("active");	
+	
 	left_menu=get_cookie("left_menu");
+	
 	$(".left_menu .tree_menu a[node='"+left_menu+"']").addClass("active");
-	if ($(".left_menu .tree_menu a.active").length == 0){
+	if($(".left_menu .tree_menu a.active").length == 0){
 		url = window.location.pathname;
 		$(".left_menu .tree_menu a[href='" + url + "']").addClass("active");
 	}
@@ -30,6 +33,7 @@ $(document).ready(function(){
 		inputbox.find(".search ul").hide();		
 		inputbox.find(".search").hide();
 	})
+	
 /* 查找联系人input 功能*/
 	$(".inputbox .letter").keyup(function(e){				
 		switch(e.keyCode)
@@ -76,14 +80,15 @@ $(document).ready(function(){
 			$.getJSON("/contact/json", {
 				key: $(this).val()
 			}, function(json){
-				if (json!=undefined){	
-					search.show();
-					search.html("");
-					$.each(json, function(i){
-						search.append('<li><a title="' + json[i].email + '">' + json[i].name +'&lt;'+ json[i].email+'&gt;</a></li>')										
-					})
-					search.children("li:first").addClass("active");		
-					search.show();
+				if (json!=undefined){
+					if(json.length>0){					
+						search.html("");
+						$.each(json, function(i){
+							search.append('<li><a title="' + json[i].email + '">' + json[i].name +'&lt;'+ json[i].email+'&gt;</a></li>')										
+						})
+						search.children("li:first").addClass("active");		
+						search.show();
+					}
 				}else{
 					search.html("");
 					search.hide();
@@ -92,7 +97,7 @@ $(document).ready(function(){
 		}else {					
 			 search.hide();
 		}
-		 }
+	}
 	});
 
 	$("label.checkbox :checkbox").click(function(){
@@ -180,15 +185,16 @@ $(document).ready(function(){
 					condition:$("#"+$(this).attr("condition")).val()
 				}, function(json){
 					if(json!=undefined){
-						search.show();
-						search.html("");
-						$.each(json, function(i){
-							html=$('<li><a>' + json[i].name+'</a></li>');
-							html.data("data",json[i]);
-							html.appendTo(search);
-						})
-						search.children("li:first").addClass("active");						
-						search.show();
+						if(json.length>0){		
+							search.html("");
+							$.each(json, function(i){
+								html=$('<li><a>' + json[i].name+'</a></li>');
+								html.data("data",json[i]);
+								html.appendTo(search);
+							})
+							search.children("li:first").addClass("active");						
+							search.show();
+						}
 					}else{
 						search.html("");
 						search.hide();
@@ -348,8 +354,8 @@ function click_top_menu(node){
 function click_left_menu(obj_node){
 	url=$(obj_node).attr("href");
 	if (url.length>0)
-	{		
-		node=$(obj_node).attr("node");	
+	{
+		node=$(obj_node).attr("node");
 		set_cookie("left_menu",node);
 	}else{
 		node=$(obj_node).parent().find("li a:first").attr("node");	
@@ -536,8 +542,7 @@ function reunit(filesize) {
  /*赋值*/
 
 function set_val(name,val){
-	//alert(name+"|"+$("#" + name).attr("type"));
-	if(($("#" + name).attr("type")) === "select-one"){
+	if($("#" + name +" option").length>0){
 		$("#" + name + " option[value='" + val + "']").attr("selected", "selected");
 		return;
 	}
@@ -552,6 +557,10 @@ function set_val(name,val){
 		$("#" + name).val(val);
 		return;
 	}
+	if(($("#" + name).attr("type")) === "hidden"){
+		$("#" + name).val(val);
+		return;
+	}	
 }
 
  /*联系人显示格式转换*/
