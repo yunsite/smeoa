@@ -6,11 +6,6 @@ class PoAction extends CommonAction {
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
 			$map['supplier_name|remark|item_remark|material_name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
-		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])) {
-			$this -> _set_search("start_date", $_POST['start_date']);
-			$this -> _set_search("end_date", $_POST['end_date']);
-			$map['po_date'] = array( array('egt', $_POST['start_date']), array('elt', $_POST['end_date']));
-		}
 		if (!empty($_POST['mat_no'])) {
 			$this -> _set_search("mat_no", $_POST['mat_no']);
 			$map['mat_no'] = array('eq', $_POST['mat_no']);

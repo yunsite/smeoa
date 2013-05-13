@@ -36,12 +36,13 @@ if (isset($_POST["install"])) {
 	$config_str .="		'TMPL_CACHE_ON'=>false,\n";
 	$config_str .="		'DB_FIELDS_CACHE'=>false,\n";
 	$config_str .="        'APP_AUTOLOAD_PATH'=>'@.TagLib',\n";
-	$config_str .="        'SESSION_AUTO_START'=>false,\n";
+	$config_str .="        'SESSION_AUTO_START'=>true,\n";
 	$config_str .="       'USER_AUTH_KEY'             =>'authId',	// 用户认证SESSION标记\n";
 	$config_str .="       'ADMIN_AUTH_KEY'			=>'administrator',\n";
 	$config_str .="       'USER_AUTH_MODEL'           =>'User',	// 默认验证数据表模型\n";
 	$config_str .="       'AUTH_PWD_ENCODER'          =>'md5',	// 用户认证密码加密方式\n";
 	$config_str .="        'USER_AUTH_GATEWAY'         =>'login/index',// 默认认证网关\n";
+	$config_str .="       'NOT_AUTH_MODULE'           =>'Push,Login,Home,Index,File',\n";
 	$config_str .="        'DB_LIKE_FIELDS'            =>'title|content|name|remark',\n";
 	$config_str .="			'SAVE_PATH'=>'Data/Files/',\n";
 	$config_str .="        'SHOW_PAGE_TRACE'=>0, //显示调试信息\n";

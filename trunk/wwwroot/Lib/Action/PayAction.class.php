@@ -8,11 +8,6 @@ class PayAction extends CommonAction {
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
 			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
-		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])){
-			$this -> _set_search("start_date", $_POST['start_date']);
-			$this -> _set_search("end_date", $_POST['end_date']);
-			$map['create_time'] = array( array('egt',$_POST['start_date']), array('elt', $_POST['end_date']));
-		}
 		if (!empty($_POST['supplier'])){
 			$this -> _set_search("supplier", $_POST['supplier']);
 			$map['supplier'] = array('eq',$_POST['supplier']);

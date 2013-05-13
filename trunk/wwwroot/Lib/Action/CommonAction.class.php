@@ -280,6 +280,10 @@ class CommonAction extends Action {
 		return $map;
 	}
 
+	protected function _set_search($key, $val) {
+		$this -> _search[$key] = $val;
+	}	
+
 	/**
 	 +----------------------------------------------------------
 	 * 根据表单生成查询条件

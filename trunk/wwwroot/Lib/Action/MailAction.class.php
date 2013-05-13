@@ -11,11 +11,6 @@ class MailAction extends CommonAction {
 		if (!empty($_POST['from'])) {
 			$map['from'] = array('like', '%' . $_POST['from'] . '%');
 		}
-		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])) {
-			$this -> _set_search("start_date", $_POST['start_date']);
-			$this -> _set_search("end_date", $_POST['end_date']);
-			$map['create_time'] = array( array('gt', date_to_int($_POST['start_date'])), array('lt', date_to_int($_POST['end_date'])));
-		}
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
 			$this -> _set_search("keyword", $_POST['keyword']);
 			$map['title'] = array('like', "%" . $_POST['keyword'] . "%");
