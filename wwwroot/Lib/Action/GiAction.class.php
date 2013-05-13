@@ -13,17 +13,7 @@ class GiAction extends CommonAction {
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
 			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
-		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])){
-			$this -> _set_search("start_date", $_POST['start_date']);
-			$this -> _set_search("end_date", $_POST['end_date']);
-			$map['gi_date'] = array( array('egt',$_POST['start_date']), array('elt', $_POST['end_date']));			
-		}
-		if (!empty($_POST['supplier'])){
-			$this -> _set_search("supplier", $_POST['supplier']);
-			$map['supplier'] = array('eq',$_POST['supplier']);
-		}
 		if (!empty($_POST['mat_no'])){
-			$this -> _set_search("mat_no", $_POST['mat_no']);
 			$map['mat_no'] = array('eq',$_POST['mat_no']);
 		}
 		if (!empty($_POST['gi_no'])){

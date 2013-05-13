@@ -13,11 +13,6 @@ class DocAction extends CommonAction {
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
 			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
-		if (!empty($_POST['start_date']) & !empty($_POST['end_date'])) {
-			$this -> _set_search("start_date", $_POST['start_date']);
-			$this -> _set_search("end_date", $_POST['end_date']);
-			$map['create_time'] = array( array('gt', date_to_int($_POST['start_date'])), array('lt', date_to_int($_POST['end_date'])));
-		}
 	}
 
 	public function index(){
