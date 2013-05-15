@@ -6,7 +6,7 @@ class PostAction extends CommonAction {
 		$map['title'] = array('like', "%" . $_POST['title'] . "%");
 		$map['user_name'] = array('like', "%" . $_POST['user_name'] . "%");
 		$map['content'] = array('like', "%" . $_POST['content'] . "%");
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	public function del() {
@@ -14,8 +14,8 @@ class PostAction extends CommonAction {
 		$user_id = get_user_id();
 		$post_user_id = M("Post") -> where($where) -> getfield('user_id');
 		if ($user_id == $post_user_id) {
-			$field = "status";
-			$this -> set_field($id, $field, 0);
+			$field = "is_del";
+			$this -> set_field($id, $field,1);
 		} else {
 			$this -> ajaxReturn($arr, "删除失败", 1);
 		}

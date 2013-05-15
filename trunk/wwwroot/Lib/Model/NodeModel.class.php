@@ -8,7 +8,7 @@ class NodeModel extends CommonModel {
 	public function checkNode() {
 		$map['name']	 =	 $_POST['name'];
 		$map['pid']	=	isset($_POST['pid'])?$_POST['pid']:0;
-        $map['status'] = 1;
+        $map['is_del'] = 1;
         if(!empty($_POST['id'])) {
 			$map['id']	=	array('neq',$_POST['id']);
         }
@@ -23,9 +23,9 @@ class NodeModel extends CommonModel {
 	public function access_list($emp_id){
 		$sql="		SELECT distinct c.id, c.pid, c.name, c.url";
 		$sql.="		FROM ".$this->tablePrefix."role_user AS a, ".$this->tablePrefix."role_node b, ".$this->tablePrefix."node AS c ";
-		$sql.="		WHERE a.role_id = b.role_id and c.status=1 ";
+		$sql.="		WHERE a.role_id = b.role_id and c.is_del=0 ";
 		$sql.="		AND a.user_id =$emp_id ";
-		$sql.="		AND c.id = b.node_id  or (c.pid=0  and c.status=1)";
+		$sql.="		AND c.id = b.node_id  or (c.pid=0  and c.is_del=0)";
 		$sql.="		ORDER BY c.sort ";
 		$rs = $this->db->query($sql);
 		return $rs;

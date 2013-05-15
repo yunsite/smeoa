@@ -14,7 +14,7 @@
 	}
 
 	function save() {
-		if ($("input:checked[name='user_list[]']").length < 1) {
+		if ($("input:checked[name='emp_id[]']").length < 1) {
 			alert("请选择用户");
 			return false;
 		};
@@ -35,20 +35,8 @@
 	}
 
 
-	$(document).ready(function() {
+	$(document).ready(function(){
 		set_return_url();
-		$("#emp_all").change(function() {
-			//alert($("#emp_all").attr("checked"));
-			if ($("#emp_all").attr("checked") == "checked") {
-				$("input[name='user_list[]']").each(function() {
-					$(this).attr("checked", "checked");
-				});
-			} else {
-				$("input[name='user_list[]']").each(function() {
-					$(this).attr("checked", false);
-				});
-			}
-		})
 		$(".sub_left_menu  tr").click(function() {
 			$(".sub_left_menu  tr").attr("class","");
 			$(this).attr("class","active");
@@ -82,7 +70,7 @@
 			<table class="table table-bordered">
 				<tr>
 					<th style="width:3%;vertical-align: -3px;">
-							<input  type="checkbox" id="select_all" value="all" onclick="select_all('emp_id')"/>
+							<input  type="checkbox" id="chk_select_all" value="all" onclick="select_all('emp_id[]')"/>
 					</th>
 					<th>
 						<nobr>员工编号</nobr>
@@ -107,7 +95,7 @@
 					<tr id="{$data.id}">
 						<td style="text-align: center">
 							<div class="chk_wrap">
-								<input type="checkbox" name="user_list[]" value="{$data.id}"></div>
+								<input type="checkbox" name="emp_id[]" value="{$data.id}"></div>
 						</td>
 						<td>
 							<nobr>{$data.emp_no}</nobr>
@@ -125,7 +113,7 @@
 							<nobr>{$data.position_name}</nobr>
 						</td>
 						<td>
-							<nobr>{$data.status|status}</nobr>
+							<nobr>{$data.is_del|status}</nobr>
 						</td>
 					</tr>
 				</volist>

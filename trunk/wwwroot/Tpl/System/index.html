@@ -50,13 +50,7 @@
 
 	function showdata(result) {
 		for (var s in result.data) {
-			//alert(s+"|"+$("#"+s).attr("type"))
-			if (($("#" + s).attr("type")) === "select-one") {
-				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
-				//alert(s+"|"+$("#"+s).attr("type")+result.data[s] )
-			} else {
-				$("#" + s).val(result.data[s]);
-			}
+			set_val(s,result.data[s]);
 		}
 		$("#dept_name").val($("#dept_list option[value='" + $("#dept_id").val() + "']").text());
 		img_url = "\\data\\files\\" + $("#pic").val();

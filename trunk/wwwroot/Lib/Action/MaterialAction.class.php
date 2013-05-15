@@ -9,7 +9,7 @@ class MaterialAction extends CommonAction {
 	}
 
 	function _filter(&$map){
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if (!empty($_POST['keyword'])){
 			$map['name|mat_no|letter'] = array('like', "%" . $_POST['keyword'] . "%");
 		}else{
@@ -126,7 +126,7 @@ class MaterialAction extends CommonAction {
 					$data['min_qty'] = $sheetData[$i]["I"];
 					$data['max_qty'] = $sheetData[$i]["J"];
 					$data['remark'] = $sheetData[$i]["K"];
-					$data['status'] = 1;
+					$data['is_del'] = 0;
 					$model -> add($data);
 				}
 				//dump($sheetData);
@@ -148,7 +148,7 @@ class MaterialAction extends CommonAction {
 			switch ($action){
 				case 'del' :
 					$where['id'] = array('in', $id);
-					$field = 'status';
+					$field = 'is_del';
 					if ($this -> set_field($id, $field, 0)){
 						$this -> ajaxReturn('', "删除成功", 1);
 					} else {
@@ -253,7 +253,7 @@ class MaterialAction extends CommonAction {
 		$where['letter'] = array('like', "%" . $keyword . "%");
 		$where['_logic'] = 'or';
 		$map['_complex'] = $where;
-		$map['status'] = 1;
+		$map['is_del'] = 0;
 		$list = $model -> where($map) -> field('id,name,spec,unit,buy_price,mat_no') -> select();
 		exit(json_encode($list));
 	}

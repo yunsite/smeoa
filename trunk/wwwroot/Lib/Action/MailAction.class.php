@@ -6,7 +6,7 @@ class MailAction extends CommonAction {
 	// 过滤查询字段
 
 	function _filter(&$map){
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		$map['user_id'] = array('eq', get_user_id());
 		if (!empty($_POST['from'])) {
 			$map['from'] = array('like', '%' . $_POST['from'] . '%');
@@ -29,7 +29,7 @@ class MailAction extends CommonAction {
 	// mailbox 3. 草稿箱		folder=3
 	// mailbox 4. 已删除		folder=4
 	// mailbox 5. 垃圾邮件	folder=5
-	// mailbox 6. 永久删除	status=0
+	// mailbox 6. 永久删除	is_del=1
 	//--------------------------------------------------------------------
 
 	public function mail_list() {
@@ -134,7 +134,7 @@ class MailAction extends CommonAction {
 	// mailbox 3. 草稿箱		folder=3
 	// mailbox 4. 已删除		folder=4
 	// mailbox 5. 垃圾邮件	folder=5
-	// mailbox 6. 永久删除	status=0
+	// mailbox 6. 永久删除	is_del=1
 	//--------------------------------------------------------------------
 	public function mark(){
 		$action = $_REQUEST['action'];
@@ -146,8 +146,8 @@ class MailAction extends CommonAction {
 				$result= $this -> set_field($id, $field, $val);
 				break;
 			case 'del_forever' :
-				$field = 'status';
-				$val = 0;	
+				$field = 'is_del';
+				$val = 1;	
 				$this -> del_add_file($id);
 				$result=$this -> set_field($id, $field, $val);
 				break;
@@ -212,7 +212,7 @@ class MailAction extends CommonAction {
 	private function organize(&$model) {
 
 		$where['user_id'] = get_user_id();
-		$where['status'] = 1;
+		$where['is_del'] = 0;
 		$list = M("MailOrganize") -> where($where) -> order('sort') -> select();
 
 		foreach ($list as $val) {
@@ -414,9 +414,8 @@ class MailAction extends CommonAction {
 	//--------------------------------------------------------------------
 	//   接收邮件
 	//--------------------------------------------------------------------
-	public function receve() {
+	public function receve(){
 		$new = 0;
-		$ajax = $_POST['ajax'];
 		if ($this -> _check_mail_account() == false) {
 			$this -> ajaxReturn(1, "请设置邮箱帐号", 0);
 			die();
@@ -450,7 +449,7 @@ class MailAction extends CommonAction {
 					$model -> user_id = $user_id;
 					$model -> read = 0;
 					$model -> folder = 1;
-					$model -> status = 1;
+					$model -> is_del = 0;
 					$str = $mail -> get_attach($mail_id, $this -> tmpPath);
 					$model -> add_file = $this -> _receive_file($str, $model);
 					$this -> organize($model);

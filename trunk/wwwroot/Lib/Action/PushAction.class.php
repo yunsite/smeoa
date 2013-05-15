@@ -11,12 +11,13 @@ class PushAction extends CommonAction {
 			$user_id = $user_id = get_user_id();
 			session_write_close();
 			$where['user_id'] = $user_id;
-			$where['time'] = array('lt', time());
+			$where['time'] = array('elt', time()-1);
 			$model = M("Push");
 			$data = $model -> where($where) -> find();
 			$where['id'] = $data['id'];
 			//dump($model);
-			if ($data) {
+			if ($data){
+				sleep(1);
 				$model -> where("id=".$data['id'])->delete();
 				$this -> ajaxReturn($data['data'],$data['info'],$data['status']);
 			} else {
@@ -26,7 +27,7 @@ class PushAction extends CommonAction {
 		$this -> ajaxReturn(null,"no-data",0);
 	}
 
-	function add($status,$info,$data) {
+	function add($status,$info,$data){
 		$user_id = get_user_id();
 		$model = M("Push");
 		$model -> user_id = $user_id;

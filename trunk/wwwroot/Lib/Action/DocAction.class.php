@@ -9,7 +9,7 @@ class DocAction extends CommonAction {
 
 	//过滤查询字段
 	function _filter(&$map){
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
 			$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
@@ -111,7 +111,7 @@ class DocAction extends CommonAction {
 					if (count($folder) == 1) {
 						$auth = D("Folder") -> _get_folder_auth($folder[0]["folder"]);
 						if ($auth['admin'] == true) {
-							$field = 'status';
+							$field = 'is_del';
 							$this -> set_field($id, $field, 0);
 						}
 						$this -> ajaxReturn('', "删除成功", 1);

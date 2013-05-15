@@ -6,7 +6,7 @@ class ForumAction extends CommonAction {
 
 	//过滤查询字段
 	function _filter(&$map) {
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if(!empty($_REQUEST['fid'])){
 			$map['folder'] = $_REQUEST['fid'];
 		}
@@ -69,7 +69,7 @@ class ForumAction extends CommonAction {
 		$this -> assign("auth", $auth);
 
 		$where['tid'] = $id;
-		$where['status'] = 1;
+		$where['is_del'] = 0;
 		$model = M("Post");
 
 		$this -> set_list_rows(8);
@@ -115,7 +115,7 @@ class ForumAction extends CommonAction {
 
 		foreach ($result as $key => $val) {
 			if ($val['admin'] == true) {
-				$field = 'status';
+				$field = 'is_del';
 				$this -> set_field($key, $field, 0);
 			}
 		}

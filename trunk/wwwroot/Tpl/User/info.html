@@ -49,13 +49,7 @@
 
 	function showdata(result) {
 		for (var s in result.data) {
-			//alert(s+"|"+$("#"+s).attr("type"))
-			if (($("#" + s).attr("type")) === "select-one") {
-				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
-				//alert(s+"|"+$("#"+s).attr("type")+result.data[s] )
-			} else {
-				$("#" + s).val(result.data[s]);
-			}
+			set_val(s,result.data[s]);
 		}
 		$("#dept_name").val($("#dept_list option[value='" + $("#dept_id").val() + "']").text());
 		img_url = "\\data\\files\\" + $("#pic").val();
@@ -65,9 +59,7 @@
 	}
 
 	$(document).ready(function() {
-		editor_init();
-		
-		
+		editor_init();				
 		$(".sub_left_menu  tr").click(function() {
 			$(".sub_left_menu  tr.active").removeClass("active");
 			$(this).attr("class","active");
@@ -104,7 +96,7 @@
 			</tr>
 			<volist name="list" id="data">
 				<tr id="{$data.id}">
-					<td>{$data.emp_no}</td><td>{$data.emp_name}</td><td>{$data.status|status}</td>
+					<td>{$data.emp_no}</td><td>{$data.emp_name}</td><td>{$data.is_del|status}</td>
 				</tr>
 			</volist>
 		</table>
@@ -156,7 +148,7 @@
 				<tr>
 					<th>性别</th>
 					<td>
-					<select class=""  name="sex" id="sex">
+					<select   name="sex" id="sex">
 						<option  value="male">男</option>
 						<option value="female">女</option>
 					</select></td>
@@ -202,9 +194,9 @@
 				<tr>
 					<th>状态</th>
 					<td colspan="3">
-					<select class=""  name="status" id="status">
-						<option  value="1">启用</option>
-						<option value="0">禁用</option>
+					<select   name="is_del" id="is_del">
+						<option  value="0">启用</option>
+						<option value="1">禁用</option>
 					</select></td>
 				</tr>
 			</table>

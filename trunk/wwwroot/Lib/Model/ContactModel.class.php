@@ -7,7 +7,7 @@ class ContactModel extends CommonModel {
 		);
 	// 自动填充设置
 	protected $_auto	 =	 array(
-		array('status','1',self::MODEL_INSERT),
+		array('is_del','0',self::MODEL_INSERT),
 		array('create_time','time',self::MODEL_INSERT,'function'),
 		);
 	public function get_dept_list($id){

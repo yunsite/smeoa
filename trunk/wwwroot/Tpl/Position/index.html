@@ -1,8 +1,6 @@
 <layout name='Layout/layout_main' />
 <script type="text/javascript">
 	function add() {
-
-		hash = $("#__hash__").val();
 		$("#form_data :input").each(function() {
 			$(this).val("");
 		});
@@ -10,34 +8,8 @@
 			$(this).val("");
 		});
 		$("#opmode").val("add");
-		$("#__hash__").val(hash);
 	}
 
-	function reset_pwd() {
-		$("#dialog-form").dialog({
-			modal : true,
-			buttons : {
-				"确定" : function() {
-					$(this).dialog("close");
-				},
-				"取消" : function() {
-					$(this).dialog("close");
-				}
-			}
-		});
-	}
-
-	function btn_search() {
-		sendForm("form_search", "__SELF__");
-		$("#form_search").submit();
-	}
-
-	function key_search() {
-		if (event.keyCode == 13) {
-			sendForm("form_search", "__SELF__");
-			return false;
-		}
-	}
 	function save() {
 		if(check_form("form_data")){
 			sendForm("form_data", "{:U('save')}");
@@ -46,11 +18,7 @@
 
 	function showdata(result) {
 		for (var s in result.data) {
-			if (($("#" + s).attr("type")) === "select-one") {
-				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
-			} else {
-				$("#" + s).val(result.data[s]);
-			}
+			set_val(s,result.data[s]);
 		}
 		$("#opmode").val("edit");
 	}
@@ -97,7 +65,7 @@
 					<tr id="{$data.id}">
 						<td>{$data.position_no}</td>
 						<td>{$data.name}</td>
-						<td>{$data.status|status}</td>
+						<td>{$data.is_del|status}</td>
 					</tr>
 				</volist>
 			</table>
@@ -107,7 +75,7 @@
 				<input type="hidden" name="id" id="id">
 				<input type="hidden" name="ajax" id="ajax" value="0">
 				<input type="hidden" name="opmode" id="opmode" value="">
-				<div id="edit" class="" >
+				<div id="edit"  >
 					<table class="table table-bordered">
 						<tr>
 							<th>
@@ -129,9 +97,9 @@
 						<tr>
 							<th>状态</th>
 							<td>
-								<select class=""  name="status" id="status">
-									<option  value="1">启用</option>
-									<option value="0">禁用</option>
+								<select   name="is_del" id="is_del">
+									<option  value="0">启用</option>
+									<option value="1">禁用</option>
 								</select>
 							</td>
 						</tr>
