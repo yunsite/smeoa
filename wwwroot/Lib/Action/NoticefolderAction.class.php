@@ -3,7 +3,7 @@ class NoticeFolderAction extends FolderAction {
 	//过滤查询字段
 	function _filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	public function index() {

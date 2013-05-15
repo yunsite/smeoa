@@ -38,32 +38,6 @@ class NodeAction extends CommonAction {
 		$this -> display();
 	}
 
-
-	public function sort() {
-		$node = M('Node');
-		if (!empty($_GET['sortId'])) {
-			$map = array();
-			$map['status'] = 1;
-			$map['id'] = array('in', $_GET['sortId']);
-			$sortList = $node -> where($map) -> order('sort asc') -> select();
-		} else {
-			if (!empty($_GET['pid']) || $_GET['pid'] == "0") {
-				$pid = $_GET['pid'];
-			}
-			if ($node -> getById($pid)) {
-				$level = $node -> level + 1;
-			} else {
-				$level = 1;
-			}
-			$this -> assign('level', $level);
-			$sortList = $node -> where('status=1 and pid=' . $pid) -> order('sort asc') -> select();
-		}
-		$this -> assign("sortList", $sortList);
-		$this -> display();
-
-		return;
-	}
-
 	function winpop() {
 		$user_id = get_user_id();
 		if ($user_id) {

@@ -81,14 +81,12 @@ class RoleAction extends CommonAction {
 	}
 
 	public function set_role() {
-		//dump($_POST);
-		$user_list = $_POST["user_list"];
+		$emp_list = $_POST["emp_id"];
 		$role_list = $_POST["role_list"];
-
 		$model = D("Role");
-		$model -> del_role($user_list);
+		$model -> del_role($emp_list);
 
-		$result = $model -> set_role($user_list, $role_list);
+		$result = $model -> set_role($emp_list, $role_list);
 		if ($result === false) {
 			$this -> error('操作失败！');
 		} else {

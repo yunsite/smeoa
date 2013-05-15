@@ -353,7 +353,8 @@ function click_top_menu(node){
 
 function click_left_menu(obj_node){
 	url=$(obj_node).attr("href");
-	if (url.length>0)
+
+	if (url.length>0 && (url!="#"))
 	{
 		node=$(obj_node).attr("node");
 		set_cookie("left_menu",node);

@@ -6,7 +6,7 @@ class FolderAction extends CommonAction {
 
 	function _filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	function set_folder($folder) {

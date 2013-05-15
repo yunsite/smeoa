@@ -81,7 +81,7 @@
 					<input type="checkbox" name="flow_type_id[]" value="{$vo.id}">
 				</span>
 					<span style="width:140px" >{$vo.group}&nbsp;</span>
-					<span style="width:100px;float:right;text-align:center;"  >{$vo.status|status}&nbsp;</span>
+					<span style="width:100px;float:right;text-align:center;"  >{$vo.is_del|status}&nbsp;</span>
 					<span style="width:300px;float:right;"  >{$vo.doc_no_format }&nbsp;</span>
 					<span class="autocut auto"><a href="{:U('edit?id='.$vo['id'])}">{$vo.name}&nbsp;</a></span>	
 				</li>

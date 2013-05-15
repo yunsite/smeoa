@@ -174,9 +174,9 @@ class CommonAction extends Action {
 			$list = $top_menu_list;
 		} else {
 			if ($this -> _session(C('ADMIN_AUTH_KEY'))) {
-				$where = array('status' => 1, 'pid' => 0, );
+				$where = array('is_del' => 0, 'pid' => 0, );
 			} else {
-				$where = array('status' => 1, 'pid' => 0, 'id' => array('neq', 84));
+				$where = array('is_del' => 0, 'pid' => 0, 'id' => array('neq', 84));
 			}
 			$list = $model -> where($where) -> order('sort asc') -> getField('id,name,url');
 			session('top_menu' . $user_id, $list);
@@ -353,14 +353,14 @@ class CommonAction extends Action {
 		return;
 	}
 
-	function pushReturn($status, $info, $data, $time = null) {
+	function pushReturn($data, $info, $status, $time = null) {
 		$user_id = get_user_id();
 		$model = M("Push");
 		$model -> user_id = $user_id;
 		$model -> data = $data;
 		$model -> status = $status;
 		$model -> info = $info;
-		if (empty($time)) {
+		if (empty($time)){
 			$model -> time = time();
 		} else {
 			$model -> time = $time;
@@ -455,7 +455,7 @@ class CommonAction extends Action {
 					$where['user_id'] = array('eq', get_user_id());
 				};
 
-				$model -> where($where) -> setField('status', 0);
+				$model -> where($where) -> setField('is_del',1);
 				$list = $model -> where($where) -> getField("id,add_file");
 				$str_list = implode($list);
 
@@ -466,7 +466,7 @@ class CommonAction extends Action {
 				$where = array();
 				$where['id'] = array('in', $file_list);
 
-				$model -> where($where) -> setField('status', 0);
+				$model -> where($where) -> setField('is_del',1);
 				$list = $model -> where($where) -> select();
 				$save_path = C('SAVE_PATH');
 

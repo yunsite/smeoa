@@ -6,14 +6,14 @@ class ScheduleAction extends CommonAction {
 			$map['name'] = array('like', "%" . $_POST['name'] . "%");
 		}
 		$map['user_id'] = array('eq', get_user_id());
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if (!empty($_POST["start_date"])) {
 			$map['start_date'] = array("egt", $_POST["start_date"]);
 		}
 		if (!empty($_POST["end_date"])) {
 			$map['end_date'] = array("elt", $_POST["end_date"]);
 		}
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	public function upload() {

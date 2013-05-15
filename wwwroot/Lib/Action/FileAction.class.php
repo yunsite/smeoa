@@ -2,15 +2,14 @@
 class FileAction extends CommonAction {
 	//过滤查询字段
 	function _filter(&$map) {
-		//$map['title'] = array('like',"%".$_POST['name']."%");
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	public function del() {
 		$fileId = f_decode($_POST['id']);
 		$File = M("File");
 		$File -> id = $fileId;
-		$File -> status = 0;
+		$File -> is_del = 1;
 		$File -> save();
 		if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/" . C("SAVE_PATH") . $savename)) {
 			unlink($_SERVER["DOCUMENT_ROOT"] . "/" . C("SAVE_PATH") . $savename);
@@ -26,16 +25,17 @@ class FileAction extends CommonAction {
 	}
 
 	// 文件上传
-	private function _upload() {
+	private function _upload(){
 		import("@.ORG.Util.UploadFile");
+		$module=$_REQUEST["module"];
 		$upload = new UploadFile();
-		$upload -> subFolder = strtolower(MODULE_NAME);
+		$upload -> subFolder =$module;
 		$upload -> savePath = C("SAVE_PATH");
 		$upload -> saveRule = uniqid;
 		$upload -> autoSub = true;
 		$upload -> subType = "date";
 
-		if (!$upload -> upload()) {
+		if (!$upload -> upload()){
 			$this -> error($upload -> getErrorMsg());
 		} else {
 			//取得成功上传的文件信息

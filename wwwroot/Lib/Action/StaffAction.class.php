@@ -8,7 +8,7 @@ class StaffAction extends CommonAction {
 	function _filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
 		$map['letter'] = array('like', "%" . $_POST['letter'] . "%");
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if (!empty($_POST['tag'])) {
 			$map['group'] = $_POST['tag'];
 		}
@@ -112,7 +112,7 @@ class StaffAction extends CommonAction {
 					$data['address'] = $sheetData[$i]["J"];
 					$data['user_id'] = get_user_id();
 					$data['remark'] = $sheetData[$i]["K"];
-					$data['status'] = 1;
+					$data['is_del'] = 0;
 					$model -> add($data);
 				}
 				//dump($sheetData);
@@ -203,57 +203,6 @@ class StaffAction extends CommonAction {
 		}
 	}
 
-	function read() {
-		$type = $_REQUEST['type'];
-		if ($type != 'inside') {
-			$model = M('Contact');
-			$id = $_REQUEST[$model -> getPk()];
-			$vo = $model -> getById($id);
-			$this -> assign('vo', $vo);
-			$this -> display();
-		} else {
-			$User = D("User");
-			$User -> viewFields = array('User' => array('id', 'status', 'nickname' => 'name'), 'Dept' => array('name' => 'dept', '_on' => 'User.dept_id =Dept.id', '_type' => 'LEFT'), 'UserInfo' => array('office_tel' => 'office_tel', 'mobile_tel' => 'mobile_tel', 'email' => 'email', 'website' => 'website', 'im' => 'im', '_on' => 'User.id=UserInfo.id'));
-			$UserView = $User -> switchModel("View", array("viewFields"));
-			$map['User.id'] = array('eq', $_REQUEST['id']);
-			$vo = $UserView -> where($map) -> find();
-			$this -> assign('vo', $vo);
-			$this -> assign('actionName', $type);
-			$this -> display('inside_read');
-		}
-	}
-
-	function set_tag() {
-		if (!empty($_POST['contact_id'])) {
-			$model = D("Tag");
-			$model -> del_data_by_row($_POST['contact_id'], 'contact');
-			if (!empty($_POST['tag'])) {
-				$result = $model -> set_tag($_POST['contact_id'], $_POST['tag'], "contact");
-			}
-		};
-		if (!empty($_POST['new_tag'])) {
-			$model = M("Tag");
-			$model -> module = MODULE_NAME;
-			$model -> name = $_POST['new_tag'];
-			$model -> status = 1;
-			$model -> user_id = get_user_id();
-			$new_tag_id = $model -> add();
-			if (!empty($_POST['contact_id'])) {
-				$model = D("Tag");
-				$result = $model -> set_tag($_POST['contact_id'], $new_tag_id, "contact");
-			}
-		};
-		if ($result !== false) {//保存成功
-			if ($ajax || $this -> isAjax())
-				$this -> ajaxReturn($list, dump($_POST['tag'], false) . "操作成功", 1);
-			$this -> assign('jumpUrl', $this->get_return_url());
-			$this -> success('操作成功!');
-		} else {
-			//失败提示
-			$this -> error('操作失败!');
-		}
-	}
-
 	function ajaxRead() {
 		$id = $_REQUEST['id'];
 		$model = M("Dept");
@@ -265,192 +214,6 @@ class StaffAction extends CommonAction {
 		$where['dept_id'] = array('in', $dept);
 		$data = $model -> where($where) -> select();
 		$this -> ajaxReturn($data, "", 1);
-	}
-
-	function popup_contact() {
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
-
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$model = D("Tag");
-
-		$tag_list = $model -> get_list("contact", "id,name,pid");
-		$tag_list = array_merge($tag_list, array( array("id" => "#", "name" => "未分组")));
-		$this -> assign("list_personal", popup_tree_menu($tag_list));
-
-		$this -> assign('type', 'rank');
-		$this -> display();
-		return;
-	}
-
-	function popup_auth() {
-
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
-
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$this -> assign('type', 'rank');
-		$this -> display();
-		return;
-	}
-
-	function popup_actor() {
-
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
-
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$this -> assign('type', 'rank');
-		$this -> display();
-		return;
-	}
-
-	function popup_confirm() {
-
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_company', popup_tree_menu($list));
-
-		$model = M("Rank");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_rank', popup_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', popup_tree_menu($list));
-
-		$this -> assign('type', 'rank');
-		$this -> display();
-		return;
-	}
-
-	function popup_flow(){
-		$model = M("DeptGrade");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_dept_grade', sub_tree_menu($list));
-
-		$model = M("Dept");
-		$list = array();
-		$list = $model -> field('id,pid,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_dept', sub_tree_menu($list));
-
-		$model = M("Position");
-		$list = array();
-		$list = $model -> field('id,name') -> order('sort asc') -> select();
-		$list = list_to_tree($list);
-		$this -> assign('list_position', sub_tree_menu($list));
-
-		$this -> assign('type', 'dgp');
-		$this -> display();
-		return;
-	}
-
-	function json(){
-		header("Content-Type:text/html; charset=utf-8");
-		$key = $_REQUEST['key'];
-		$ajax = $_REQUEST['ajax'];
-		//dump($ajax);
-
-		$model = M("User");
-		$where['emp_name'] = array('like', "%" . $key . "%");
-		$where['letter'] = array('like', "%" . $key . "%");
-		$where['email'] = array('like', "%" . $key . "%");
-		$where['_logic'] = 'or';
-		$company = $model -> where($where) -> field('id,emp_name as name,email') -> select();
-
-		$where = array();
-		$model = M("Contact");
-		$where['name'] = array('like', "%" . $key . "%");
-		$where['letter'] = array('like', "%" . $key . "%");
-		$where['email'] = array('like', "%" . $key . "%");
-		$where['_logic'] = 'or';
-		$map['_complex'] = $where;
-		$map['email'] = array('neq', '');
-		$map['user_id'] = array('eq', get_user_id());
-		$personal = $model -> where($map) -> field('id,name,email') -> select();
-
-		if (empty($company)) {
-			$company = array();
-		}
-		if (empty($personal)) {
-			$personal = array();
-		}
-		$contact = array_merge_recursive($company, $personal);
-		exit(json_encode($contact));
-	}
-
-	function json2() {
-		header("Content-Type:text/html; charset=utf-8");
-		$key = $_REQUEST['key'];
-		$ajax = $_REQUEST['ajax'];
-		//dump($ajax);
-
-		$model = M("User");
-		$where['emp_name'] = array('like', "%" . $key . "%");
-		$where['letter'] = array('like', "%" . $key . "%");
-		$where['email'] = array('like', "%" . $key . "%");
-		$where['_logic'] = 'or';
-		$company = $model -> where($where) -> field('id,emp_name as name,email,emp_no') -> select();
-
-		if (empty($company)) {
-			$company = array();
-		}
-		if (empty($personal)) {
-			$personal = array();
-		}
-		$contact = array_merge_recursive($company, $personal);
-		exit(json_encode($contact));
 	}
 }
 ?>

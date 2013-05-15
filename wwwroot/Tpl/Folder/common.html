@@ -37,13 +37,9 @@
 		}
 	};
 
-	function showdata(result) {
+	function showdata(result){
 		for (var s in result.data) {
-			if (($("#" + s).attr("type")) === "select-one") {
-				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
-			} else {
-				$("#" + s).val(result.data[s]);
-			}
+			set_val(s,result.data[s]);
 		}
 		$("#admin_list div.address_list").html(contact_conv($("#admin").val()));
 		$("#write_list div.address_list").html(contact_conv($("#write").val()));
@@ -178,18 +174,18 @@
 				</div>
 				<div class="row-fluid form-horizontal">
 					<div class="control-group">
-						<label class="control-label" for="status">状态：</label>
+						<label class="control-label" for="is_del">状态：</label>
 						<div class="controls">
-							<select class=""  name="status" id="status">
-								<option  value="1">启用</option>
-								<option value="0">禁用</option>
+							<select   name="is_del" id="is_del">
+								<option  value="0">启用</option>
+								<option value="1">禁用</option>
 							</select>
 						</div>
 					</div>
 				</div>
 				<div class="row-fluid form-horizontal">
 					<div class="control-group">
-						<label class="control-label" for="status">备注：</label>
+						<label class="control-label" for="is_del">备注：</label>
 						<div class="controls">
 							<textarea id="remark" name="remark" class="span12"></textarea>
 						</div>

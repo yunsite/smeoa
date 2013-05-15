@@ -8,7 +8,7 @@ class RankModel extends CommonModel {
 	public function checkNode() {
 		$map['name']	 =	 $_POST['name'];
 		$map['pid']	=	isset($_POST['pid'])?$_POST['pid']:0;
-        $map['status'] = 1;
+        $map['is_del'] = 1;
         if(!empty($_POST['id'])) {
 			$map['id']	=	array('neq',$_POST['id']);
         }

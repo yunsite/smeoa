@@ -1,11 +1,11 @@
 <?php
 class FolderModel extends CommonModel {
 	protected $_auto	 =	 array(
-		array('status','1',self::MODEL_INSERT),
+		array('is_del','0',self::MODEL_INSERT),
 	);
 	public function get_list($folder,$public){		
 		$where['folder']=$folder;
-		$where['status']=1;
+		$where['is_del']=0;
 		if($public==2){
 			$user_id=$this->get_user_id();
 			$where['user_id']=$user_id;
@@ -17,7 +17,7 @@ class FolderModel extends CommonModel {
 	public function get_common_list(){
 		$sql="		SELECT CONCAT('fid_',a.id) as id,a.name,a.folder,a.sort,CONCAT('fid_',a.pid) as pid,CONCAT(a.folder,'?fid=',a.id) as url";
 		$sql.="		FROM ".$this->tablePrefix."folder AS a";
-		$sql.="		WHERE  status=1 and public=1 ";
+		$sql.="		WHERE  is_del=0 and public=1 ";
 		$sql.="		ORDER BY a.folder,a.sort ";
 		$rs = $this->db->query($sql);
 		$list=array();
@@ -36,7 +36,7 @@ class FolderModel extends CommonModel {
 		$user_id=$this->get_user_id();
 		$sql="		SELECT CONCAT('fid_',a.id) as id,a.name,a.folder,CONCAT('fid_',a.pid) as pid,CONCAT(a.folder,'?fid=',a.id) as url";
 		$sql.="		FROM ".$this->tablePrefix."folder AS a";
-		$sql.="		WHERE  status=1 and public=2 and user_id=$user_id ";
+		$sql.="		WHERE  is_del=0 and public=2 and user_id=$user_id ";
 		$sql.="		ORDER BY a.folder,a.sort ";
 		$rs = $this->db->query($sql);
 		$list=array();

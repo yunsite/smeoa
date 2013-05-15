@@ -16,39 +16,39 @@
 		<div class="form_box">
 			<div class="row-fluid form-horizontal">
 				<div class="control-group">
-					<label class="control-label" for="status">邮件显示名称：</label>
+					<label class="control-label" for="is_del">邮件显示名称：</label>
 					<div class="controls">
 						<input type="text" name="mail_name" value="{$mail_user.mail_name}"   check="require" msg="请输入邮件显示名称" >
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="status">邮件地址：</label>
+					<label class="control-label" for="email">邮件地址：</label>
 					<div class="controls">
 						<input type="text" name="email" value="{$mail_user.email}" check="require" msg="请输入邮件地址" >
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="status">接收服务器：</label>
+					<label class="control-label" for="pop3svr">接收服务器：</label>
 					<div class="controls">
 						<input type="text" name="pop3svr" value="{$mail_user.pop3svr}"  check="require" msg="请输入接收服务器" >
 						<span class="help-inline">例如：pop.qq.com</span>
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="status">发送服务器：</label>
+					<label class="control-label" for="smtpsvr">发送服务器：</label>
 					<div class="controls">
 						<input type="text" name="smtpsvr" value="{$mail_user.smtpsvr}"   check="require" msg="请输入发送服务器">
 						<span class="help-inline">例如：smtp.qq.com</span>
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="status">用户名：</label>
+					<label class="control-label" for="mail_id">用户名：</label>
 					<div class="controls">
 						<input type="text" name="mail_id" value="{$mail_user.mail_id}" check="require" msg="请输入用户名" >
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="status">密码：</label>
+					<label class="control-label" for="mail_pwd">密码：</label>
 					<div class="controls">
 						<input type="password" name="mail_pwd" value="{$mail_user.mail_pwd}"  check="require" msg="密码"  >
 					</div>

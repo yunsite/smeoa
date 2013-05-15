@@ -767,10 +767,10 @@ function mail_org_string($vo) {
 }
 
 function status($status) {
-	if ($status == 1) {
+	if ($status == 0) {
 		return "启用";
 	}
-	if ($status == 0) {
+	if ($status == 1) {
 		return "禁用";
 	}
 }

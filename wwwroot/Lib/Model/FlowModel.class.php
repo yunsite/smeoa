@@ -7,7 +7,7 @@ class FlowModel extends CommonModel {
 		);
 	// 自动填充设置
 	protected $_auto	 =	 array(
-		array('status','1',self::MODEL_INSERT),
+		array('is_del','0',self::MODEL_INSERT),
 		array('create_time','time',self::MODEL_INSERT,'function'),
 		array('update_time','time',self::MODEL_UPDATE,'function')
 		);
@@ -126,7 +126,7 @@ class FlowModel extends CommonModel {
 				$where=array();
 				$where['dept_id']=$dept_id;
 				$where['position_id']=$position;
-				$where['status']=1;
+				$where['is_del']=0;
 				$emp_list=$model->where($where)->select();
 				//dump($emp_list);
 				$emp_list=rotate($emp_list);
@@ -143,7 +143,7 @@ class FlowModel extends CommonModel {
 				$where=array();
 				$where['dept_id']=$dept;
 				$where['position_id']=$position;
-				$where['status']=1;
+				$where['is_del']=0;
 				$emp_list=$model->where($where)->select();
 				//dump($emp_list);
 				$emp_list=rotate($emp_list);
@@ -159,7 +159,7 @@ class FlowModel extends CommonModel {
 				$model=M("User");
 				$where=array();
 				$where['dept_id']=$dept;
-				$where['status']=1;
+				$where['is_del']=0;
 				$emp_list=$model->where($where)->select();
 				$emp_list=rotate($emp_list);
 				if(!empty($emp_list)){

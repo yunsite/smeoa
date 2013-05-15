@@ -9,19 +9,19 @@ class UserAction extends CommonAction {
 
 	public function _before_index() {
 		$model = M("Position");
-		$list = $model -> where('status=1') -> order('sort asc') -> getField('id,name');
+		$list = $model -> where('is_del=1') -> order('sort asc') -> getField('id,name');
 		$this -> assign('position_list', $list);
 
 		$model = M("Rank");
-		$list = $model -> where('status=1') -> order('sort asc') -> getField('id,name');
+		$list = $model -> where('is_del=1') -> order('sort asc') -> getField('id,name');
 		$this -> assign('rank_list', $list);
 
 		$model = M("Dept");
-		$list = $model -> where('status=1') -> order('sort asc') -> getField('id,name');
+		$list = $model -> where('is_del=1') -> order('sort asc') -> getField('id,name');
 		$this -> assign('dept_list', $list);
 
 		$model = M("Rank");
-		$list = $model -> where('status=1') -> order('sort asc') -> getField('id,name');
+		$list = $model -> where('is_del=1') -> order('sort asc') -> getField('id,name');
 		$this -> assign('rank_list', $list);
 	}
 

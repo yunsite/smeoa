@@ -26,7 +26,7 @@ class PsiAction extends CommonAction {
 
 		//获取最新邮件
 		$where['user_id'] = $user_id;
-		$where['status'] = array('eq', '1');
+		$where['is_del'] = array('eq', '0');
 		$where['folder'] = array( array('eq', 1), array('gt', 6), 'or');
 
 		$new_mail_list = $model -> where($where) -> field("id,title,create_time") -> order("create_time desc") -> limit(6) -> select();
@@ -65,13 +65,13 @@ class PsiAction extends CommonAction {
 		$model = D('Doc');
 		//获取最新邮件
 
-		$where['status'] = array('eq', '1');
+		$where['is_del'] = array('eq', '0');
 		$where['type'] = array('eq', '/doc/common/');
 		$common_list = $model -> where($where) -> field("id,name,create_time") -> order("create_time desc") -> limit(6) -> select();
 		$this -> assign("common_list", $common_list);
 
 		$where = array();
-		$where['status'] = array('eq', '1');
+		$where['is_del'] = array('eq', '0');
 		$where['user_id'] = $user_id;
 		$where['type'] = array('eq', '/doc/personal/');
 		$personal_list = $model -> where($where) -> field("id,name,create_time") -> order("create_time desc") -> limit(6) -> select();
@@ -91,7 +91,7 @@ class PsiAction extends CommonAction {
 		$model = M("Todo");
 		$where = array();
 		$where['user_id'] = $user_id;
-		$where['status'] = array("in", "1,2");
+		$where['is_del'] = array("in", "1,2");
 		$todo_list = M("Todo") -> where($where) -> order('priority desc,sort asc') -> limit(6) -> select();
 		$this -> assign("todo_list", $todo_list);
 	}
@@ -100,14 +100,14 @@ class PsiAction extends CommonAction {
 		$model = D('Notice');
 		//获取最新邮件
 
-		$where['status'] = array('eq', '1');
+		$where['is_del'] = array('eq', '0');
 		$new_notice_list = $model -> where($where) -> field("id,title,create_time") -> order("create_time desc") -> limit(6) -> select();
 		$this -> assign("new_notice_list", $new_notice_list);
 	}
 
 	protected function forum_list() {
 		$model = D('Forum');
-		$where['status'] = array('eq', '1');
+		$where['is_del'] = array('eq', '0');
 		$new_forum_list = $model -> where($where) -> field("id,title,create_time") -> order("create_time desc") -> limit(6) -> select();
 		$this -> assign("new_forum_list", $new_forum_list);
 	}

@@ -5,16 +5,16 @@ class SupplierAction extends CommonAction {
 	function _filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
 		$map['letter'] = array('like', "%" . $_POST['letter'] . "%");
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if (!empty($_POST['tag'])) {
 			$map['group'] = $_POST['tag'];
 		}
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	function index() {
 		$model = M("Supplier");
-		$where['status']=1;
+		$where['is_del']=0;
 		$list = $model -> where($where) -> select();
 		$this -> assign('list', $list);
 		$tag_data = D("Tag") -> get_data_list();
@@ -101,7 +101,7 @@ class SupplierAction extends CommonAction {
 					$data['mobile_tel'] = $sheetData[$i]["J"];
 					$data['fax'] = $sheetData[$i]["K"];
 					$data['im'] = $sheetData[$i]["L"];
-					$data['status'] = 1;
+					$data['is_del'] = 0;
 					$model -> add($data);
 				}
 				//dump($sheetData);
@@ -202,24 +202,11 @@ class SupplierAction extends CommonAction {
 	}
 
 	function read() {
-		$type = $_REQUEST['type'];
-		if ($type != 'inside') {
 			$model = M('Supplier');
 			$id = $_REQUEST[$model -> getPk()];
 			$vo = $model -> getById($id);
 			$this -> assign('vo', $vo);
 			$this -> display();
-		} else {
-			$User = D("User");
-			$User -> viewFields = array('User' => array('id', 'status', 'nickname' => 'name'), 'Dept' => array('name' => 'dept', '_on' => 'User.dept_id =Dept.id', '_type' => 'LEFT'), 'UserInfo' => array('office_tel' => 'office_tel', 'mobile_tel' => 'mobile_tel', 'email' => 'email', 'website' => 'website', 'im' => 'im', '_on' => 'User.id=UserInfo.id'));
-			$UserView = $User -> switchModel("View", array("viewFields"));
-			$map['User.id'] = array('eq', $_REQUEST['id']);
-			$vo = $UserView -> where($map) -> find();
-			$this -> assign('accessList', $accessList);
-			$this -> assign('vo', $vo);
-			$this -> assign('actionName', $type);
-			$this -> display('inside_read');
-		}
 	}
 
 	function set_tag(){
@@ -234,7 +221,7 @@ class SupplierAction extends CommonAction {
 			$model = M("Tag");
 			$model -> module = MODULE_NAME;
 			$model -> name = $_POST['new_tag'];
-			$model -> status = 1;
+			$model -> is_del = 0;
 			$model -> user_id = get_user_id();
 			$new_tag_id = $model -> add();
 			if (!empty($_POST['supplier_id'])) {

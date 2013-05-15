@@ -38,7 +38,7 @@
 
 	$(document).ready(function() {		
 		editor_init();
-		set_val("status", "{$vo.status}");
+		set_val("is_del", "{$vo.is_del}");
 		set_val("group", "{$vo.group}");
 		set_val("type", "{$vo.type}");
 	})
@@ -91,11 +91,11 @@
 										<input type="text" id="sort" name="sort" value="{$vo.sort}"></div>
 						</div>
 						<div class="control-group span6">
-								<label class="control-label" for="status">状态：</label>
+								<label class="control-label" for="is_del">状态：</label>
 								<div class="controls">
-									<select name="status" id="status">
+									<select name="is_del" id="is_del">
 										<option value="1" >启用</option>
-										<option value="0">禁用</option>
+										<option value="1">禁用</option>
 									</select>
 						</div>
 				</div>

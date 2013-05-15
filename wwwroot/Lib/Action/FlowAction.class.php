@@ -7,12 +7,12 @@ class FlowAction extends CommonAction {
 	public function _initialize() {
 		parent::_initialize();
 		$model = D('FlowType');
-		$where['status']=1;
+		$where['is_del']=0;
 		//$this -> _flow_type = $model -> where($where) -> getField('id,name');
 	}
 
 	function _filter(&$map) {
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	public function upload() {
@@ -30,7 +30,7 @@ class FlowAction extends CommonAction {
 			}
 		}
 
-		$where['status'] = 1;
+		$where['is_del'] = 0;
 		$list = $model -> where($where) -> select();
 		$this -> assign("list", $list);
 		$this -> display();
@@ -100,7 +100,7 @@ class FlowAction extends CommonAction {
 		$model = M("FlowLog");
 		$where['emp_no'] = $_SESSION['emp_no'];
 		$where['_string'] = "result is null";
-		$where['status'] = 1;
+		$where['is_del'] = 0;
 		return $model -> where($where) -> count('id');
 	}
 
@@ -176,7 +176,7 @@ class FlowAction extends CommonAction {
 		//保存当前数据对象
 		$list = $model -> save();
 		$model = D("FlowLog");
-		$model -> where("step=$step and flow_id=$flow_id and result is null") -> setField('status', 0);
+		$model -> where("step=$step and flow_id=$flow_id and result is null") -> setField('is_del',1);
 
 		if ($list !== false) {//保存成功
 			D("Flow") -> next_step($flow_id, $step);
@@ -207,7 +207,7 @@ class FlowAction extends CommonAction {
 		$list = $model -> save();
 		//可以裁决的人有多个人的时候，一个人评价完以后，禁止其他人重复裁决。
 		$model = D("FlowLog");
-		$model -> where("step=$step and flow_id=$flow_id and result is null") -> setField('status', 0);
+		$model -> where("step=$step and flow_id=$flow_id and result is null") -> setField('is_del',1);
 
 		if ($list !== false) {//保存成功
 			D("Flow") -> where("id=$flow_id") -> setField('step', 0);

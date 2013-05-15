@@ -50,7 +50,7 @@ class LoginAction extends Action {
 		$map = array();
 		// 支持使用绑定帐号登录
 		$map['emp_no'] = $_POST['emp_no'];
-		$map["status"] = array('gt', 0);
+		$map["is_del"] = array('eq',0);
 		$model=M(C('USER_AUTH_MODEL'));
 		$authInfo = $model->where($map)->find();
 		//使用用户名、密码和状态的方式进行认证

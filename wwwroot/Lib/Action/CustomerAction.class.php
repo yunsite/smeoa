@@ -5,16 +5,16 @@ class CustomerAction extends CommonAction {
 	function _filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['name'] . "%");
 		$map['letter'] = array('like', "%" . $_POST['letter'] . "%");
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if (!empty($_POST['tag'])) {
 			$map['group'] = $_POST['tag'];
 		}
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 	}
 
 	function index() {
 		$model = M("Customer");
-		$where['status'] = 1;
+		$where['is_del'] = 0;
 		$list = $model -> where($where) -> select();
 		$this -> assign('list', $list);
 		$tag_data = D("Tag") -> get_data_list();
@@ -203,24 +203,11 @@ class CustomerAction extends CommonAction {
 	}
 
 	function read() {
-		$type = $_REQUEST['type'];
-		if ($type != 'inside') {
 			$model = M('Customer');
 			$id = $_REQUEST[$model -> getPk()];
 			$vo = $model -> getById($id);
 			$this -> assign('vo', $vo);
 			$this -> display();
-		} else {
-			$User = D("User");
-			$User -> viewFields = array('User' => array('id', 'status', 'nickname' => 'name'), 'Dept' => array('name' => 'dept', '_on' => 'User.dept_id =Dept.id', '_type' => 'LEFT'), 'UserInfo' => array('office_tel' => 'office_tel', 'mobile_tel' => 'mobile_tel', 'email' => 'email', 'website' => 'website', 'im' => 'im', '_on' => 'User.id=UserInfo.id'));
-			$UserView = $User -> switchModel("View", array("viewFields"));
-			$map['User.id'] = array('eq', $_REQUEST['id']);
-			$vo = $UserView -> where($map) -> find();
-			$this -> assign('accessList', $accessList);
-			$this -> assign('vo', $vo);
-			$this -> assign('actionName', $type);
-			$this -> display('inside_read');
-		}
 	}
 
 	function set_tag() {

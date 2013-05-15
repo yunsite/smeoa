@@ -51,13 +51,7 @@
 
 	function showdata(result) {
 		for (var s in result.data) {
-			//alert(s+"|"+$("#"+s).attr("type"))
-			if (($("#" + s).attr("type")) === "select-one") {
-				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
-				//alert(s+"|"+$("#"+s).attr("type")+result.data[s] )
-			} else {
-				$("#" + s).val(result.data[s]);
-			}
+			set_val(s,result.data[s]);
 		}
 		$("#dept_name").val($("#dept_list option[value='" + $("#dept_id").val() + "']").text());
 		img_url = "{:C('SAVE_PATH')}" + $("#pic").val();
@@ -110,7 +104,7 @@
 					<tr id="{$data.id}">
 						<td>{$data.emp_no}</td>
 						<td>{$data.emp_name}</td>
-						<td>{$data.status|status}</td>
+						<td>{$data.is_del|status}</td>
 					</tr>
 				</volist>
 			</table>
@@ -203,9 +197,9 @@
 					<tr>
 						<th>状态</th>
 						<td colspan="3">
-							<select class="input-date"  name="status" id="status">
-								<option  value="1">启用</option>
-								<option value="0">禁用</option>
+							<select class="input-date"  name="is_del" id="is_del">
+								<option  value="0">启用</option>
+								<option value="1">禁用</option>
 							</select>
 						</td>
 					</tr>

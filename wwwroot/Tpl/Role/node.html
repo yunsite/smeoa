@@ -18,7 +18,7 @@
 			$(this).attr("checked", false);
 			$(this).parents("td").removeClass("active");
 		});
-		for (var s in result.data) {
+		for (var s in result.data){
 			$(".sub_left_menu .tree_menu input[name='node_id'][value=" + result.data[s].node_id + "]").attr("checked", true);
 
 			if(result.data[s].admin==1){

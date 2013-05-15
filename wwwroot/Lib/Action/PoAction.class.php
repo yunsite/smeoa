@@ -2,7 +2,7 @@
 class PoAction extends CommonAction {
 	//过滤查询字段
 	function _filter(&$map) {
-		$map['status'] = array('eq', '1');
+		$map['is_del'] = array('eq', '0');
 		if (!empty($_REQUEST['keyword']) && empty($map['title'])) {
 			$map['supplier_name|remark|item_remark|material_name'] = array('like', "%" . $_POST['keyword'] . "%");
 		}
@@ -156,7 +156,7 @@ class PoAction extends CommonAction {
 		$keyword = $_REQUEST['keyword'];
 		$model = M("Po");
 		$map['po_no'] = array('like', "%" . $keyword . "%");
-		$map['status'] = 1;
+		$map['is_del'] = 0;
 		$map['finish'] = 0;
 		$list = $model -> where($map) -> field('id,po_no as name') -> select();
 		//dump($model);

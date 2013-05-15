@@ -26,11 +26,7 @@
 
 	function showdata(result) {
 		for (var s in result.data) {
-			if (($("#" + s).attr("type")) === "select-one") {
-				$("#" + s + " option[value='" + result.data[s] + "']").attr("selected", "selected");
-			} else {
-				$("#" + s).val(result.data[s]);
-			}
+			set_val(s,result.data[s]);
 		}
 		$("#opmode").val("edit");
 	}
@@ -94,9 +90,9 @@
 					<tr>
 						<th>状态</th>
 						<td>
-							<select class=""  name="status" id="status">
-								<option  value="1">启用</option>
-								<option value="0">禁用</option>
+							<select   name="is_del" id="is_del">
+								<option  value="0">启用</option>
+								<option value="1">禁用</option>
 							</select>
 						</td>
 					</tr>

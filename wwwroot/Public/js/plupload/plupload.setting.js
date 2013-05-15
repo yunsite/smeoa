@@ -8,9 +8,9 @@ function uploader_init(){
 		url : upload_url,
 		flash_swf_url : '/Public/js/plupload/plupload.flash.swf',
 		filters : [
-			{title : "Image files", extensions : "jpg,gif,png"},
-			{title : "Zip files", extensions : "zip,rar"},
-			{title : "Office files", extensions : "doc,dox,xls,xlsx,ppt,pptx,pdf"}
+			{title : "Office files", extensions : "doc,dox,xls,xlsx,ppt,pptx,pdf"},
+			{title : "Image files", extensions : "jpg,gif,png,tif,xps"},
+			{title : "Zip files", extensions : "zip,rar"}			
 		]
 	};
 
@@ -42,6 +42,7 @@ function uploader_init(){
 			html+='</div>\n';
 			$('#file_list').append(html);
 		}
+		uploader.start();
 	});
 
 	uploader.bind('UploadProgress', function(up, file){
