@@ -1,8 +1,7 @@
 <?php
 class MailAction extends CommonAction {
-	public $config;
+	private $_account ;
 	private $tmpPath = "data";
-
 	// 过滤查询字段
 
 	function _filter(&$map){
@@ -263,19 +262,16 @@ class MailAction extends CommonAction {
 	//--------------------------------------------------------------------
 	//  读取邮箱用户数据
 	//--------------------------------------------------------------------
-	private function _check_mail_account() {
-		if (empty($this -> config)) {
+	private function _check_mail_account(){
 			$user_id = get_user_id();
 			$model = M('MailAccount');
 			$list = $model -> field('mail_name,email,pop3svr,smtpsvr,mail_id,mail_pwd') -> find($user_id);
-			if (empty($list['mail_name']) || empty($list['email']) || empty($list['pop3svr']) || empty($list['smtpsvr']) || empty($list['mail_id']) || empty($list['mail_pwd'])) {
-				$this -> error("请设置邮箱帐号", "/mailaccount");
-				return;
-			} else {
-				$this -> config = $list;
-			}
+			if (empty($list['mail_name']) || empty($list['email']) || empty($list['pop3svr']) || empty($list['smtpsvr']) || empty($list['mail_id']) || empty($list['mail_pwd'])){
+				$this->_account=$list;
+				return false;
+		}else{
+			return true;
 		}
-		return $this -> config;
 	}
 
 	//--------------------------------------------------------------------
@@ -425,7 +421,7 @@ class MailAction extends CommonAction {
 		vendor("Mail.class#receve2");
 		$mail_list = array();
 		$mail = new receiveMail();
-		$connect = $mail -> connect($this -> config['pop3svr'], '110', $this -> config['mail_id'], $this -> config['mail_pwd'], 'INBOX', 'pop3');
+		$connect = $mail -> connect($this -> _account['pop3svr'], '110', $this -> _account['mail_id'], $this -> _account['mail_pwd'], 'INBOX', 'pop3');
 		$mail_count = $mail -> mail_total_count();
 		if ($connect){
 			for ($i = 1; $i < $mail_count; $i++){
@@ -506,9 +502,10 @@ class MailAction extends CommonAction {
 	//--------------------------------------------------------------------
 	//   保存草稿箱
 	//--------------------------------------------------------------------
-	public function set_darft() {
+	public function set_darft(){
 		if ($this -> _check_mail_account() == false) {
-			return;
+			$this -> ajaxReturn(1, "请设置邮箱帐号", 0);
+			die();
 		}
 		$model = D('Mail');
 		if (false === $model -> create()) {
@@ -516,8 +513,8 @@ class MailAction extends CommonAction {
 		}
 		$model -> __set('user_id', get_user_id());
 		$model -> __set('folder', 3);
-		$model -> __set('from', $this -> config['mail_name'] . '|' . $this -> config['email']);
-		$model -> __set('reply_to', $this -> config['mail_name'] . '|' . $this -> config['email']);
+		$model -> __set('from', $this -> _account['mail_name'] . '|' . $this -> _account['email']);
+		$model -> __set('reply_to', $this -> _account['mail_name'] . '|' . $this -> _account['email']);
 		if (empty($_POST["id"])) {
 			$list = $model -> add();
 		} else {
@@ -548,7 +545,6 @@ class MailAction extends CommonAction {
 		$data["user_id"] = $user_id;
 		$model = M("Recent");
 		$recent = $model -> where("user_id=$user_id") -> getField("recent");
-
 		if (!empty($recent)) {
 			$address_list = implode(";", array_unique(array_filter(explode(";", $address_list . $recent, 20), "not_dept")));
 			//保留20个数据
@@ -570,7 +566,7 @@ class MailAction extends CommonAction {
 	public function send() {
 		$ajax = $_POST['ajax'];
 		if ($this -> _check_mail_account() == false) {
-			$this -> assign('jumpUrl', U('config'));
+			$this -> assign('jumpUrl', U('mailaccount/index'));
 			$this -> error("请设置邮箱", $ajax);
 			return;
 		}
@@ -592,7 +588,7 @@ class MailAction extends CommonAction {
 		$mail -> IsSMTP();
 		// telling the class to use SMTP
 		try {
-			$mail -> Host = $this -> config['smtpsvr'];
+			$mail -> Host = $this -> _account['smtpsvr'];
 			//"smtp.qq.com"; // SMTP server 部分邮箱不支持SMTP，QQ邮箱里要设置开启的
 			$mail -> SMTPDebug = false;
 			// 改为2可以开启调试
@@ -603,13 +599,13 @@ class MailAction extends CommonAction {
 			$mail -> CharSet = "UTF-8";
 			// 这里指定字符集！解决中文乱码问题
 			$mail -> Encoding = "base64";
-			$mail -> Username = $this -> config['mail_id'];
+			$mail -> Username = $this -> _account['mail_id'];
 			// SMTP account username
-			$mail -> Password = $this -> config['mail_pwd'];
+			$mail -> Password = $this -> _account['mail_pwd'];
 			// SMTP account password
-			$mail -> SetFrom($this -> config['email'], $this -> config['mail_name']);
+			$mail -> SetFrom($this -> _account['email'], $this -> _account['mail_name']);
 			//发送者邮箱
-			$mail -> AddReplyTo($this -> config['email'], $this -> config['mail_name']);
+			$mail -> AddReplyTo($this -> _account['email'], $this -> _account['mail_name']);
 			//回复到这个邮箱
 
 			$arrtmp = explode(';', $to);
@@ -696,8 +692,8 @@ class MailAction extends CommonAction {
 			$model -> __set('user_id', get_user_id());
 			$model -> __set('folder', 2);
 			$model -> __set('read', 1);
-			$model -> __set('from', $this -> config['mail_name'] . '|' . $this -> config['email']);
-			$model -> __set('reply_to', $this -> config['mail_name'] . '|' . $this -> config['email']);
+			$model -> __set('from', $this -> _account['mail_name'] . '|' . $this -> _account['email']);
+			$model -> __set('reply_to', $this -> _account['mail_name'] . '|' . $this -> _account['email']);
 			if (empty($_POST["id"])) {
 				$list = $model -> add();
 			} else {
