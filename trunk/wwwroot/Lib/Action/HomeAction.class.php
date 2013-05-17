@@ -10,7 +10,7 @@ class HomeAction extends CommonAction {
 
 	public function index() {
 		cookie("top_menu", null);
-		$config = D("Config") -> get_config();
+		$config = D("UserConfig") -> get_config();
 		$this -> assign("home_sort", $config['home_sort']);
 		$this -> mail_list();
 		$this -> flow_list();

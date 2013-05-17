@@ -51,14 +51,14 @@
                 var id=result.data[s].id;
                 var position_name=result.data[s].position_name;
                 var emp_no=result.data[s].emp_no;
-                var emp_name=result.data[s].emp_name;
+                var name=result.data[s].name;
                 var email=result.data[s].email;
                 if (position_name==undefined)
                 {
-                    var html_string="<label><input type=\"checkbox\" name=\"addr_id\" value=\""+emp_no +"\"><a  title="+email+" onmousedown=\"return false\" href=\"javascript:void(0);\">"+emp_name+" &lt;"+email+"&gt; </a></label>";         
+                    var html_string="<label><input type=\"checkbox\" name=\"addr_id\" value=\""+emp_no +"\"><a  title="+email+" onmousedown=\"return false\" href=\"javascript:void(0);\">"+name+" &lt;"+email+"&gt; </a></label>";         
                 }else{
 
-                    var html_string="<label><input type=\"checkbox\" name=\"addr_id\" value=\""+emp_no +"\"><a  title="+email+" onmousedown=\"return false\" href=\"javascript:void(0);\">"+emp_name+" / "+ position_name+"</a></label>"; 
+                    var html_string="<label><input type=\"checkbox\" name=\"addr_id\" value=\""+emp_no +"\"><a  title="+email+" onmousedown=\"return false\" href=\"javascript:void(0);\">"+name+" / "+ position_name+"</a></label>"; 
                 }
                 $("#addr_list").html($("#addr_list").html()+html_string);
             }
@@ -280,7 +280,6 @@
                     })                
                 break
              }
-
         }
     //-->
     </script>

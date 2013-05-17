@@ -14,9 +14,8 @@
 	}
 
 	$(document).ready(function(){
-		alert($("#type option").length);
-		$("#type").change(function(){
-			
+
+		$("#type").change(function(){	
 			if($(this).val()==1){
 				$("#warehouse").attr("disabled","disabled");
 			}
@@ -25,17 +24,30 @@
 				$("#payment option[value='3']").attr("selected", "selected");
 			}
 		})
-		$("#po_date").datepicker();
+
+		$("#payment").change(function(){
+			if($(this).val()==2){
+				$("#prepay").attr("disabled",false);
+			}else{
+				$("#prepay").attr("disabled","disabled");
+			}
+		})		
+
+		$("#type").change();
+		$("#payment").change();
+
 		$(".qty input,.price input").live("blur", function() {
 			qty = $(this).parents("div.span6").find(".qty input").val();
 			price = $(this).parents("div.span6").find(".price input").val();
 			$(this).parents("div.span6").find(".sum input").val(dec_mul(price, qty));
 		});
+
 		$(".sum input").live("blur", function(){
 			qty = $(this).parents("div.span6").find(".qty input").val();
 			sum = $(this).parents("div.span6").find(".sum input").val();
 			$(this).parents("div.span6").find(".price input").val(Math.round(dec_div(sum, qty) * 100) / 100);
 		})
+
 		$(".qty input,.price input").live("keyup", function() {
 			switch(event.keyCode) {
 				case 13:
@@ -45,6 +57,7 @@
 					break
 			}
 		})
+
 		$(".sum input").live("keyup", function() {
 			switch(event.keyCode) {
 				case 13:
@@ -87,14 +100,11 @@
 		<div class="left">
 			<a class="btn" onclick="new_line();" >新行</a>
 			<a class="btn" onclick="del_line();" >删行</a>
-			<a class="btn" onclick="send(true);">打印</a>
 			<a class="btn" onclick="send(true);">取消</a>
+			<a class="btn" onclick="send(true);">设为默认</a>
 		</div>
 		<div class="right">
 			<a class="btn" onclick="save();" >保存</a>
-			<a class="btn" onclick="edit();">修改</a>
-			<a class="btn" onclick="new_order();">新单</a>
-			<a class="btn" onclick="save();" >关闭</a>
 		</div>
 	</div>
 	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data">
@@ -153,7 +163,7 @@
 						<select name="payment" id="payment">
 							<option value="1">预付货款</option>
 							<option value="2">预付部分</option>
-							<option value="3">货到付款</option>
+							<option value="3">货到付款</option>							
 						</select>
 					</div>
 				</div>

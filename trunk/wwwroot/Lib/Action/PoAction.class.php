@@ -21,7 +21,6 @@ class PoAction extends CommonAction {
 		if (method_exists($this, '_filter')) {
 			$this -> _filter($map);
 		}
-		dump($map);
 		if (empty($_POST['start_date']) & empty($_POST['end_date'])) {
 			$start_date = toDate(mktime(0, 0, 0, date("m"), 1, date("Y")), 'Y-m-d');
 			$end_date = toDate(mktime(0, 0, 0, date("m") + 1, 0, date("Y")), 'Y-m-d');

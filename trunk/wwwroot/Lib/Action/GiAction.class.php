@@ -110,10 +110,7 @@ class GiAction extends CommonAction {
 		$type=$_POST['type'];
 		$payment=$_POST['payment'];
 
-		dump(array_map(number_format,$arr_qty));
-		dump(array_map(number_format,$arr_diff));
-		$test=array_diff_assoc(array_map(number_format,$arr_qty),array_map(number_format,$arr_order_qty));
-
+		$test=array_sum($arr_diff);
 		if(empty($test)){			
 			$where['po_no']=array('eq',$_POST['po_no']);
 			M("Po")->where($where)->setField("finish",1);

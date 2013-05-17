@@ -9,7 +9,7 @@ class PsiAction extends CommonAction {
 	}
 
 	public function index() {
-		$config = D("Config") -> get_config();
+		$config = D("UserConfig") -> get_config();
 		$this -> assign("home_sort", $config['home_sort']);
 		$this -> display();
 	}
@@ -17,7 +17,7 @@ class PsiAction extends CommonAction {
 	public function set_sort() {
 		$val = $_REQUEST["val"];
 		$data['home_sort'] = $val;
-		$model = D("Config") -> set_config($data);
+		$model = D("UserConfig") -> set_config($data);
 	}
 
 	protected function mail_list() {

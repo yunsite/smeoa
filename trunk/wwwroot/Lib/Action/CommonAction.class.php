@@ -2,10 +2,9 @@
 class CommonAction extends Action {
 	public $_list_rows;
 	public $_search;
-	public $_config;
+	public $_user_config;
 
 	function _initialize() {
-
 		$auth_id = session(C('USER_AUTH_KEY'));
 		if (!isset($auth_id)) {
 			//跳转到认证网关
@@ -15,7 +14,7 @@ class CommonAction extends Action {
 			$this -> error("没有权限");
 		}
 		$this -> _assign_left_menu();
-		$this -> _get_config();
+		$this -> _user_config = D("UserConfig") -> get_config();
 	}
 
 	public function index() {
@@ -113,18 +112,8 @@ class CommonAction extends Action {
 		}
 	}
 
-	protected function _get_config() {
-		$config = session('config' . get_user_id());
-		if (!empty($config)) {
-			$this -> _config = $config;
-		} else {
-			$this -> _config = D("Config") -> get_config();
-			session('config' . get_user_id(), $this -> _config);
-		}
-	}
-
 	protected function get_list_rows() {
-		return $this -> _config['list_rows'];
+		return $this -> _user_config['list_rows'];
 	}
 
 	protected function set_list_rows($num) {
@@ -196,7 +185,7 @@ class CommonAction extends Action {
 			//缓存菜单访问
 			session('menu' . $user_id, $menu);
 		}
-		
+
 		if (!empty($top_menu)) {
 			$this -> assign("top_menu_name", $model -> where("id=$top_menu") -> getField('name'));
 		}
@@ -282,7 +271,7 @@ class CommonAction extends Action {
 
 	protected function _set_search($key, $val) {
 		$this -> _search[$key] = $val;
-	}	
+	}
 
 	/**
 	 +----------------------------------------------------------
@@ -360,7 +349,7 @@ class CommonAction extends Action {
 		$model -> data = $data;
 		$model -> status = $status;
 		$model -> info = $info;
-		if (empty($time)){
+		if (empty($time)) {
 			$model -> time = time();
 		} else {
 			$model -> time = $time;
@@ -455,7 +444,7 @@ class CommonAction extends Action {
 					$where['user_id'] = array('eq', get_user_id());
 				};
 
-				$model -> where($where) -> setField('is_del',1);
+				$model -> where($where) -> setField('is_del', 1);
 				$list = $model -> where($where) -> getField("id,add_file");
 				$str_list = implode($list);
 
@@ -466,7 +455,7 @@ class CommonAction extends Action {
 				$where = array();
 				$where['id'] = array('in', $file_list);
 
-				$model -> where($where) -> setField('is_del',1);
+				$model -> where($where) -> setField('is_del', 1);
 				$list = $model -> where($where) -> select();
 				$save_path = C('SAVE_PATH');
 
