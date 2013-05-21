@@ -1,0 +1,29 @@
+<layout name='Layout/layout_page' />
+<script type="text/javascript">
+	function save(){
+		if(check_form("form_data")){
+			sendForm("form_data", "{:U('save')}","__URL__");
+		}
+	}
+	</script>
+<div class="config">
+	<div class="row-fluid title">
+		<span>设置</span>
+	</div>
+	<form method='post' id="form_data">
+		<input type="hidden" name="opmode" value="{$opmode}">
+		<input type="hidden" name="ajax" id="ajax" value="0">
+		<div class="row-fluid form_box">
+			<div class="row-fluid form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="list_rows">列表数量：</label>
+					<div class="controls">
+						<input type="text" id="list_rows" name="list_rows" value="{$config.list_rows}" check="number" msg="必须是数字"></div>
+				</div>
+			</div>		
+		</div>
+		<div class="action">
+			<input class="btn default" type="button" value="保存" onclick="save();">
+			<input  class="btn" type="button" value="取消" onclick="go_return_url();"></div>
+	</form>
+</div>

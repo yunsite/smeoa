@@ -431,6 +431,28 @@ class ContactAction extends CommonAction {
 		return;
 	}
 
+	function popup_depts(){
+		$model = M("Dept");
+		$list = array();
+		$list = $model -> field('id,pid,name') -> order('sort asc') -> select();
+		$list = list_to_tree($list);
+		$this -> assign('list_dept', sub_tree_menu($list));
+		$this -> display();
+		return;
+	}
+
+
+	function popup_position(){
+
+		$model = M("Position");
+		$list = array();
+		$list = $model -> field('id,name') -> order('sort asc') -> select();
+		$list = list_to_tree($list);
+		$this -> assign('list_position', sub_tree_menu($list));
+		$this -> display();
+		return;
+	}
+
 	function json(){
 		header("Content-Type:text/html; charset=utf-8");
 		$key = $_REQUEST['key'];

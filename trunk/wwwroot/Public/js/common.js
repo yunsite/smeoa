@@ -480,6 +480,16 @@ function sendAjax(url,vars,callback) {
 		});
 }
 
+function getHtml(url,vars,callback) {
+		return $.ajax({
+				type: "POST",
+				url: url,
+				data: vars+"&ajax=1",
+				dataType: "text",
+				success: callback
+		});
+}
+
 /*提交表单*/
 function sendForm(formId,post_url,return_url){
 		if($("#ajax").val()==1){
@@ -561,7 +571,11 @@ function set_val(name,val){
 	if(($("#" + name).attr("type")) === "hidden"){
 		$("#" + name).val(val);
 		return;
-	}	
+	}
+	if(name == "remark"){
+		$("#" + name).val(val);
+		return;
+	}
 }
 
  /*联系人显示格式转换*/

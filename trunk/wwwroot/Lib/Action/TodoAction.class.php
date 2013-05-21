@@ -3,7 +3,6 @@ class TodoAction extends CommonAction {
 	//过滤查询字段
 	function _filter(&$map) {
 		$map['name'] = array('like', "%" . $_POST['keyword'] . "%");
-		$map['is_del'] = array('eq', '0');
 	}
 
 	public function index() {
