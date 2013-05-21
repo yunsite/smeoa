@@ -237,10 +237,8 @@ class CommonAction extends Action {
 		}
 
 		foreach ($request as $val) {
-			if ($check) {
-				if (!in_array(substr($val, 3), $fields)) {
-					continue;
-				}
+			if (!in_array(substr($val, 3), $fields)) {
+				continue;
 			}
 			if (substr($val, 0, 3) == "be_") {
 				if (isset($_REQUEST["en_" . substr($val, 3)])) {

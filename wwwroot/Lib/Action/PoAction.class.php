@@ -40,7 +40,7 @@ class PoAction extends CommonAction {
 		return;
 	}
 
-	function insert() {
+	function insert(){
 		$arr_mat_no = $_POST['mat_no'];
 		$arr_qty = $_POST['qty'];
 		$arr_price = $_POST['price'];
